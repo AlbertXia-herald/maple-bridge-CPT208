@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>公告栏 | Maple Bridge</title>
+  <meta name="description" content="Maple Bridge 居民公告栏，集中展示社区活动、景区运营更新与便民提醒。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="notice-board-page">
+  <div class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="返回 Maple Bridge 首页">
+        <span class="brand-mark">MB</span>
+        <span class="brand-copy">
+          <strong>Maple Bridge</strong>
+          <span>枫桥文化导览</span>
+        </span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="notice-board-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span class="sr-only">打开导航</span>
+      </button>
+
+      <nav class="site-nav" id="notice-board-nav" aria-label="公告栏导航">
+        <a href="index.html">首页</a>
+        <a href="#notice-focus">重要提醒</a>
+        <a href="#notice-board">公告列表</a>
+        <a href="interactive-map.html">互动地图</a>
+        <a href="photo-wall.html">照片墙</a>
+        <a href="smart-agent.html">智能枫桥</a>
+      </nav>
+    </header>
+
+    <main class="notice-board-main">
+      <section class="notice-hero">
+        <div class="notice-hero-copy">
+          <p class="eyebrow">Resident Notice Board</p>
+          <h1>把社区更新、
+            <span>景区运营与便民提醒，</span>
+            放在一页清楚看完。
+          </h1>
+          <p class="hero-summary">
+            这是一页面向居民与社区关注者的公告栏。它强调分类清楚、信息可信、阅读直接，帮助用户快速找到与日常生活、活动安排和运营更新相关的内容。
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#notice-board">查看公告</a>
+            <a class="button button-secondary" href="#notice-focus">先看重点</a>
+          </div>
+        </div>
+
+        <aside class="notice-hero-panel" aria-label="公告页概览">
+          <article class="notice-overview-card">
+            <span class="kicker">页面定位</span>
+            <strong>社区信息页</strong>
+            <p>与首页、照片墙和互动地图不同，这里重点服务居民阅读与社区沟通，因此更强调实用性、稳定性和可信感。</p>
+          </article>
+          <div class="wall-stat-grid">
+            <article>
+              <span id="notice-total-count">0</span>
+              <p>条当前公告</p>
+            </article>
+            <article>
+              <span>3</span>
+              <p>类居民信息</p>
+            </article>
+            <article>
+              <span>Read</span>
+              <p>移动端优先</p>
+            </article>
+          </div>
+        </aside>
+      </section>
+
+      <section class="notice-focus section" id="notice-focus">
+        <div class="section-heading">
+          <p class="eyebrow">重要提醒</p>
+          <h2>先把最紧要的信息放在前面</h2>
+          <p>这一部分用于快速传达居民最可能优先关心的事项，例如时间调整、现场维护、报名截止或临时提醒。</p>
+        </div>
+
+        <div class="notice-focus-grid" id="notice-focus-grid" aria-live="polite"></div>
+      </section>
+
+      <section class="notice-board-shell section" id="notice-board">
+        <div class="notice-board-topbar">
+          <div class="section-heading">
+            <p class="eyebrow">公告列表</p>
+            <h2>按类别查看社区活动、运营信息与便民提醒</h2>
+            <p>内容按居民视角组织，避免混杂成“景点导览页”。每条公告都保留统一结构，便于后续接入真实内容源。</p>
+          </div>
+
+          <div class="notice-filter-bar" aria-label="公告分类筛选">
+            <button class="notice-filter-chip is-active" type="button" data-category-filter="all">全部</button>
+            <button class="notice-filter-chip" type="button" data-category-filter="community">社区活动</button>
+            <button class="notice-filter-chip" type="button" data-category-filter="operations">景区运营</button>
+            <button class="notice-filter-chip" type="button" data-category-filter="service">便民提醒</button>
+          </div>
+        </div>
+
+        <div class="notice-columns" id="notice-columns"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="notice-board.js"></script>
+</body>
+</html>

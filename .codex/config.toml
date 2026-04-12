@@ -1,0 +1,65 @@
+model = "gpt-5.4"
+model_provider = "openai"
+
+model_reasoning_effort = "medium"
+plan_mode_reasoning_effort = "high"
+model_reasoning_summary = "auto"
+model_verbosity = "medium"
+personality = "pragmatic"
+
+approval_policy = "on-request"
+allow_login_shell = true
+
+sandbox_mode = "workspace-write"
+
+# Keep this concise. It is injected before AGENTS.md.
+developer_instructions = """
+Prefer planning before large UI refactors.
+When visual references are provided, extract layout principles rather than copying branding literally.
+Optimize for mobile-first usability, clean hierarchy, and coursework-friendly scope.
+"""
+
+# Project documentation discovery
+project_doc_max_bytes = 65536
+project_doc_fallback_filenames = ["Agent.md"]
+project_root_markers = [".git"]
+
+# Helpful in VS Code when Codex emits file links
+file_opener = "vscode"
+
+# Keep default UI behavior simple
+hide_agent_reasoning = false
+show_raw_agent_reasoning = false
+check_for_update_on_startup = true
+
+[sandbox_workspace_write]
+writable_roots = []
+network_access = false
+exclude_tmpdir_env_var = false
+exclude_slash_tmp = false
+
+[shell_environment_policy]
+inherit = "all"
+ignore_default_excludes = false
+exclude = []
+set = {}
+include_only = []
+
+[tools]
+view_image = true
+
+[features]
+shell_tool = true
+unified_exec = true
+shell_snapshot = true
+multi_agent = false
+smart_approvals = false
+enable_request_compression = true
+
+# Optional: keep this if you want Codex to consult official OpenAI docs for Codex/OpenAI questions.
+[mcp_servers.openaiDeveloperDocs]
+url = "https://developers.openai.com/mcp"
+enabled = true
+required = false
+tool_timeout_sec = 60.0
+startup_timeout_sec = 10.0

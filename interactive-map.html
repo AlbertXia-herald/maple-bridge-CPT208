@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>互动地图 | Maple Bridge</title>
+  <meta name="description" content="Maple Bridge 互动地图，支持景点解读、寒山寺祈福小游戏与《枫桥夜泊》诗意互动。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="interactive-map-page">
+  <div class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="返回 Maple Bridge 首页">
+        <span class="brand-mark">MB</span>
+        <span class="brand-copy">
+          <strong>Maple Bridge</strong>
+          <span>枫桥文化导览</span>
+        </span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="interactive-map-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span class="sr-only">打开导航</span>
+      </button>
+
+      <nav class="site-nav" id="interactive-map-nav" aria-label="互动地图导航">
+        <a href="index.html">首页</a>
+        <a href="#map-explorer">地图探索</a>
+        <a href="#map-legend">热点图例</a>
+        <a href="photo-wall.html">照片墙</a>
+        <a href="notice-board.html">公告栏</a>
+        <a href="smart-agent.html">智能枫桥</a>
+      </nav>
+    </header>
+
+    <main class="interactive-map-main">
+      <section class="interactive-map-hero">
+        <div class="interactive-map-copy">
+          <p class="eyebrow">Playful Heritage Exploration</p>
+          <h1>点开一张枫桥地图，
+            <span>从景点、诗意与祈愿里</span>
+            慢慢走进去。
+          </h1>
+          <p class="hero-summary">
+            这是一页面向游客的深度探索页面。你可以点击不同热点，打开景点详解、寒山寺祈福互动，或在水面区域参与《枫桥夜泊》的诗意体验。
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#map-explorer">开始探索</a>
+            <a class="button button-secondary" href="#map-legend">先看图例</a>
+          </div>
+        </div>
+
+        <aside class="interactive-map-panel" aria-label="互动地图概览">
+          <article class="map-overview-card">
+            <span class="kicker">本页重点</span>
+            <strong>互动地图是核心可玩页</strong>
+            <p>不同热点会带来不同层次的内容反馈，让访问者在地图上逐步发现景点、故事与轻量互动。</p>
+          </article>
+
+          <div class="wall-stat-grid">
+            <article>
+              <span>5</span>
+              <p>个可点击热点</p>
+            </article>
+            <article>
+              <span>3</span>
+              <p>类弹窗体验</p>
+            </article>
+            <article>
+              <span>Mobile</span>
+              <p>底部抽屉式阅读</p>
+            </article>
+          </div>
+        </aside>
+      </section>
+
+      <section class="map-stage section" id="map-explorer">
+        <div class="map-stage-header">
+          <div class="section-heading">
+            <p class="eyebrow">地图探索</p>
+            <h2>点击热点，沿着枫桥一带慢慢发现内容</h2>
+            <p>地图使用轻量插画式场景来承载交互，不依赖复杂地图引擎。景点、游戏和诗歌热点有不同标识，帮助你快速判断点开后会看到什么。</p>
+          </div>
+
+          <div class="map-tips">
+            <article class="map-tip-card">
+              <h3>景点热点</h3>
+              <p>打开大尺寸底部信息面板，阅读景点介绍、历史片段与亮点。</p>
+            </article>
+            <article class="map-tip-card">
+              <h3>玩法热点</h3>
+              <p>寒山寺可进行祈福小游戏，水域区域可进入《枫桥夜泊》互动。</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="map-surface-wrap">
+          <div class="map-legend" id="map-legend" aria-label="热点图例">
+            <span class="legend-pill legend-scenic">景点解读</span>
+            <span class="legend-pill legend-game">祈福互动</span>
+            <span class="legend-pill legend-poem">诗意互动</span>
+          </div>
+
+          <section class="map-surface" aria-label="枫桥互动地图">
+            <div class="map-art">
+              <div class="map-water map-water-main"></div>
+              <div class="map-water map-water-branch"></div>
+              <div class="map-land map-land-left"></div>
+              <div class="map-land map-land-right"></div>
+              <div class="map-bridge"></div>
+              <div class="map-temple"></div>
+              <div class="map-wharf"></div>
+              <div class="map-garden"></div>
+              <div class="map-label map-label-bridge">枫桥</div>
+              <div class="map-label map-label-temple">寒山寺</div>
+              <div class="map-label map-label-water">水巷</div>
+              <div class="map-label map-label-wharf">古渡口</div>
+            </div>
+            <div class="hotspot-layer" id="hotspot-layer" aria-live="polite"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="map-modal" id="map-modal" aria-hidden="true">
+    <div class="map-modal-backdrop" data-close-modal="true"></div>
+    <section class="map-sheet" role="dialog" aria-modal="true" aria-labelledby="map-modal-title">
+      <header class="map-sheet-header">
+        <div class="map-sheet-kicker" id="map-modal-kicker">探索中</div>
+        <button class="map-sheet-close" type="button" id="map-modal-close" aria-label="关闭弹窗">关闭</button>
+      </header>
+      <div class="map-sheet-body" id="map-modal-body"></div>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="interactive-map.js"></script>
+</body>
+</html>

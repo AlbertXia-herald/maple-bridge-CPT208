@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智能枫桥 | Maple Bridge</title>
+  <meta name="description" content="Smart Maple Bridge 智能枫桥，提供轻量规则式导览建议，帮助用户快速找到合适的页面与路线。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="smart-agent-page">
+  <div class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="返回 Maple Bridge 首页">
+        <span class="brand-mark">MB</span>
+        <span class="brand-copy">
+          <strong>Maple Bridge</strong>
+          <span>枫桥文化导览</span>
+        </span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="smart-agent-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span class="sr-only">打开导航</span>
+      </button>
+
+      <nav class="site-nav" id="smart-agent-nav" aria-label="智能枫桥导航">
+        <a href="index.html">首页</a>
+        <a href="#smart-agent-page-root">智能枫桥</a>
+        <a href="interactive-map.html">互动地图</a>
+        <a href="photo-wall.html">照片墙</a>
+        <a href="notice-board.html">公告栏</a>
+      </nav>
+    </header>
+
+    <main class="smart-agent-main">
+      <section class="smart-agent-hero">
+        <div class="smart-agent-copy">
+          <p class="eyebrow">Cultural Guide Assistant</p>
+          <h1>让智能枫桥先帮你判断，
+            <span>接下来该看哪一页。</span>
+          </h1>
+          <p class="hero-summary">这是一个规则式、原型阶段的轻量导览助手。它不追求复杂聊天，而是专注于帮你快速找到更合适的页面、路线和信息入口。</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#smart-agent-page-root">开始询问</a>
+            <a class="button button-secondary" href="index.html">返回首页</a>
+          </div>
+        </div>
+
+        <aside class="smart-agent-panel" aria-label="智能枫桥能力概览">
+          <article class="notice-overview-card">
+            <span class="kicker">当前能力</span>
+            <strong>原型阶段的智能入口</strong>
+            <p>适合快速回答“我先看哪里”“今天怎么玩”“居民该进哪一页”这类导航型问题，后续可以再升级成真实 AI 或 FAQ 后端。</p>
+          </article>
+          <div class="wall-stat-grid">
+            <article>
+              <span>6</span>
+              <p>个快捷问题</p>
+            </article>
+            <article>
+              <span>Rule</span>
+              <p>规则式响应</p>
+            </article>
+            <article>
+              <span>Guide</span>
+              <p>偏导览而非客服</p>
+            </article>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section smart-agent-section">
+        <div id="smart-agent-page-root"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="smart-agent-data.js"></script>
+  <script src="smart-agent.js"></script>
+</body>
+</html>
