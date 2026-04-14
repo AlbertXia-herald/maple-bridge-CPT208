@@ -190,3 +190,21 @@ After implementation:
 - summarize what changed
 - mention any assumptions
 - mention any remaining placeholders
+## Visual atmosphere constraint
+Artistic motifs such as red maple, sunset glow, and temple-inspired heritage details must be applied as restrained decorative layers only.
+
+They may appear in:
+- hero backgrounds
+- section accents
+- dividers
+- card accents
+- popup headers
+- lightweight overlays
+- reusable ornamental details
+
+They must not:
+- alter information architecture
+- reduce readability
+- cover core content areas densely
+- become page-filling background illustrations
+- create inconsistent page-specific visual styles

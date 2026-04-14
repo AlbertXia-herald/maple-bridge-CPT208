@@ -28,30 +28,29 @@
         <span class="sr-only">打开导航</span>
       </button>
 
-      <nav class="site-nav" id="site-nav" aria-label="主页导航">
-        <a href="#guide">导览</a>
-        <a href="#wander">枫桥漫游</a>
-        <a href="#services">攻略秘籍</a>
+      <nav class="site-nav" id="site-nav" aria-label="全站导航">
+        <a href="#top" aria-current="page">首页</a>
         <a href="interactive-map.html">互动地图</a>
         <a href="photo-wall.html">照片墙</a>
+        <a href="notice-board.html">公告栏</a>
         <a href="smart-agent.html">智能枫桥</a>
       </nav>
     </header>
 
     <main id="top">
       <section class="hero">
+        <figure class="hero-bridge-art" aria-hidden="true">
+          <img src="assets/homepage/bridge-illustration.svg" alt="">
+        </figure>
+
         <div class="hero-copy">
           <p class="eyebrow">Heritage Walk Companion</p>
           <h1>用一页看懂枫桥，
             <span>也能从这里慢慢深入。</span>
           </h1>
           <p class="hero-summary">
-            这是一套面向课程展示的文化导览首页。它先给出轻量概览，再把路线、互动地图、照片墙与智能问答整理成清楚入口，让初次访问也能快速找到方向。
+            这是一页面向课程展示的文化导览首页。它先用克制的信息建立整体印象，再把互动地图、照片墙、公告栏与智能问答整理成清楚入口，让初次访问也能很快找到方向。
           </p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="#guide">开始导览</a>
-            <a class="button button-secondary" href="interactive-map.html">查看互动地图</a>
-          </div>
         </div>
 
         <aside class="hero-panel" aria-label="概览信息">
@@ -61,121 +60,93 @@
                 <p class="eyebrow">当日天气</p>
                 <h2>枫桥出游指数</h2>
               </div>
-              <span class="weather-date">04 / 11</span>
+              <span class="weather-date" data-weather-date>加载中</span>
             </div>
 
             <div class="weather-ticker" data-weather-ticker>
-              <article class="weather-slide is-active">
+              <article class="weather-slide is-active" data-weather-slide="overview">
                 <div class="weather-main">
-                  <span class="weather-icon" aria-hidden="true">☁</span>
+                  <span class="weather-icon" aria-hidden="true" data-weather-icon>…</span>
                   <div>
-                    <strong>11°C</strong>
-                    <p>多云，体感较舒适</p>
+                    <strong data-weather-temp>实时获取中</strong>
+                    <p data-weather-summary>正在同步枫桥景区当日天气。</p>
                   </div>
                 </div>
                 <div class="weather-meta">
-                  <span>最高 14°C</span>
-                  <span>最低 5°C</span>
+                  <span data-weather-high>最高 --°C</span>
+                  <span data-weather-low>最低 --°C</span>
                 </div>
               </article>
 
-              <article class="weather-slide">
+              <article class="weather-slide" data-weather-slide="air">
                 <div class="weather-main">
-                  <span class="weather-badge weather-badge-warn">AQI 122</span>
+                  <span class="weather-badge" data-weather-aqi-badge>AQI --</span>
                   <div>
-                    <strong>轻度污染</strong>
-                    <p>建议久留户外时适当留意空气质量。</p>
+                    <strong data-weather-aqi-level>空气质量同步中</strong>
+                    <p data-weather-aqi-summary>正在获取实时空气质量数据。</p>
                   </div>
                 </div>
                 <div class="weather-meta">
-                  <span>PM2.5 偏高</span>
-                  <span>外出可备口罩</span>
+                  <span data-weather-pm25>PM2.5 --</span>
+                  <span data-weather-aqi-tip>出行建议加载中</span>
                 </div>
               </article>
 
-              <article class="weather-slide">
+              <article class="weather-slide" data-weather-slide="comfort">
                 <div class="weather-main">
-                  <span class="weather-badge">湿度 69%</span>
+                  <span class="weather-badge" data-weather-humidity-badge>湿度 --</span>
                   <div>
-                    <strong>微风 9 km/h</strong>
-                    <p>适合轻量漫游与拍照浏览。</p>
+                    <strong data-weather-wind>风速 --</strong>
+                    <p data-weather-comfort-summary>正在生成当日出游感受。</p>
                   </div>
                 </div>
                 <div class="weather-meta">
-                  <span>首页右上角滚动展示</span>
-                  <span>便于快速判断出行感受</span>
+                  <span data-weather-update>实时天气接入中</span>
+                  <span data-weather-location>定位到枫桥景区</span>
                 </div>
               </article>
             </div>
           </section>
 
-          <div class="hero-card">
-            <span class="kicker">今日适合</span>
-            <strong>15 分钟快速浏览</strong>
-            <p>先看导览与枫桥漫游，再按兴趣进入互动内容。</p>
-          </div>
-          <div class="hero-metrics">
-            <article>
-              <span>3</span>
-              <p>个使用步骤</p>
-            </article>
-            <article>
-              <span>4</span>
-              <p>个深入入口</p>
-            </article>
-            <article>
-              <span>Mobile</span>
-              <p>优先排版</p>
-            </article>
-          </div>
+          <section class="forecast-card" aria-label="未来七天天气趋势">
+            <div class="forecast-card-head">
+              <div>
+                <p class="eyebrow">未来 7 天</p>
+                <h2>一周天气趋势</h2>
+              </div>
+              <span class="forecast-update" data-forecast-update>同步中</span>
+            </div>
+            <div class="forecast-chart" data-forecast-chart aria-live="polite">
+              正在生成未来一周天气趋势...
+            </div>
+            <div class="forecast-legend" aria-label="气温图例">
+              <span><i class="forecast-legend-line forecast-legend-line-high" aria-hidden="true"></i>最高温</span>
+              <span><i class="forecast-legend-line forecast-legend-line-low" aria-hidden="true"></i>最低温</span>
+            </div>
+          </section>
         </aside>
       </section>
 
       <section class="section section-guide" id="guide">
         <div class="section-heading">
           <p class="eyebrow">导览</p>
-          <h2>先认识枫桥，再决定从哪里开始</h2>
-          <p>用几张简短信息卡先建立景点印象，让第一次到访的游客也能快速知道这里看什么、怎么逛、怎么到。</p>
+          <h2>先用一段清楚介绍，建立对枫桥景区的整体印象</h2>
+          <p>枫桥景区适合作为初次到访苏州时的文化起点。它的吸引力不只在某一处景点，而在古桥、运河、寺院、水巷与诗意记忆共同形成的整体气质。</p>
         </div>
 
         <div class="overview-grid">
-          <article class="overview-card">
-            <h3>枫桥印象</h3>
-            <p>枫桥以古桥、水巷与寒山寺周边人文景观闻名，整体气质安静、古雅，适合用慢节奏方式感受江南水乡与诗意记忆。</p>
+          <article class="overview-card overview-card-primary">
+            <h3>枫桥景区是什么样的地方</h3>
+            <p>枫桥景区位于苏州古运河一带，以枫桥、寒山寺、江村桥和沿岸水巷共同构成核心游览体验。它不是依赖大型娱乐设施的景区，而是一处更强调空间氛围、文化线索与慢节奏感受的江南人文场所。</p>
+            <p>当人们提到枫桥，往往会立刻想到《枫桥夜泊》的意象。也正因此，游客来到这里，不只是看桥、看水、看寺，更像是在进入一段关于夜泊、钟声与古运河记忆的文化场景。</p>
           </article>
           <article class="overview-card">
-            <h3>景点速览</h3>
-            <p>在这里可以快速联想到“枫桥夜泊”的文化意象，也能顺着古桥、河道、寺院与街巷的关系，建立对景区空间与氛围的初步认识。</p>
+            <h3>文化价值</h3>
+            <p>景区最吸引人的地方，在于诗歌、历史与现实空间之间的呼应。寒山寺钟声、桥边水路和江南夜色，使这里不仅适合参观，也适合被缓慢理解和回味。</p>
           </article>
           <article class="overview-card">
-            <h3>游览气质</h3>
-            <p>适合先用首页建立整体印象，再根据时间与兴趣，切换到互动地图、照片墙或智能枫桥继续深入浏览。</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="section section-wander" id="wander">
-        <div class="section-heading">
-          <p class="eyebrow">枫桥漫游</p>
-          <h2>第一次使用网站时，顺着这三步就够了</h2>
-          <p>把原来的攻略与路线推荐合并成一段更直观的浏览引导，让用户轻松理解这个网站该怎么用、从哪里进入更深入的内容。</p>
-        </div>
-
-        <div class="wander-grid">
-          <article class="wander-card">
-            <span class="tip-index">01</span>
-            <h3>先看首页导览</h3>
-            <p>先通过导览区认识枫桥景点与整体气质，快速建立对景区内容和页面结构的第一印象。</p>
-          </article>
-          <article class="wander-card wander-card-featured">
-            <span class="tip-index">02</span>
-            <h3>再选一个入口深入</h3>
-            <p>如果想看空间关系，就进入互动地图；如果更想先感受氛围，可以切到照片墙；想直接提问则进入智能枫桥。</p>
-          </article>
-          <article class="wander-card">
-            <span class="tip-index">03</span>
-            <h3>最后按需求扩展</h3>
-            <p>需要更具体的动态信息时，可以继续进入公告栏；需要路线建议或问答辅助时，再交给智能枫桥完成。</p>
+            <h3>到访语境</h3>
+            <p>如果你是第一次来，可以先把它理解为一处“适合边走边看、边听边想”的文化景区。首页先负责建立整体印象，更多空间关系和图像氛围可以在后面的入口中继续展开。</p>
           </article>
         </div>
       </section>
@@ -183,8 +154,8 @@
       <section class="section section-services" id="services">
         <div class="section-heading">
           <p class="eyebrow">攻略秘籍</p>
-          <h2>把最常用的出行与服务信息放在一起</h2>
-          <p>参考服务信息块的组织方式，把游客最容易关心的出行、票务和热线电话集中展示，方便快速查阅。</p>
+          <h2>把到访前最常用的支持信息集中在这里</h2>
+          <p>保留一组简洁、可靠的服务信息，帮助首次浏览首页的用户快速处理出行、票务和现场咨询这三类常见问题。</p>
         </div>
 
         <div class="services-grid">
@@ -213,48 +184,42 @@
         </div>
       </section>
 
-      <section class="section section-agent">
-        <div class="agent-banner">
-          <div>
-            <p class="eyebrow">智能枫桥</p>
-            <h2>把问路、找内容、推荐顺序交给一个更直接的入口</h2>
-            <p>智能枫桥承担首页之外的即时帮助，让“想知道下一步看什么”的用户不需要自己摸索。它适合游客快速找入口，也适合居民直接跳到公告信息。</p>
-            <div class="agent-preview-chips" aria-label="智能枫桥快捷帮助">
-              <span>了解枫桥</span>
-              <span>今日推荐路线</span>
-              <span>适合居民的信息</span>
+      <section class="section section-entries">
+        <div class="entry-layout">
+          <div class="agent-banner">
+            <div>
+              <p class="eyebrow">智能枫桥</p>
+              <h2>把问路、找内容、推荐顺序交给一个更直接的入口</h2>
+              <p>智能枫桥承担首页之外的即时帮助，让“想知道下一步看什么”的用户不需要自己摸索。它既适合游客快速找入口，也适合居民直接跳到公告信息。</p>
+              <div class="agent-preview-chips" aria-label="智能枫桥快捷帮助">
+                <span>了解枫桥</span>
+                <span>今日推荐路线</span>
+                <span>适合居民的信息</span>
+              </div>
+            </div>
+            <div class="agent-entry-actions">
+              <button class="button button-primary" type="button" data-open-assistant="homepage">打开智能枫桥</button>
+              <a class="button button-secondary" href="smart-agent.html">查看完整助手页</a>
             </div>
           </div>
-          <div class="agent-entry-actions">
-            <button class="button button-primary" type="button" data-open-assistant="homepage">打开智能枫桥</button>
-            <a class="button button-secondary" href="smart-agent.html">查看完整助手页</a>
+
+          <div class="entry-grid">
+            <a class="entry-card" href="interactive-map.html">
+              <span class="entry-tag">互动地图</span>
+              <h3>按位置浏览内容</h3>
+              <p>适合需要空间感与路径感的访问者。</p>
+            </a>
+            <a class="entry-card entry-card-photo" href="photo-wall.html">
+              <span class="entry-tag">照片墙</span>
+              <h3>从图像切入氛围</h3>
+              <p>以轻量画面浏览方式承接更多视觉材料。</p>
+            </a>
+            <a class="entry-card entry-card-notice" href="notice-board.html">
+              <span class="entry-tag">公告栏</span>
+              <h3>查看提醒与动态</h3>
+              <p>用简洁版式集中展示通知、活动与更新信息。</p>
+            </a>
           </div>
-        </div>
-      </section>
-
-      <section class="section section-entries">
-        <div class="section-heading">
-          <p class="eyebrow">深入入口</p>
-          <h2>继续探索时，从这里进入更具体的页面</h2>
-          <p>清楚、独立、可识别的卡片入口，让首页保持克制，同时不牺牲功能可达性。</p>
-        </div>
-
-        <div class="entry-grid">
-          <a class="entry-card" href="interactive-map.html">
-            <span class="entry-tag">互动地图</span>
-            <h3>按位置浏览内容</h3>
-            <p>适合需要空间感与路径感的访问者。</p>
-          </a>
-          <a class="entry-card" href="photo-wall.html">
-            <span class="entry-tag">照片墙</span>
-            <h3>从图像切入氛围</h3>
-            <p>以轻量画面浏览方式承接更多视觉材料。</p>
-          </a>
-          <a class="entry-card" href="notice-board.html">
-            <span class="entry-tag">公告栏</span>
-            <h3>查看提醒与动态</h3>
-            <p>用简洁版式集中展示通知与更新信息。</p>
-          </a>
         </div>
       </section>
     </main>

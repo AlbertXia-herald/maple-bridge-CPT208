@@ -1,8 +1,23 @@
-const hotspotLayer = document.querySelector("#hotspot-layer");
 const mapModal = document.querySelector("#map-modal");
 const mapModalBody = document.querySelector("#map-modal-body");
 const mapModalClose = document.querySelector("#map-modal-close");
 const mapModalKicker = document.querySelector("#map-modal-kicker");
+const mapSurface = document.querySelector("#amap-container");
+const mapStatus = document.querySelector("[data-map-status]");
+const mapFallback = document.querySelector("[data-map-fallback]");
+
+const MAP_CONFIG = window.MAPLE_BRIDGE_AMAP_CONFIG || {};
+const MAP_CENTER = Array.isArray(MAP_CONFIG.center) ? MAP_CONFIG.center : [120.5662, 31.3161];
+const MAP_ZOOM = typeof MAP_CONFIG.zoom === "number" ? MAP_CONFIG.zoom : 15.9;
+const MAP_VERSION = MAP_CONFIG.version || "2.0";
+const SCENIC_BOUNDS = {
+  southWest: [120.5626, 31.3062],
+  northEast: [120.5668, 31.3096],
+};
+
+let mapInstance = null;
+let activeHotspot = null;
+let activePoemIndex = 0;
 
 const scenicImage = ({ palette, title, subtitle }) => {
   const [first, second, third] = palette;
@@ -32,10 +47,10 @@ const hotspots = [
     id: "fengqiao-bridge",
     title: "枫桥桥身",
     type: "scenic",
-    position: { top: "52%", left: "43%" },
+    position: { lng: 120.56745, lat: 31.30888 },
     tag: "景点解读",
     shortDescription: "从桥身向两侧望去，可以同时感受到水巷尺度与游线转折，是枫桥最适合建立空间印象的位置。",
-    detail: "枫桥不仅是一个地理节点，更是诗意意象的聚合点。站在桥面上，能直观理解桥、水、寺、街巷之间的相互关系，也是游客初次到访时最容易形成‘我已经到了枫桥’这一感受的地方。",
+    detail: "枫桥不仅是一个地理节点，更是诗意意象的聚合点。站在桥面上，能直观理解桥、水、寺、街巷之间的相互关系，也是游客初次到访时最容易形成“我已经到了枫桥”这一感受的地方。",
     highlights: ["桥上视角适合建立空间认知", "可串联寒山寺、水巷与步行流线", "是讲述《枫桥夜泊》意象的最佳起点"],
     image: scenicImage({
       palette: ["#eadbc7", "#b88660", "#f6e5c3"],
@@ -47,10 +62,10 @@ const hotspots = [
     id: "hanshan-temple",
     title: "寒山寺祈福",
     type: "game",
-    position: { top: "28%", left: "70%" },
+    position: { lng: 120.56915, lat: 31.31018 },
     tag: "祈福互动",
     shortDescription: "在钟声与香火意象里进行一次轻量祈愿，生成今日签语风格的福运结果。",
-    intro: "寒山寺是这页中最适合做‘祈愿式互动’的地点。点一下祈福按钮，让原型用一种温和、课程友好的方式给出今天的祝福回应。",
+    intro: "寒山寺是这页中最适合做“祈愿式互动”的地点。点一下祈福按钮，让原型用一种温和、课程友好的方式给出今天的祝福回应。",
     fortunes: [
       {
         title: "钟声入怀",
@@ -78,7 +93,7 @@ const hotspots = [
     id: "water-poem",
     title: "水面诗境",
     type: "poem",
-    position: { top: "60%", left: "62%" },
+    position: { lng: 120.56705, lat: 31.30848 },
     tag: "诗意互动",
     shortDescription: "围绕水域展开《枫桥夜泊》互动，点击诗句可以看到意象解释与氛围回应。",
     poemTitle: "枫桥夜泊",
@@ -106,11 +121,11 @@ const hotspots = [
     id: "ancient-wharf",
     title: "古渡口",
     type: "scenic",
-    position: { top: "70%", left: "25%" },
+    position: { lng: 120.56818, lat: 31.30796 },
     tag: "景点解读",
     shortDescription: "古渡口更接近日常流动的生活感，适合讲述商旅、水路与停泊记忆。",
     detail: "如果说桥身强调的是空间骨架，那么古渡口强调的就是人与水路的关系。这里承接停舟、换岸、短暂停留等动作，也让枫桥不只是诗里的意象，而是曾经真实运转的地方。",
-    highlights: ["更偏生活性与交通性记忆", "适合串联船行与停泊意象", "可作为游客理解‘夜泊’的现实场景入口"],
+    highlights: ["更偏生活性与交通性记忆", "适合串联船行与停泊意象", "可作为游客理解“夜泊”的现实场景入口"],
     image: scenicImage({
       palette: ["#dfe7e2", "#769183", "#efe2cb"],
       title: "古渡口",
@@ -121,10 +136,10 @@ const hotspots = [
     id: "bell-corridor",
     title: "钟声长廊",
     type: "scenic",
-    position: { top: "36%", left: "52%" },
+    position: { lng: 120.56845, lat: 31.30926 },
     tag: "景点解读",
-    shortDescription: "这里适合承接‘钟声到客船’的文化联想，把声音经验转化成叙事体验。",
-    detail: "钟声长廊并不需要复杂的机制，就能成为文化理解的锚点。它适合放置关于寒山寺钟声、夜半回响和游客记忆的解释，让用户从‘听到’的意象进入更完整的文化背景。",
+    shortDescription: "这里适合承接“钟声到客船”的文化联想，把声音经验转化成叙事体验。",
+    detail: "钟声长廊并不需要复杂的机制，就能成为文化理解的锚点。它适合放置关于寒山寺钟声、夜半回响和游客记忆的解释，让用户从“听到”的意象进入更完整的文化背景。",
     highlights: ["连接钟声、寺院与诗歌", "适合作为文化解读节点", "可扩展为声音播放或时间轴内容"],
     image: scenicImage({
       palette: ["#ead7bd", "#8f6545", "#f6e7c2"],
@@ -133,9 +148,6 @@ const hotspots = [
     })
   }
 ];
-
-let activeHotspot = null;
-let activePoemIndex = 0;
 
 const openModal = () => {
   if (!mapModal) {
@@ -254,30 +266,189 @@ const renderModal = (hotspot) => {
   openModal();
 };
 
-const createHotspotButton = (hotspot) => {
+const setMapStatus = (message) => {
+  if (mapStatus) {
+    mapStatus.textContent = message;
+  }
+};
+
+const showMapFallback = (message) => {
+  if (mapFallback) {
+    mapFallback.hidden = false;
+
+    const fallbackText = mapFallback.querySelector(".map-fallback-card p:last-child");
+    if (fallbackText) {
+      fallbackText.textContent = message;
+    }
+  }
+
+  if (mapSurface) {
+    mapSurface.setAttribute("aria-hidden", "true");
+  }
+
+  setMapStatus(message);
+};
+
+const hideMapFallback = () => {
+  if (mapFallback) {
+    mapFallback.hidden = true;
+  }
+
+  if (mapSurface) {
+    mapSurface.removeAttribute("aria-hidden");
+  }
+};
+
+const createMarkerContent = (hotspot) => {
   const button = document.createElement("button");
   button.type = "button";
-  button.className = `map-hotspot map-hotspot-${hotspot.type}`;
-  button.style.top = hotspot.position.top;
-  button.style.left = hotspot.position.left;
+  button.className = `map-hotspot-chip map-hotspot-${hotspot.type}`;
   button.setAttribute("aria-label", `打开${hotspot.title}${hotspot.tag}`);
   button.innerHTML = `
     <span class="map-hotspot-dot" aria-hidden="true"></span>
     <span class="map-hotspot-label">${hotspot.title}</span>
   `;
 
-  button.addEventListener("click", () => {
-    renderModal(hotspot);
-  });
-
   return button;
 };
 
-if (hotspotLayer) {
-  hotspots.forEach((hotspot) => {
-    hotspotLayer.appendChild(createHotspotButton(hotspot));
+const bindMarkerEvents = (marker, hotspot) => {
+  marker.on("click", () => {
+    renderModal(hotspot);
   });
-}
+};
+
+const createMapMarker = (hotspot) => {
+  const AMap = window.AMap;
+
+  if (!AMap || !mapInstance) {
+    throw new Error("AMap marker cannot be created before map initialization.");
+  }
+
+  const marker = new AMap.Marker({
+    position: [hotspot.position.lng, hotspot.position.lat],
+    content: createMarkerContent(hotspot),
+    anchor: "bottom-center",
+    offset: new AMap.Pixel(0, -4),
+    title: hotspot.title,
+  });
+
+  bindMarkerEvents(marker, hotspot);
+  marker.setMap(mapInstance);
+
+  return marker;
+};
+
+const loadExternalScript = (src, marker) =>
+  new Promise((resolve, reject) => {
+    const existingScript = document.querySelector(`script[data-${marker}="true"]`);
+
+    if (existingScript) {
+      if (existingScript.dataset.loaded === "true") {
+        resolve();
+        return;
+      }
+
+      existingScript.addEventListener("load", () => resolve(), { once: true });
+      existingScript.addEventListener("error", () => reject(new Error(`${marker} failed to load.`)), { once: true });
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = src;
+    script.async = true;
+    script.defer = true;
+    script.dataset[marker] = "true";
+    script.addEventListener(
+      "load",
+      () => {
+        script.dataset.loaded = "true";
+        resolve();
+      },
+      { once: true }
+    );
+    script.addEventListener("error", () => reject(new Error(`${marker} failed to load.`)), { once: true });
+    document.head.appendChild(script);
+  });
+
+const loadAmapSdk = async () => {
+  if (!MAP_CONFIG.key) {
+    throw new Error("Missing AMap key.");
+  }
+
+  if (window.AMap && window.AMapLoader) {
+    return window.AMapLoader.load({
+      key: MAP_CONFIG.key,
+      version: MAP_VERSION,
+    });
+  }
+
+  if (MAP_CONFIG.securityJsCode) {
+    window._AMapSecurityConfig = {
+      securityJsCode: MAP_CONFIG.securityJsCode,
+    };
+  }
+
+  await loadExternalScript("https://webapi.amap.com/loader.js", "amapLoader");
+
+  if (!window.AMapLoader) {
+    throw new Error("AMapLoader unavailable.");
+  }
+
+  return window.AMapLoader.load({
+    key: MAP_CONFIG.key,
+    version: MAP_VERSION,
+  });
+};
+
+const initInteractiveMap = async () => {
+  if (!mapSurface) {
+    return;
+  }
+
+  if (!MAP_CONFIG.key) {
+    showMapFallback("尚未配置高德地图 Key");
+    return;
+  }
+
+  setMapStatus("正在连接高德真实地图...");
+
+  try {
+    const AMap = await loadAmapSdk();
+
+    if (!AMap) {
+      throw new Error("AMap SDK unavailable.");
+    }
+
+    mapInstance = new AMap.Map("amap-container", {
+      viewMode: "2D",
+      center: MAP_CENTER,
+      zoom: MAP_ZOOM,
+      resizeEnable: true,
+      dragEnable: true,
+      zoomEnable: true,
+      doubleClickZoom: true,
+      jogEnable: false,
+      keyboardEnable: false,
+      features: ["bg", "road", "building", "point"],
+    });
+
+    const markers = hotspots.map((hotspot) => createMapMarker(hotspot));
+    const scenicBounds = new AMap.Bounds(SCENIC_BOUNDS.southWest, SCENIC_BOUNDS.northEast);
+
+    mapInstance.setBounds(scenicBounds, false, [88, 96, 88, 96]);
+    mapInstance.setFitView(markers, false, [132, 160, 88, 120], MAP_ZOOM);
+    mapInstance.setZoomAndCenter(Math.max(mapInstance.getZoom(), MAP_ZOOM), MAP_CENTER);
+
+    hideMapFallback();
+    setMapStatus("可点击地图热点以查看景点解读、祈福或诗意互动");
+  } catch (error) {
+    console.error(error);
+    showMapFallback(`真实地图加载失败：${error instanceof Error ? error.message : "请检查 Key、网络或浏览器控制台"}`);
+  }
+};
+
+initInteractiveMap();
 
 document.addEventListener("click", (event) => {
   const target = event.target;

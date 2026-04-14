@@ -28,10 +28,9 @@
         <span class="sr-only">打开导航</span>
       </button>
 
-      <nav class="site-nav" id="interactive-map-nav" aria-label="互动地图导航">
-        <a href="index.html">首页</a>
-        <a href="#map-explorer">地图探索</a>
-        <a href="#map-legend">热点图例</a>
+      <nav class="site-nav" id="interactive-map-nav" aria-label="全站导航">
+        <a href="index.html#top">首页</a>
+        <a href="interactive-map.html" aria-current="page">互动地图</a>
         <a href="photo-wall.html">照片墙</a>
         <a href="notice-board.html">公告栏</a>
         <a href="smart-agent.html">智能枫桥</a>
@@ -49,10 +48,6 @@
           <p class="hero-summary">
             这是一页面向游客的深度探索页面。你可以点击不同热点，打开景点详解、寒山寺祈福互动，或在水面区域参与《枫桥夜泊》的诗意体验。
           </p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="#map-explorer">开始探索</a>
-            <a class="button button-secondary" href="#map-legend">先看图例</a>
-          </div>
         </div>
 
         <aside class="interactive-map-panel" aria-label="互动地图概览">
@@ -84,7 +79,7 @@
           <div class="section-heading">
             <p class="eyebrow">地图探索</p>
             <h2>点击热点，沿着枫桥一带慢慢发现内容</h2>
-            <p>地图使用轻量插画式场景来承载交互，不依赖复杂地图引擎。景点、游戏和诗歌热点有不同标识，帮助你快速判断点开后会看到什么。</p>
+            <p>地图升级为真实底图承载交互。景点、游戏和诗歌热点有不同标识，帮助你快速判断点开后会看到什么，同时保留适合移动端演示的轻量抽屉式阅读体验。</p>
           </div>
 
           <div class="map-tips">
@@ -107,21 +102,17 @@
           </div>
 
           <section class="map-surface" aria-label="枫桥互动地图">
-            <div class="map-art">
-              <div class="map-water map-water-main"></div>
-              <div class="map-water map-water-branch"></div>
-              <div class="map-land map-land-left"></div>
-              <div class="map-land map-land-right"></div>
-              <div class="map-bridge"></div>
-              <div class="map-temple"></div>
-              <div class="map-wharf"></div>
-              <div class="map-garden"></div>
-              <div class="map-label map-label-bridge">枫桥</div>
-              <div class="map-label map-label-temple">寒山寺</div>
-              <div class="map-label map-label-water">水巷</div>
-              <div class="map-label map-label-wharf">古渡口</div>
+            <div class="map-surface-status" data-map-status>
+              正在准备真实地图...
             </div>
-            <div class="hotspot-layer" id="hotspot-layer" aria-live="polite"></div>
+            <div class="amap-container" id="amap-container" role="application" aria-label="枫桥真实互动地图"></div>
+            <div class="map-surface-fallback" data-map-fallback hidden>
+              <div class="map-fallback-card">
+                <p class="eyebrow">真实地图未就绪</p>
+                <h3>请配置高德地图 Key 后再加载</h3>
+                <p>当前页面已经预留真实地图接入位，并保留了热点与弹窗结构。补入高德 Web JS API Key 后，即可切换到真实地图底图浏览。</p>
+              </div>
+            </div>
           </section>
         </div>
       </section>
@@ -140,6 +131,15 @@
   </div>
 
   <script src="script.js"></script>
+  <script>
+    window.MAPLE_BRIDGE_AMAP_CONFIG = {
+      key: "11c583bdfcb34fafe908470c21b51516",
+      securityJsCode: "8ca28843964095842c507a0108f44b0f",
+      version: "2.0",
+      center: [120.56785, 31.30965],
+      zoom: 17.8
+    };
+  </script>
   <script src="interactive-map.js"></script>
 </body>
 </html>
