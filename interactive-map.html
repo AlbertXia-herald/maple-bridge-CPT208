@@ -1,23 +1,34 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>互动地图 | Maple Bridge</title>
-  <meta name="description" content="Maple Bridge 互动地图，支持景点解读、寒山寺祈福小游戏与《枫桥夜泊》诗意互动。">
+  <title>互动地图 | 枫盈枫桥</title>
+  <meta name="description" content="枫盈枫桥互动地图，支持景点解读、祈福互动与《枫桥夜泊》诗意体验。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20260414-maplegend">
+  <script>
+    (() => {
+      const buildVersion = `20260414-maplegend-fix-${Date.now()}`;
+      window.MAPLE_BRIDGE_ASSET_VERSION = buildVersion;
+
+      const styleLink = document.querySelector('link[href^="styles.css"]');
+      if (styleLink) {
+        styleLink.href = `styles.css?v=${buildVersion}`;
+      }
+    })();
+  </script>
 </head>
 <body class="interactive-map-page">
   <div class="page-shell">
     <header class="site-header">
-      <a class="brand" href="index.html" aria-label="返回 Maple Bridge 首页">
-        <span class="brand-mark">MB</span>
+      <a class="brand" href="index.html" aria-label="返回枫盈枫桥首页">
+        <span class="brand-mark"><img src="images/log.jpg" alt=""></span>
         <span class="brand-copy">
-          <strong>Maple Bridge</strong>
-          <span>枫桥文化导览</span>
+          <strong>枫盈枫桥</strong>
+          <span>枫桥景区文化导览</span>
         </span>
       </a>
 
@@ -46,31 +57,36 @@
             慢慢走进去。
           </h1>
           <p class="hero-summary">
-            这是一页面向游客的深度探索页面。你可以点击不同热点，打开景点详解、寒山寺祈福互动，或在水面区域参与《枫桥夜泊》的诗意体验。
+            你可以点击不同热点，查看景点解读、进入寒山寺祈福互动，或在水面区域参与《枫桥夜泊》的诗意体验。
           </p>
         </div>
 
-        <aside class="interactive-map-panel" aria-label="互动地图概览">
-          <article class="map-overview-card">
-            <span class="kicker">本页重点</span>
-            <strong>互动地图是核心可玩页</strong>
-            <p>不同热点会带来不同层次的内容反馈，让访问者在地图上逐步发现景点、故事与轻量互动。</p>
-          </article>
+        <aside class="interactive-map-panel" aria-label="路线推荐">
+          <section class="route-recommend-panel" id="route-recommend-panel">
+            <div class="route-panel-head">
+              <p class="eyebrow">路线推荐</p>
+              <h2>按停留时间与兴趣方向，挑一条更适合当下节奏的走法。</h2>
+              <p class="route-panel-note">先选时间，再定偏好。完成后会先在这里给出一条轻量摘要，想看完整建议时再打开详细路线弹窗。</p>
+            </div>
 
-          <div class="wall-stat-grid">
-            <article>
-              <span>5</span>
-              <p>个可点击热点</p>
-            </article>
-            <article>
-              <span>3</span>
-              <p>类弹窗体验</p>
-            </article>
-            <article>
-              <span>Mobile</span>
-              <p>底部抽屉式阅读</p>
-            </article>
-          </div>
+            <div class="route-picker">
+              <section class="route-picker-section" aria-label="按时间选择路线">
+                <div class="route-filter-head">
+                  <span class="kicker">时间</span>
+                </div>
+                <div class="route-filter-chips" id="route-time-options"></div>
+              </section>
+
+              <section class="route-picker-section" aria-label="按偏好选择路线">
+                <div class="route-filter-head">
+                  <span class="kicker">偏好</span>
+                </div>
+                <div class="route-filter-chips" id="route-preference-options"></div>
+              </section>
+            </div>
+
+            <article class="route-result-inline is-hidden" id="route-result-inline" aria-live="polite" hidden></article>
+          </section>
         </aside>
       </section>
 
@@ -79,26 +95,26 @@
           <div class="section-heading">
             <p class="eyebrow">地图探索</p>
             <h2>点击热点，沿着枫桥一带慢慢发现内容</h2>
-            <p>地图升级为真实底图承载交互。景点、游戏和诗歌热点有不同标识，帮助你快速判断点开后会看到什么，同时保留适合移动端演示的轻量抽屉式阅读体验。</p>
+            <p>地图升级为真实底图承载交互。圆形按钮用于景点介绍，三角形按钮用于玩法互动，帮助你在进入页面后立刻分清“看介绍”和“进体验”的不同入口。</p>
           </div>
 
           <div class="map-tips">
             <article class="map-tip-card">
               <h3>景点热点</h3>
-              <p>打开大尺寸底部信息面板，阅读景点介绍、历史片段与亮点。</p>
+              <p>圆形按钮会打开大尺寸底部信息面板，阅读景点介绍、历史片段与看点摘要。</p>
             </article>
             <article class="map-tip-card">
               <h3>玩法热点</h3>
-              <p>寒山寺可进行祈福小游戏，水域区域可进入《枫桥夜泊》互动。</p>
+              <p>三角形按钮代表玩法入口。寒山寺可进行祈福小游戏，水域区域可进入《枫桥夜泊》互动。</p>
             </article>
           </div>
         </div>
 
         <div class="map-surface-wrap">
           <div class="map-legend" id="map-legend" aria-label="热点图例">
-            <span class="legend-pill legend-scenic">景点解读</span>
-            <span class="legend-pill legend-game">祈福互动</span>
-            <span class="legend-pill legend-poem">诗意互动</span>
+            <span class="legend-pill legend-scenic legend-intro">景点解读</span>
+            <span class="legend-pill legend-game legend-play">祈福互动</span>
+            <span class="legend-pill legend-poem legend-play">诗意互动</span>
           </div>
 
           <section class="map-surface" aria-label="枫桥互动地图">
@@ -109,8 +125,8 @@
             <div class="map-surface-fallback" data-map-fallback hidden>
               <div class="map-fallback-card">
                 <p class="eyebrow">真实地图未就绪</p>
-                <h3>请配置高德地图 Key 后再加载</h3>
-                <p>当前页面已经预留真实地图接入位，并保留了热点与弹窗结构。补入高德 Web JS API Key 后，即可切换到真实地图底图浏览。</p>
+                <h3>地图暂时未能加载</h3>
+                <p>请稍后刷新页面，或检查当前网络环境后再次进入互动地图。</p>
               </div>
             </div>
           </section>
@@ -130,7 +146,20 @@
     </section>
   </div>
 
-  <script src="script.js"></script>
+  <div class="route-modal" id="route-modal" aria-hidden="true">
+    <div class="route-modal-backdrop" data-close-route-modal="true"></div>
+    <section class="route-sheet" role="dialog" aria-modal="true" aria-labelledby="route-modal-title">
+      <header class="route-sheet-header">
+        <div>
+          <div class="route-sheet-kicker">路线推荐</div>
+          <h2 id="route-modal-title">导览建议</h2>
+        </div>
+        <button class="route-sheet-close" type="button" id="route-modal-close" aria-label="关闭路线推荐弹窗">关闭</button>
+      </header>
+      <div class="route-sheet-body" id="route-modal-body"></div>
+    </section>
+  </div>
+
   <script>
     window.MAPLE_BRIDGE_AMAP_CONFIG = {
       key: "11c583bdfcb34fafe908470c21b51516",
@@ -140,6 +169,24 @@
       zoom: 17.8
     };
   </script>
-  <script src="interactive-map.js"></script>
+  <script>
+    (() => {
+      const assetVersion = window.MAPLE_BRIDGE_ASSET_VERSION || `20260414-maplegend-fix-${Date.now()}`;
+
+      const loadScript = (src) =>
+        new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = `${src}?v=${assetVersion}`;
+          script.onload = resolve;
+          script.onerror = () => reject(new Error(`${src} failed to load`));
+          document.body.appendChild(script);
+        });
+
+      loadScript("script.js")
+        .then(() => loadScript("interactive-map.js"))
+        .catch((error) => console.error("Map asset bootstrap failed:", error));
+    })();
+  </script>
 </body>
 </html>
+

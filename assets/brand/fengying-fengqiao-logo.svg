@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" fill="none">
+  <defs>
+    <linearGradient id="fy-bg" x1="36" y1="24" x2="220" y2="228" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF8F1"/>
+      <stop offset="1" stop-color="#F7EBDD"/>
+    </linearGradient>
+    <linearGradient id="fy-main" x1="52" y1="62" x2="202" y2="198" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F2B287"/>
+      <stop offset="1" stop-color="#F6C9A7"/>
+    </linearGradient>
+  </defs>
+  <rect x="12" y="12" width="232" height="232" rx="52" fill="url(#fy-bg)"/>
+  <path d="M58 136C79 123 96 112 111 100C122 91 133 84 145 84C158 84 170 91 182 101C195 112 208 123 221 133V154H58V136Z" fill="url(#fy-main)"/>
+  <path d="M73 137C88 129 102 120 116 109C127 100 136 96 145 96C154 96 165 100 178 109C190 117 202 125 213 133" stroke="#F0A97A" stroke-width="7" stroke-linecap="round"/>
+  <path d="M71 128L71 94M99 113L99 83M127 95L127 69M156 95L156 69M185 113L185 83M212 127L212 94" stroke="#F0A97A" stroke-width="7" stroke-linecap="round"/>
+  <path d="M77 151C90 146 99 143 110 143H167C182 143 195 147 214 154V184H42V154C54 151 64 151 77 151Z" fill="url(#fy-main)"/>
+  <path d="M82 154C93 118 113 99 142 99C171 99 190 119 199 154" stroke="#FFF8F1" stroke-width="8" stroke-linecap="round"/>
+  <path d="M95 154C104 126 121 112 142 112C163 112 177 127 185 154" stroke="#F7D8BE" stroke-width="5" stroke-linecap="round"/>
+  <path d="M54 167H116M141 167H188M62 179H102M147 179H206M48 190H128M154 190H193M80 202H152" stroke="#FFF8F1" stroke-width="6" stroke-linecap="round"/>
+  <path d="M52 86L61 76L58 65L67 72L77 67L73 78L81 87L69 86L63 96L60 85L52 86Z" fill="#F3B48D"/>
+  <path d="M86 61L97 48L93 34L108 44L123 39L117 54L129 66L112 65L102 80L98 64L86 61Z" fill="#F2B287"/>
+  <path d="M122 43L132 31L129 19L142 27L155 24L150 37L161 48L147 47L138 59L135 46L122 43Z" fill="#F6C39D"/>
+</svg>

@@ -34,7 +34,7 @@ const createAssistantMarkup = (mode = "page") => {
   return `
     <section class="assistant-shell assistant-shell-${mode}">
       <header class="assistant-intro">
-        <p class="eyebrow">Smart Maple Bridge</p>
+        <p class="eyebrow">Fengying Fengqiao Guide</p>
         <h2>${smartKnowledge.greeting.title}</h2>
         <p>${smartKnowledge.greeting.helper}</p>
       </header>

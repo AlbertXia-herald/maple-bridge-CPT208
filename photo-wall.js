@@ -1,6 +1,11 @@
 const galleryGrid = document.querySelector("#gallery-grid");
 const uploadInput = document.querySelector("#photo-upload-input");
 const photoCount = document.querySelector("#photo-count");
+const photoLightbox = document.querySelector("#photo-lightbox");
+const photoLightboxImage = document.querySelector("#photo-lightbox-image");
+const photoLightboxTitle = document.querySelector("#photo-lightbox-title");
+const photoLightboxDate = document.querySelector("#photo-lightbox-date");
+const photoLightboxCloseButtons = document.querySelectorAll("[data-photo-lightbox-close]");
 
 const createSceneSvg = ({ palette, title, subtitle, aspect = "4:5" }) => {
   const [first, second, third] = palette;
@@ -39,7 +44,7 @@ const mockPhotos = [
     image: createSceneSvg({
       palette: ["#e7dac8", "#b7835f", "#f8eddc"],
       title: "桥边光影",
-      subtitle: "Maple Bridge"
+      subtitle: "枫盈枫桥"
     })
   },
   {
@@ -114,24 +119,55 @@ const mockPhotos = [
   }
 ];
 
+const openPhotoLightbox = (photo) => {
+  if (!photoLightbox || !photoLightboxImage || !photoLightboxTitle || !photoLightboxDate) {
+    return;
+  }
+
+  photoLightboxImage.src = photo.image;
+  photoLightboxImage.alt = photo.alt;
+  photoLightboxTitle.textContent = photo.title;
+  photoLightboxDate.textContent = photo.date;
+  photoLightbox.classList.add("is-open");
+  photoLightbox.setAttribute("aria-hidden", "false");
+  document.body.classList.add("photo-lightbox-open");
+};
+
+const closePhotoLightbox = () => {
+  if (!photoLightbox || !photoLightboxImage || !photoLightboxTitle || !photoLightboxDate) {
+    return;
+  }
+
+  photoLightbox.classList.remove("is-open");
+  photoLightbox.setAttribute("aria-hidden", "true");
+  photoLightboxImage.src = "";
+  photoLightboxImage.alt = "";
+  photoLightboxTitle.textContent = "枫桥瞬间";
+  photoLightboxDate.textContent = "";
+  document.body.classList.remove("photo-lightbox-open");
+};
+
 const createPhotoCard = (photo) => {
   const card = document.createElement("article");
   card.className = "photo-card";
-  card.dataset.tag = photo.tag;
+  card.dataset.tag = photo.tag || "";
 
   card.innerHTML = `
-    <figure class="photo-frame ${photo.isUploaded ? "photo-frame-uploaded" : ""}">
+    <button class="photo-frame ${photo.isUploaded ? "photo-frame-uploaded" : ""}" type="button" aria-label="放大查看 ${photo.title}">
       <img src="${photo.image}" alt="${photo.alt}" loading="lazy">
-    </figure>
+    </button>
     <div class="photo-card-copy">
       <div class="photo-card-meta">
-        <span class="photo-chip">${photo.tag}</span>
         <span class="photo-date">${photo.date}</span>
       </div>
       <h3>${photo.title}</h3>
-      <p>由 ${photo.uploader} 分享</p>
     </div>
   `;
+
+  const trigger = card.querySelector(".photo-frame");
+  if (trigger) {
+    trigger.addEventListener("click", () => openPhotoLightbox(photo));
+  }
 
   return card;
 };
@@ -164,7 +200,7 @@ if (uploadInput) {
     const uploadedPhotos = files.map((file, index) => ({
       id: `upload-${Date.now()}-${index}`,
       title: file.name.replace(/\.[^.]+$/, "") || "新上传照片",
-      uploader: "本地预览",
+      uploader: "枫盈枫桥用户",
       date: new Date().toISOString().slice(0, 10).replace(/-/g, "."),
       tag: "新上传",
       alt: `用户上传的枫桥照片预览：${file.name}`,
@@ -175,3 +211,13 @@ if (uploadInput) {
     renderGallery([...uploadedPhotos, ...mockPhotos]);
   });
 }
+
+photoLightboxCloseButtons.forEach((button) => {
+  button.addEventListener("click", closePhotoLightbox);
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && photoLightbox?.classList.contains("is-open")) {
+    closePhotoLightbox();
+  }
+});

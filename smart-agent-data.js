@@ -14,17 +14,17 @@ window.smartMapleBridgeKnowledge = {
   responses: {
     "了解枫桥": {
       title: "先认识枫桥",
-      text: "枫桥最适合先从“古桥、水巷、寒山寺”三条线索理解。首页导览能帮你快速建立整体印象，再决定继续看地图、照片还是公告。",
+      text: "枫桥最适合先从古桥、水巷和寒山寺三条线索理解。首页导览能帮你快速建立整体印象，再决定继续看地图、照片还是公告。",
       links: [
         { label: "前往首页导览", href: "index.html#guide" },
-        { label: "查看枫桥漫游", href: "index.html#wander" }
+        { label: "查看景区信息", href: "index.html#services" }
       ]
     },
     "今日推荐路线": {
       title: "今天适合这样走",
-      text: "如果你是第一次来，建议先看首页导览，再进入互动地图建立空间感，最后用照片墙补足氛围。如果时间更紧，可以直接看首页的“枫桥漫游”。",
+      text: "如果你是第一次来，建议先看首页导览，再进入互动地图建立空间感，最后用照片墙补足氛围。如果时间更紧，可以先看首页的核心信息和服务提示。",
       links: [
-        { label: "查看推荐路径", href: "index.html#wander" },
+        { label: "查看首页导览", href: "index.html#guide" },
         { label: "进入互动地图", href: "interactive-map.html" }
       ]
     },
@@ -37,7 +37,7 @@ window.smartMapleBridgeKnowledge = {
     },
     "查看照片墙": {
       title: "去看看大家留下的枫桥瞬间",
-      text: "照片墙更适合轻松浏览氛围、人物和日常片段，也适合作为课程展示里的视觉页面。你还可以在那里模拟本地上传预览。",
+      text: "照片墙更适合轻松浏览氛围、人物和日常片段，也方便随手上传你在枫桥拍下的瞬间。",
       links: [
         { label: "打开照片墙", href: "photo-wall.html" }
       ]
@@ -59,7 +59,7 @@ window.smartMapleBridgeKnowledge = {
     },
     "我想快速看懂枫桥": {
       title: "用最短路径了解枫桥",
-      text: "建议先浏览首页导览区，再看“枫桥漫游”。这样可以在较短时间内建立景点印象和页面结构感知。",
+      text: "建议先浏览首页导览区，再看服务信息和互动入口。这样可以在较短时间内建立景点印象与浏览顺序。",
       links: [
         { label: "回到首页导览", href: "index.html#guide" }
       ]
@@ -82,7 +82,7 @@ window.smartMapleBridgeKnowledge = {
   },
   fallback: {
     title: "可以这样继续",
-    text: "我目前是原型阶段的规则式助手，最适合帮你在“导览、路线、互动地图、照片墙、公告栏”之间快速找到下一步。",
+    text: "我会帮你在导览、路线、互动地图、照片墙和公告栏之间快速找到下一步。",
     links: [
       { label: "回到首页概览", href: "index.html" },
       { label: "查看完整助手页", href: "smart-agent.html" }

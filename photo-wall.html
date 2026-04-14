@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>照片墙 | Maple Bridge</title>
-  <meta name="description" content="Maple Bridge 照片墙，展示用户分享的枫桥时刻，支持轻量上传占位与移动端友好浏览。">
+  <title>照片墙 | 枫盈枫桥</title>
+  <meta name="description" content="枫盈枫桥照片墙，浏览大家留下的枫桥瞬间，并上传自己的影像记录。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,11 +13,11 @@
 <body class="photo-wall-page">
   <div class="page-shell">
     <header class="site-header">
-      <a class="brand" href="index.html" aria-label="返回 Maple Bridge 首页">
-        <span class="brand-mark">MB</span>
+      <a class="brand" href="index.html" aria-label="返回枫盈枫桥首页">
+        <span class="brand-mark"><img src="images/log.jpg" alt=""></span>
         <span class="brand-copy">
-          <strong>Maple Bridge</strong>
-          <span>枫桥文化导览</span>
+          <strong>枫盈枫桥</strong>
+          <span>枫桥景区文化导览</span>
         </span>
       </a>
 
@@ -46,59 +46,28 @@
             轻轻挂上来。
           </h1>
           <p class="hero-summary">
-            照片墙是一页独立的共享相册。它优先服务浏览体验，让访问者先看到真实的枫桥时刻，再通过轻量上传入口参与这面不断生长的社区墙。
+            照片墙汇集了游客与居民在枫桥留下的光影瞬间，也欢迎你把自己的所见所感一并挂上来。
           </p>
         </div>
 
-        <aside class="photo-wall-hero-panel" aria-label="照片墙概览">
-          <article class="wall-stat-card">
-            <span class="kicker">本页定位</span>
-            <strong>共享相册入口</strong>
-            <p>突出图片浏览、轻量上传意图与社区感，方便课程展示与后续接入真实接口。</p>
-          </article>
+        <aside class="photo-wall-hero-panel" aria-label="上传入口">
+          <article class="photo-wall-upload-card">
+            <div class="photo-wall-upload-intro">
+              <p class="eyebrow">上传入口</p>
+              <h2>上传一张照片</h2>
+              <p>选中图片后即可查看效果</p>
+            </div>
 
-          <div class="wall-stat-grid">
-            <article>
-              <span id="photo-count">0</span>
-              <p>张精选照片</p>
-            </article>
-            <article>
-              <span>Mixed</span>
-              <p>多种画幅</p>
-            </article>
-            <article>
-              <span>Upload</span>
-              <p>支持本地预览</p>
-            </article>
-          </div>
+            <label class="upload-dropzone upload-dropzone-hero" for="photo-upload-input">
+              <span class="upload-icon" aria-hidden="true">+</span>
+              <strong>把这一刻挂上来</strong>
+              <span>选择图片后会在下方即时预览</span>
+              <input id="photo-upload-input" type="file" accept="image/*" multiple>
+            </label>
+
+            <p class="photo-wall-hero-meta">当前已展示 <span id="photo-count">0</span> 张照片</p>
+          </article>
         </aside>
-      </section>
-
-      <section class="photo-wall-upload section" id="upload-entry">
-        <div class="upload-heading">
-          <div class="section-heading">
-            <p class="eyebrow">上传入口</p>
-            <h2>分享你的 Maple Bridge moment</h2>
-            <p>当前为原型阶段的轻量上传入口。你可以先本地选择图片进行页面内预览，后续再连接真实上传接口与云端存储。</p>
-          </div>
-          <label class="upload-dropzone" for="photo-upload-input">
-            <span class="upload-icon" aria-hidden="true">+</span>
-            <strong>上传一张照片</strong>
-            <span>支持本地预览，暂不上传到服务器</span>
-            <input id="photo-upload-input" type="file" accept="image/*" multiple>
-          </label>
-        </div>
-
-        <div class="upload-actions" aria-label="上传提示">
-          <article class="upload-note-card">
-            <h3>推荐内容</h3>
-            <p>桥面、河道、寺边街景、夜色、手写游记、与枫桥相关的小细节。</p>
-          </article>
-          <article class="upload-note-card">
-            <h3>当前状态</h3>
-            <p>已实现页面内 mock 数据展示与本地预览，真实账号、数据库和审核流程仍保留为后续扩展。</p>
-          </article>
-        </div>
       </section>
 
       <section class="photo-wall-gallery section" id="shared-gallery">
@@ -106,20 +75,31 @@
           <div class="section-heading">
             <p class="eyebrow">共享照片墙</p>
             <h2>浏览大家留下的枫桥瞬间</h2>
-            <p>卡片文字保持简洁，让画面成为主角。不同尺寸的图片以稳定节奏排列，兼顾移动端浏览与截图展示效果。</p>
-          </div>
-
-          <div class="gallery-filters" aria-label="照片标签">
-            <button class="gallery-chip is-active" type="button">全部</button>
-            <button class="gallery-chip" type="button">桥与水巷</button>
-            <button class="gallery-chip" type="button">暮色与灯影</button>
-            <button class="gallery-chip" type="button">生活片段</button>
           </div>
         </div>
 
         <div class="gallery-grid" id="gallery-grid" aria-live="polite"></div>
       </section>
     </main>
+  </div>
+
+  <div class="photo-lightbox" id="photo-lightbox" aria-hidden="true">
+    <div class="photo-lightbox-backdrop" data-photo-lightbox-close></div>
+    <section class="photo-lightbox-sheet" role="dialog" aria-modal="true" aria-labelledby="photo-lightbox-title">
+      <header class="photo-lightbox-header">
+        <div class="photo-lightbox-copy">
+          <p class="photo-lightbox-kicker">照片预览</p>
+          <h2 id="photo-lightbox-title">枫桥瞬间</h2>
+          <p class="photo-lightbox-date" id="photo-lightbox-date"></p>
+        </div>
+        <button class="photo-lightbox-close" type="button" data-photo-lightbox-close>关闭</button>
+      </header>
+      <div class="photo-lightbox-body">
+        <figure class="photo-lightbox-media">
+          <img id="photo-lightbox-image" src="" alt="">
+        </figure>
+      </div>
+    </section>
   </div>
 
   <script src="script.js"></script>
