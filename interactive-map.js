@@ -25,7 +25,8 @@ const SCENIC_BOUNDS = {
 
 let mapInstance = null;
 let activeHotspot = null;
-let activePoemIndex = 0;
+let activePoemImageryId = "";
+let fortuneShakeTimer = null;
 let activeRouteFilters = {
   time: "",
   preference: "",
@@ -56,6 +57,18 @@ const scenicImage = ({ palette, title, subtitle }) => {
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 };
 
+const MAP_SCENE_IMAGE_BY_ID = {
+  "ancient-wharf": "images/map_scene/ancient-dock.jpg",
+  "bell-corridor": "images/map_scene/bell-gallary.jpg",
+  "fengqiao-bridge": "images/map_scene/maple-bridge-body.jpg",
+  "fengqiao-old-town": "images/map_scene/maple-bridge-town.jpg",
+  "jiangcun-bridge": "images/map_scene/jiangcun-bridge.jpg",
+  "tieling-pass": "images/map_scene/tielingguan.jpg",
+  "grand-canal": "images/map_scene/ancient-manual-river.jpg",
+  "opera-stage-square": "images/map_scene/ancient-dramatic-planet-square.jpg",
+  "puming-pagoda": "images/map_scene/puming-tower.jpg",
+};
+
 const hotspots = [
   {
     id: "fengqiao-bridge",
@@ -66,7 +79,7 @@ const hotspots = [
     shortDescription: "从桥身向两侧望去，可以同时感受到水巷尺度与游线转折，是枫桥最适合建立空间印象的位置。",
     detail: "枫桥不仅是一个地理节点，更是诗意意象的聚合点。站在桥面上，能直观理解桥、水、寺、街巷之间的相互关系，也是游客初次到访时最容易形成“我已经到了枫桥”这一感受的地方。",
     highlights: ["桥上视角适合建立空间认知", "可串联寒山寺、水巷与步行流线", "是讲述《枫桥夜泊》意象的最佳起点"],
-    image: scenicImage({
+    image: MAP_SCENE_IMAGE_BY_ID["fengqiao-bridge"] || scenicImage({
       palette: ["#eadbc7", "#b88660", "#f6e5c3"],
       title: "枫桥桥身",
       subtitle: "Bridge View"
@@ -109,25 +122,75 @@ const hotspots = [
     type: "poem",
     position: { lng: 120.56655, lat: 31.30948 },
     tag: "诗意互动",
-    shortDescription: "围绕水域展开《枫桥夜泊》互动，点击诗句可以看到意象解释与氛围回应。",
+    shortDescription: "围绕水域展开《枫桥夜泊》互动，点击诗中的关键意象，可以看到对应解析与画面回应。",
     poemTitle: "枫桥夜泊",
     poemAuthor: "张继",
     poemLines: [
       {
-        line: "月落乌啼霜满天",
-        note: "这一句把听觉、视觉和体感并置在一起，开场就建立了深夜、清冷而辽阔的氛围。"
+        text: "月落乌啼霜满天",
+        segments: [
+          { type: "imagery", imageryId: "moon-crow", text: "月落乌啼" },
+          { type: "text", text: "霜满天" }
+        ]
       },
       {
-        line: "江枫渔火对愁眠",
-        note: "江边枫树与渔火让空间有了落点，也让情绪有了停驻之处，是诗里最有画面感的一句。"
+        text: "江枫渔火对愁眠",
+        segments: [
+          { type: "imagery", imageryId: "river-maple-lights", text: "江枫渔火" },
+          { type: "text", text: "对愁眠" }
+        ]
       },
       {
-        line: "姑苏城外寒山寺",
-        note: "从水上夜景回到明确地点，寒山寺在这里不是背景板，而是情感坐标。"
+        text: "姑苏城外寒山寺",
+        segments: [
+          { type: "imagery", imageryId: "gusu-city", text: "姑苏城" },
+          { type: "text", text: "外" },
+          { type: "imagery", imageryId: "hanshan-temple", text: "寒山寺" }
+        ]
       },
       {
-        line: "夜半钟声到客船",
-        note: "钟声的抵达让诗从静景变成被触动的体验，也因此和枫桥、寒山寺长期连在一起。"
+        text: "夜半钟声到客船",
+        segments: [
+          { type: "imagery", imageryId: "midnight-bell", text: "夜半钟声" },
+          { type: "text", text: "到客船" }
+        ]
+      }
+    ],
+    imageryNotes: [
+      {
+        id: "moon-crow",
+        label: "月落乌啼",
+        title: "月落乌啼",
+        note: "月色渐沉、乌啼忽起，把夜航人的听觉与天色变化一起推到眼前。它不是单纯写景，而是在第一瞬就把枫桥夜泊的清寒、惊醒与漂泊感安静地铺开。",
+        image: "images/poem/yueluowuti.jpg"
+      },
+      {
+        id: "river-maple-lights",
+        label: "江枫渔火",
+        title: "江枫渔火",
+        note: "江边枫影与点点渔火让广阔水面忽然有了可停驻的画面焦点，也让旅人的情绪落到可感知的地方。它把远夜写得不空，给整首诗添上最鲜明的人间温度。",
+        image: "images/poem/jiangfengyuhuo.jpg"
+      },
+      {
+        id: "gusu-city",
+        label: "姑苏城",
+        title: "姑苏城",
+        note: "诗句写到姑苏城，水上的夜色便有了真实坐标。它把前两句的氛围感引回苏州这座古城，也让读者意识到，这份愁绪并不是虚景，而是停泊在可被抵达的地方文化中。",
+        image: "images/poem/gusu_city.jpg"
+      },
+      {
+        id: "hanshan-temple",
+        label: "寒山寺",
+        title: "寒山寺",
+        note: "寒山寺在诗中像一枚沉稳的文化锚点，让漂泊的夜晚突然有了精神寄托。它不仅提示地点，更把寺院、钟声与旅人心绪连成枫桥最经典的一层记忆。",
+        image: "images/poem/hanshan_temple.jpg"
+      },
+      {
+        id: "midnight-bell",
+        label: "夜半钟声",
+        title: "夜半钟声",
+        note: "钟声穿过深夜传到客船，是整首诗里最有穿透力的瞬间。它让原本静止的夜景突然流动起来，也把旅人的孤寂、寺院的回响与枫桥的文化意象一起留在记忆里。",
+        image: "images/poem/midnight_bell_sound.jpg"
       }
     ]
   },
@@ -140,7 +203,7 @@ const hotspots = [
     shortDescription: "古渡口更接近日常流动的生活感，适合讲述商旅、水路与停泊记忆。",
     detail: "如果说桥身强调的是空间骨架，那么古渡口强调的就是人与水路的关系。这里承接停舟、换岸、短暂停留等动作，也让枫桥不只是诗里的意象，而是曾经真实运转的地方。",
     highlights: ["更偏生活性与交通性记忆", "适合串联船行与停泊意象", "可作为游客理解“夜泊”的现实场景入口"],
-    image: scenicImage({
+    image: MAP_SCENE_IMAGE_BY_ID["ancient-wharf"] || scenicImage({
       palette: ["#dfe7e2", "#769183", "#efe2cb"],
       title: "古渡口",
       subtitle: "Old Wharf"
@@ -155,7 +218,7 @@ const hotspots = [
     shortDescription: "这里适合承接“钟声到客船”的文化联想，把声音经验转化成叙事体验。",
     detail: "钟声长廊并不需要复杂的机制，就能成为文化理解的锚点。它适合放置关于寒山寺钟声、夜半回响和游客记忆的解释，让用户从“听到”的意象进入更完整的文化背景。",
     highlights: ["连接钟声、寺院与诗歌", "适合作为文化解读节点", "可扩展为声音播放或时间轴内容"],
-    image: scenicImage({
+    image: MAP_SCENE_IMAGE_BY_ID["bell-corridor"] || scenicImage({
       palette: ["#ead7bd", "#8f6545", "#f6e7c2"],
       title: "钟声长廊",
       subtitle: "Bell Echo"
@@ -170,7 +233,7 @@ const hotspots = [
     shortDescription: "江村桥与枫桥共同构成这片景区最重要的桥梁意象，是理解水路与步行游线关系的关键点位。",
     detail: "江村桥更偏向空间秩序与交通组织的理解入口。站在这里，可以看清桥、水、岸线与寺院之间的层次关系，也能把“桥畔夜泊”的诗意感受落回到真实的地理场景中。",
     highlights: ["适合观察桥梁与古运河的相对关系", "可与枫桥桥身形成对照观看", "是游客建立景区空间感的重要节点"],
-    image: scenicImage({
+    image: MAP_SCENE_IMAGE_BY_ID["jiangcun-bridge"] || scenicImage({
       palette: ["#e6dccd", "#9a7050", "#f2dfba"],
       title: "江村桥",
       subtitle: "Jiangcun Bridge"
@@ -185,7 +248,7 @@ const hotspots = [
     shortDescription: "铁岭关强调的是枫桥一带更厚重的历史边界感，让游览从桥与水延伸到关隘与防守记忆。",
     detail: "相比桥梁与水巷的柔和感受，铁岭关更适合讲述枫桥一带在历史上的出入节点与关防意味。它让这片景区不只是诗意夜泊的地方，也保留了古代交通与边界管理的层次。",
     highlights: ["适合承接历史边界与关防叙事", "为空间体验补充更厚重的历史语境", "能与桥、水、寺形成更完整的文化层次"],
-    image: scenicImage({
+    image: MAP_SCENE_IMAGE_BY_ID["tieling-pass"] || scenicImage({
       palette: ["#ddd2c4", "#8d6649", "#e9d6b3"],
       title: "铁岭关",
       subtitle: "Tieling Pass"
@@ -200,7 +263,7 @@ const hotspots = [
     shortDescription: "古运河是这片景区真正的流动背景，桥、渡口、钟声和夜泊意象都要回到这条水路上理解。",
     detail: "古运河并不是地图上的陪衬，而是枫桥景区叙事真正流动起来的主线。顺着河道看过去，桥梁、寺院、停泊与商旅往来会被串成一个整体，也让《枫桥夜泊》的情绪有了现实依托。",
     highlights: ["连接桥梁、渡口与船行意象", "是理解夜泊与钟声传播的真实媒介", "适合做整条游线的背景认知节点"],
-    image: scenicImage({
+    image: MAP_SCENE_IMAGE_BY_ID["grand-canal"] || scenicImage({
       palette: ["#d8e2e1", "#6c8790", "#efe1c9"],
       title: "古运河",
       subtitle: "Grand Canal"
@@ -215,7 +278,7 @@ const hotspots = [
     shortDescription: "古镇部分承接更接近日常的街巷体验，让游客从“看景点”过渡到“感受地方生活肌理”。",
     detail: "枫桥古镇的意义在于补足生活性的感受。相比桥与寺的高辨识度地标，这里更适合讲述街巷、商铺、停留节奏和地方气质，让整段游览不止停留在几个打卡点之间。",
     highlights: ["适合理解枫桥的街巷与生活感", "能承接更缓慢的步行浏览体验", "帮助景区从地标观看延伸到地方氛围"],
-    image: scenicImage({
+    image: MAP_SCENE_IMAGE_BY_ID["fengqiao-old-town"] || scenicImage({
       palette: ["#e8ddcf", "#b37f58", "#f4e7cf"],
       title: "枫桥古镇",
       subtitle: "Old Town"
@@ -230,7 +293,7 @@ const hotspots = [
     shortDescription: "古戏台广场更适合承接公共活动与文化展示的想象，是景区里更具聚集感与演出感的位置。",
     detail: "古戏台广场让枫桥的文化体验从静态观看延伸到公共活动场景。它适合讲述节庆、表演、临时展演与游客停留，帮助用户理解景区也可以是被共同使用、共同观看的文化空间。",
     highlights: ["强化景区的公共活动感", "适合扩展节庆或演出内容", "是从静态风景进入公共文化空间的重要节点"],
-    image: scenicImage({
+    image: MAP_SCENE_IMAGE_BY_ID["opera-stage-square"] || scenicImage({
       palette: ["#ead8ca", "#9c6544", "#f1ddbb"],
       title: "古戏台广场",
       subtitle: "Stage Square"
@@ -245,7 +308,7 @@ const hotspots = [
     shortDescription: "普明宝塔为景区补充了更鲜明的垂直地标感，也让寺院文化的层次更加完整。",
     detail: "普明宝塔适合被理解为视线中的垂直锚点。相比桥和运河的水平展开，宝塔让这片区域拥有了更明显的上升感与纪念感，也为景区的宗教与历史氛围增加了另一层识别度。",
     highlights: ["提供明显的垂直地标识别", "补足寺院文化与历史层次", "适合作为景区轮廓中的视觉锚点"],
-    image: scenicImage({
+    image: MAP_SCENE_IMAGE_BY_ID["puming-pagoda"] || scenicImage({
       palette: ["#e4d5c2", "#916447", "#eedab7"],
       title: "普明宝塔",
       subtitle: "Puming Pagoda"
@@ -595,6 +658,9 @@ const gameTemplate = (hotspot) => `
       <h2 id="map-modal-title">${hotspot.title}</h2>
       <p class="sheet-lead">${hotspot.intro}</p>
     </div>
+    <figure class="fortune-vessel" id="fortune-vessel" aria-hidden="true">
+      <img src="images/qiangtong.png" alt="" loading="lazy" decoding="async">
+    </figure>
   </article>
   <section class="sheet-section">
     <h3>玩法说明</h3>
@@ -610,30 +676,71 @@ const gameTemplate = (hotspot) => `
   </section>
 `;
 
+const renderPoemLineSegments = (segments, activeImageryId) =>
+  segments
+    .map((segment) => {
+      if (segment.type === "imagery") {
+        const isActive = segment.imageryId === activeImageryId;
+        return `
+          <button
+            class="poem-imagery${isActive ? " is-active" : ""}"
+            type="button"
+            data-poem-imagery="${segment.imageryId}"
+            aria-pressed="${isActive ? "true" : "false"}"
+          >
+            ${segment.text}
+          </button>
+        `;
+      }
+
+      return `<span class="poem-text-fragment">${segment.text}</span>`;
+    })
+    .join("");
+
+const createPoemNoteMarkup = (imagery) => {
+  if (!imagery) {
+    return `
+      <div class="poem-note-empty">
+        <strong>点开一个意象，慢慢读进枫桥夜色。</strong>
+        <p>点击诗中加粗的词语，下方会出现对应的画面和诗文解析。</p>
+      </div>
+    `;
+  }
+
+  return `
+    <figure class="poem-note-media">
+      <img src="${imagery.image}" alt="${imagery.title}意象示意图" loading="lazy" decoding="async">
+    </figure>
+    <div class="poem-note-copy">
+      <strong>${imagery.title}</strong>
+      <p>${imagery.note}</p>
+    </div>
+  `;
+};
+
 const poemTemplate = (hotspot) => `
   <article class="sheet-hero sheet-hero-soft">
     <div class="sheet-copy">
       <p class="sheet-tag">${hotspot.tag}</p>
       <h2 id="map-modal-title">${hotspot.poemTitle}</h2>
-      <p class="sheet-lead">点击每一行诗句，查看它在枫桥水域语境中的意象解释，让阅读变成一次缓慢参与的过程。</p>
+      <p class="sheet-lead">诗句中的五个关键意象已经被标记出来。点开它们，让《枫桥夜泊》的画面、地点与回响在下方慢慢展开。</p>
       <p class="poem-author">${hotspot.poemAuthor}</p>
     </div>
   </article>
   <section class="sheet-section">
-    <div class="poem-lines" id="poem-lines">
+    <div class="poem-lines" id="poem-lines" aria-label="${hotspot.poemTitle}全文">
       ${hotspot.poemLines
         .map(
-          (item, index) => `
-            <button class="poem-line ${index === 0 ? "is-active" : ""}" type="button" data-poem-index="${index}">
-              ${item.line}
-            </button>
+          (item) => `
+            <p class="poem-line">
+              ${renderPoemLineSegments(item.segments, activePoemImageryId)}
+            </p>
           `
         )
         .join("")}
     </div>
     <div class="poem-note" id="poem-note">
-      <strong>${hotspot.poemLines[0].line}</strong>
-      <p>${hotspot.poemLines[0].note}</p>
+      ${createPoemNoteMarkup(null)}
     </div>
   </section>
 `;
@@ -655,12 +762,34 @@ const renderModal = (hotspot) => {
   }
 
   if (hotspot.type === "poem") {
-    activePoemIndex = 0;
+    activePoemImageryId = "";
     mapModalBody.innerHTML = poemTemplate(hotspot);
   }
 
   openModal();
 };
+
+const triggerFortuneVesselShake = () => {
+  const fortuneVessel = document.querySelector("#fortune-vessel");
+
+  if (!(fortuneVessel instanceof HTMLElement)) {
+    return;
+  }
+
+  fortuneVessel.classList.remove("is-shaking");
+  void fortuneVessel.offsetWidth;
+  fortuneVessel.classList.add("is-shaking");
+
+  if (fortuneShakeTimer) {
+    window.clearTimeout(fortuneShakeTimer);
+  }
+
+  fortuneShakeTimer = window.setTimeout(() => {
+    fortuneVessel.classList.remove("is-shaking");
+    fortuneShakeTimer = null;
+  }, 900);
+};
+
 
 const setMapStatus = (message) => {
   if (mapStatus) {
@@ -869,6 +998,7 @@ document.addEventListener("click", (event) => {
   }
 
   if (target.dataset.fortuneAction === "draw" && activeHotspot?.type === "game") {
+    triggerFortuneVesselShake();
     const pool = activeHotspot.fortunes;
     const fortune = pool[Math.floor(Math.random() * pool.length)];
     const fortuneResult = document.querySelector("#fortune-result");
@@ -893,23 +1023,21 @@ document.addEventListener("click", (event) => {
     }
   }
 
-  if (target.dataset.poemIndex && activeHotspot?.type === "poem") {
-    const poemIndex = Number(target.dataset.poemIndex);
-    activePoemIndex = poemIndex;
+  if (target.dataset.poemImagery && activeHotspot?.type === "poem") {
+    activePoemImageryId = target.dataset.poemImagery;
 
-    const poemButtons = document.querySelectorAll(".poem-line");
-    poemButtons.forEach((button, index) => {
-      button.classList.toggle("is-active", index === activePoemIndex);
+    const poemButtons = document.querySelectorAll(".poem-imagery");
+    poemButtons.forEach((button) => {
+      const isActive = button.getAttribute("data-poem-imagery") === activePoemImageryId;
+      button.classList.toggle("is-active", isActive);
+      button.setAttribute("aria-pressed", isActive ? "true" : "false");
     });
 
     const poemNote = document.querySelector("#poem-note");
-    const line = activeHotspot.poemLines[activePoemIndex];
+    const imagery = activeHotspot.imageryNotes.find((item) => item.id === activePoemImageryId);
 
-    if (poemNote && line) {
-      poemNote.innerHTML = `
-        <strong>${line.line}</strong>
-        <p>${line.note}</p>
-      `;
+    if (poemNote && imagery) {
+      poemNote.innerHTML = createPoemNoteMarkup(imagery);
     }
   }
 });

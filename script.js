@@ -1,6 +1,54 @@
 const menuToggle = document.querySelector(".menu-toggle");
 const siteNav = document.querySelector(".site-nav");
 const navLinks = document.querySelectorAll(".site-nav a");
+const seniorModeToggle = document.querySelector("[data-senior-mode-toggle]");
+const languageToggle = document.querySelector("[data-language-toggle]");
+const SENIOR_MODE_STORAGE_KEY = "mapleBridgeSeniorMode";
+
+const readSeniorModePreference = () => {
+  try {
+    return window.localStorage.getItem(SENIOR_MODE_STORAGE_KEY) === "true";
+  } catch (error) {
+    return false;
+  }
+};
+
+const writeSeniorModePreference = (enabled) => {
+  try {
+    window.localStorage.setItem(SENIOR_MODE_STORAGE_KEY, String(enabled));
+  } catch (error) {
+    // Ignore storage failures and keep the current page state usable.
+  }
+};
+
+const syncSeniorModeUi = (enabled) => {
+  document.documentElement.classList.toggle("is-senior-mode", enabled);
+  document.body.classList.toggle("is-senior-mode", enabled);
+
+  if (!seniorModeToggle) {
+    return;
+  }
+
+  seniorModeToggle.setAttribute("aria-pressed", String(enabled));
+  seniorModeToggle.setAttribute("aria-label", enabled ? "退出长辈模式" : "开启长辈模式");
+  seniorModeToggle.title = enabled ? "点击退出长辈模式" : "点击开启长辈模式";
+};
+
+syncSeniorModeUi(readSeniorModePreference());
+
+if (seniorModeToggle) {
+  seniorModeToggle.addEventListener("click", () => {
+    const nextEnabled = !document.body.classList.contains("is-senior-mode");
+    syncSeniorModeUi(nextEnabled);
+    writeSeniorModePreference(nextEnabled);
+  });
+}
+
+if (languageToggle) {
+  languageToggle.addEventListener("click", () => {
+    languageToggle.setAttribute("aria-label", "中英文切换功能暂未启用");
+  });
+}
 
 if (menuToggle && siteNav) {
   const closeMenu = () => {
