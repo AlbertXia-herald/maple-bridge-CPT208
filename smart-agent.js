@@ -1,4 +1,4 @@
-const smartKnowledge = window.smartMapleBridgeKnowledge || null;
+﻿const smartKnowledge = window.smartMapleBridgeKnowledge || null;
 
 const resolveAssistantResponse = (query) => {
   if (!smartKnowledge) {
@@ -48,7 +48,7 @@ const createAssistantMarkup = (mode = "page") => {
           <form class="assistant-input-form" data-assistant-form="true">
             <label class="assistant-input-label" for="assistant-input-${mode}">试着问一句</label>
             <div class="assistant-input-row">
-              <input id="assistant-input-${mode}" class="assistant-input" type="text" name="assistantQuery" placeholder="例如：今天怎么玩 或 适合居民的信息">
+              <input id="assistant-input-${mode}" class="assistant-input" type="text" name="assistantQuery" placeholder="例如：今天怎么玩 或 路线推荐">
               <button class="button button-primary assistant-submit" type="submit">发送</button>
             </div>
           </form>

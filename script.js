@@ -119,11 +119,11 @@ if (weatherTicker) {
     }));
 
   const createForecastSvg = (series) => {
-    const width = 640;
-    const height = 240;
-    const padding = { top: 48, right: 24, bottom: 46, left: 24 };
-    const chartWidth = width - padding.left - padding.right;
-    const chartHeight = height - padding.top - padding.bottom;
+      const width = 640;
+      const height = 198;
+      const padding = { top: 38, right: 22, bottom: 30, left: 22 };
+      const chartWidth = width - padding.left - padding.right;
+      const chartHeight = height - padding.top - padding.bottom;
     const allTemps = series.flatMap((item) => [item.max, item.min]);
     const minTemp = Math.min(...allTemps) - 2;
     const maxTemp = Math.max(...allTemps) + 2;

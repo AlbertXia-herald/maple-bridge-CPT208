@@ -1,12 +1,12 @@
-window.smartMapleBridgeKnowledge = {
+﻿window.smartMapleBridgeKnowledge = {
   greeting: {
     title: "智能枫桥",
-    helper: "我可以帮你快速判断先看哪里、适合走哪条路径，以及该进入哪个页面。"
+    helper: "我可以帮你快速判断更适合走哪种方向、看哪段内容，以及从哪里开始更顺手。"
   },
   quickActions: [
     "了解枫桥",
     "今日推荐路线",
-    "进入互动地图",
+    "路线推荐",
     "查看照片墙",
     "查看公告栏",
     "适合居民的信息"
@@ -14,7 +14,7 @@ window.smartMapleBridgeKnowledge = {
   responses: {
     "了解枫桥": {
       title: "先认识枫桥",
-      text: "枫桥最适合先从古桥、水巷和寒山寺三条线索理解。首页导览能帮你快速建立整体印象，再决定继续看地图、照片还是公告。",
+      text: "如果想先建立整体印象，建议从桥、水巷和寒山寺这三条线索进入。先把景区气质看清楚，再决定往运河、关隘还是古镇方向继续走。",
       links: [
         { label: "前往首页导览", href: "index.html#guide" },
         { label: "查看景区信息", href: "index.html#services" }
@@ -22,29 +22,29 @@ window.smartMapleBridgeKnowledge = {
     },
     "今日推荐路线": {
       title: "今天适合这样走",
-      text: "如果你是第一次来，建议先看首页导览，再进入互动地图建立空间感，最后用照片墙补足氛围。如果时间更紧，可以先看首页的核心信息和服务提示。",
+      text: "如果你是第一次来，今天更适合从桥与运河线入手：先看枫桥桥身与江村桥，再沿着古运河慢慢走。如果更想看历史层次，可以把重点放在铁岭关与沿线旧址；想轻松逛，就走古镇漫游方向。",
       links: [
-        { label: "查看首页导览", href: "index.html#guide" },
-        { label: "进入互动地图", href: "interactive-map.html" }
+        { label: "景区概览", href: "index.html#guide" },
+        { label: "路线推荐", href: "interactive-map.html#route-recommend-panel" }
       ]
     },
-    "进入互动地图": {
-      title: "去更深的探索页",
-      text: "互动地图适合想继续深入的游客。那里可以点击景点热点、体验寒山寺祈福互动，还能在水域区域进入《枫桥夜泊》的诗意体验。",
+    "路线推荐": {
+      title: "去看更细的路线建议",
+      text: "互动地图里的路线推荐会按时间和偏好，帮你在桥与运河、历史关隘、古镇漫游之间挑出更合适的一条，适合已经准备开始逛的人。",
       links: [
-        { label: "打开互动地图", href: "interactive-map.html" }
+        { label: "路线推荐", href: "interactive-map.html#route-recommend-panel" }
       ]
     },
     "查看照片墙": {
       title: "去看看大家留下的枫桥瞬间",
-      text: "照片墙更适合轻松浏览氛围、人物和日常片段，也方便随手上传你在枫桥拍下的瞬间。",
+      text: "如果你更关注光影、人物与生活气息，照片墙会比地图更快带你进入气氛，也方便先看看别人都把镜头停留在哪些角落。",
       links: [
         { label: "打开照片墙", href: "photo-wall.html" }
       ]
     },
     "查看公告栏": {
       title: "需要更实用的信息时",
-      text: "公告栏更偏社区信息页，适合查看活动安排、运营更新和便民提醒。它的信息结构比首页更完整，也更适合居民快速扫读。",
+      text: "如果你更关心社区活动、运营更新或便民提醒，建议直接查看公告栏。它更适合快速确认最近安排，不必在景区信息里来回找。",
       links: [
         { label: "打开公告栏", href: "notice-board.html" }
       ]
@@ -58,31 +58,32 @@ window.smartMapleBridgeKnowledge = {
       ]
     },
     "我想快速看懂枫桥": {
-      title: "用最短路径了解枫桥",
-      text: "建议先浏览首页导览区，再看服务信息和互动入口。这样可以在较短时间内建立景点印象与浏览顺序。",
+      title: "用最短路径认识枫桥",
+      text: "建议先看首页导览建立整体印象，再根据你更偏好的方向决定下一步：想看空间肌理走桥与运河，想看历史层次走历史关隘，想轻松漫游就看古镇方向。",
       links: [
-        { label: "回到首页导览", href: "index.html#guide" }
+        { label: "回到首页导览", href: "index.html#guide" },
+        { label: "路线推荐", href: "interactive-map.html#route-recommend-panel" }
       ]
     },
     "我想拍照和看氛围": {
       title: "适合先去照片墙",
-      text: "如果你更关注氛围、光影和共享内容，照片墙会比地图更直接。它更轻松，也更适合先感受枫桥的视觉气质。",
+      text: "如果你更关注光影、街巷与人情味，照片墙会比地图更快带你进入气氛，也方便先看看别人都把镜头停留在哪些角落。",
       links: [
         { label: "进入照片墙", href: "photo-wall.html" }
       ]
     },
     "今天怎么玩": {
-      title: "给你一条今日轻量路径",
-      text: "先看首页导览，再进入互动地图点开两个热点，最后去照片墙或公告栏补足你更关心的内容。游客适合照片墙，居民适合公告栏。",
+      title: "今天可以这样安排",
+      text: "若时间不长，优先走桥与运河线；若想看更厚重的历史层次，可以转向铁岭关一带；若更想放慢节奏，则适合去古镇漫游。想把路线细化时，可以直接去互动地图看路线推荐。",
       links: [
-        { label: "查看首页", href: "index.html" },
-        { label: "打开互动地图", href: "interactive-map.html" }
+        { label: "景区概览", href: "index.html" },
+        { label: "路线推荐", href: "interactive-map.html#route-recommend-panel" }
       ]
     }
   },
   fallback: {
     title: "可以这样继续",
-    text: "我会帮你在导览、路线、互动地图、照片墙和公告栏之间快速找到下一步。",
+    text: "我会帮你在游玩方向、路线推荐、照片墙和公告栏之间快速找到更适合的下一步。",
     links: [
       { label: "回到首页概览", href: "index.html" },
       { label: "查看完整助手页", href: "smart-agent.html" }

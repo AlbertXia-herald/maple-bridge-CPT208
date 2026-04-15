@@ -1,4 +1,4 @@
-const galleryGrid = document.querySelector("#gallery-grid");
+﻿const galleryGrid = document.querySelector("#gallery-grid");
 const uploadInput = document.querySelector("#photo-upload-input");
 const photoCount = document.querySelector("#photo-count");
 const photoLightbox = document.querySelector("#photo-lightbox");
@@ -6,6 +6,10 @@ const photoLightboxImage = document.querySelector("#photo-lightbox-image");
 const photoLightboxTitle = document.querySelector("#photo-lightbox-title");
 const photoLightboxDate = document.querySelector("#photo-lightbox-date");
 const photoLightboxCloseButtons = document.querySelectorAll("[data-photo-lightbox-close]");
+const photoUploadToast = document.querySelector("#photo-upload-toast");
+const photoUploadToastClose = document.querySelector("[data-photo-upload-toast-close]");
+let photoUploadToastTimer = null;
+let uploadedPhotos = [];
 
 const createSceneSvg = ({ palette, title, subtitle, aspect = "4:5" }) => {
   const [first, second, third] = palette;
@@ -147,6 +151,31 @@ const closePhotoLightbox = () => {
   document.body.classList.remove("photo-lightbox-open");
 };
 
+const hideUploadToast = () => {
+  if (!photoUploadToast) {
+    return;
+  }
+
+  photoUploadToast.hidden = true;
+  photoUploadToast.classList.remove("is-visible");
+};
+
+const showUploadToast = () => {
+  if (!photoUploadToast) {
+    return;
+  }
+
+  if (photoUploadToastTimer) {
+    clearTimeout(photoUploadToastTimer);
+  }
+
+  photoUploadToast.hidden = false;
+  photoUploadToast.classList.add("is-visible");
+  photoUploadToastTimer = window.setTimeout(() => {
+    hideUploadToast();
+  }, 2400);
+};
+
 const createPhotoCard = (photo) => {
   const card = document.createElement("article");
   card.className = "photo-card";
@@ -187,7 +216,7 @@ const renderGallery = (items) => {
   }
 };
 
-renderGallery(mockPhotos);
+renderGallery([...uploadedPhotos, ...mockPhotos]);
 
 if (uploadInput) {
   uploadInput.addEventListener("change", (event) => {
@@ -197,7 +226,7 @@ if (uploadInput) {
       return;
     }
 
-    const uploadedPhotos = files.map((file, index) => ({
+    const newUploadedPhotos = files.map((file, index) => ({
       id: `upload-${Date.now()}-${index}`,
       title: file.name.replace(/\.[^.]+$/, "") || "新上传照片",
       uploader: "枫盈枫桥用户",
@@ -208,13 +237,25 @@ if (uploadInput) {
       isUploaded: true
     }));
 
+    uploadedPhotos = [...newUploadedPhotos, ...uploadedPhotos];
     renderGallery([...uploadedPhotos, ...mockPhotos]);
+    uploadInput.value = "";
+    showUploadToast();
   });
 }
 
 photoLightboxCloseButtons.forEach((button) => {
   button.addEventListener("click", closePhotoLightbox);
 });
+
+if (photoUploadToastClose) {
+  photoUploadToastClose.addEventListener("click", () => {
+    if (photoUploadToastTimer) {
+      clearTimeout(photoUploadToastTimer);
+    }
+    hideUploadToast();
+  });
+}
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && photoLightbox?.classList.contains("is-open")) {

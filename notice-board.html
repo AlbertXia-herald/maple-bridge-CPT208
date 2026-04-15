@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>公告栏 | 枫盈枫桥</title>
-  <meta name="description" content="枫盈枫桥公告栏，集中展示社区活动、景区运营更新与便民提醒。">
+  <title>公告栏 | 枫盈苏州</title>
+  <meta name="description" content="枫盈苏州公告栏，集中展示社区活动、景区运营更新与便民提醒。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,11 +13,11 @@
 <body class="notice-board-page">
   <div class="page-shell">
     <header class="site-header">
-      <a class="brand" href="index.html" aria-label="返回枫盈枫桥首页">
+      <a class="brand" href="index.html" aria-label="返回枫盈苏州首页">
         <span class="brand-mark"><img src="images/log.jpg" alt=""></span>
         <span class="brand-copy">
-          <strong>枫盈枫桥</strong>
-          <span>枫桥景区文化导览</span>
+          <strong>枫盈苏州</strong>
+          <span>苏州枫桥文化导览</span>
         </span>
       </a>
 
@@ -48,43 +48,17 @@
           <p class="hero-summary">
             这是一页面向居民与社区关注者的公告栏。它强调分类清楚、信息可信、阅读直接，帮助用户快速找到与日常生活、活动安排和运营更新相关的内容。
           </p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="#notice-board">查看公告</a>
-            <a class="button button-secondary" href="#notice-focus">先看重点</a>
-          </div>
         </div>
 
-        <aside class="notice-hero-panel" aria-label="公告页概览">
-          <article class="notice-overview-card">
-            <span class="kicker">页面定位</span>
-            <strong>社区信息页</strong>
-            <p>与首页、照片墙和互动地图不同，这里重点服务居民阅读与社区沟通，因此更强调实用性、稳定性和可信感。</p>
-          </article>
-          <div class="wall-stat-grid">
-            <article>
-              <span id="notice-total-count">0</span>
-              <p>条当前公告</p>
-            </article>
-            <article>
-              <span>3</span>
-              <p>类居民信息</p>
-            </article>
-            <article>
-              <span>Read</span>
-              <p>移动端优先</p>
-            </article>
-          </div>
+        <aside class="notice-hero-panel" aria-label="重要提醒">
+          <section class="notice-hero-alert" aria-labelledby="notice-alert-title">
+            <div class="notice-hero-alert-head">
+              <p class="eyebrow">重要提醒</p>
+              <h2 id="notice-alert-title">优先查看最新提醒</h2>
+            </div>
+            <div class="notice-hero-alert-list" id="notice-hero-alert-list" aria-live="polite"></div>
+          </section>
         </aside>
-      </section>
-
-      <section class="notice-focus section" id="notice-focus">
-        <div class="section-heading">
-          <p class="eyebrow">重要提醒</p>
-          <h2>先把最紧要的信息放在前面</h2>
-          <p>这一部分用于快速传达居民最可能优先关心的事项，例如时间调整、现场维护、报名截止或临时提醒。</p>
-        </div>
-
-        <div class="notice-focus-grid" id="notice-focus-grid" aria-live="polite"></div>
       </section>
 
       <section class="notice-board-shell section" id="notice-board">
@@ -108,7 +82,23 @@
     </main>
   </div>
 
+  <div class="notice-modal" id="notice-modal" aria-hidden="true">
+    <button class="notice-modal-backdrop" type="button" aria-label="关闭公告详情"></button>
+    <section class="notice-sheet" role="dialog" aria-modal="true" aria-labelledby="notice-sheet-title">
+      <header class="notice-sheet-header">
+        <div>
+          <p class="notice-sheet-kicker">公告详情</p>
+          <h2 id="notice-sheet-title">查看完整内容</h2>
+        </div>
+        <button class="notice-sheet-close" type="button">关闭</button>
+      </header>
+      <div class="notice-sheet-body" id="notice-sheet-body"></div>
+    </section>
+  </div>
+
   <script src="script.js"></script>
   <script src="notice-board.js"></script>
 </body>
 </html>
+
+

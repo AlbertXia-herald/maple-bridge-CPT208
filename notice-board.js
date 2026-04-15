@@ -1,7 +1,12 @@
-const noticeFocusGrid = document.querySelector("#notice-focus-grid");
+﻿const noticeHeroAlertList = document.querySelector("#notice-hero-alert-list");
 const noticeColumns = document.querySelector("#notice-columns");
 const noticeTotalCount = document.querySelector("#notice-total-count");
 const noticeFilterButtons = document.querySelectorAll("[data-category-filter]");
+const noticeModal = document.querySelector("#notice-modal");
+const noticeModalBackdrop = document.querySelector(".notice-modal-backdrop");
+const noticeModalClose = document.querySelector(".notice-sheet-close");
+const noticeSheetTitle = document.querySelector("#notice-sheet-title");
+const noticeSheetBody = document.querySelector("#notice-sheet-body");
 
 const noticeData = [
   {
@@ -74,6 +79,7 @@ const noticeData = [
 
 const focusNoticeIds = ["nb-02", "nb-03", "nb-01"];
 let activeCategory = "all";
+let activeNoticeId = null;
 
 const categoryConfig = [
   { key: "community", label: "社区活动" },
@@ -87,8 +93,10 @@ const getNoticeTagClass = (category) => {
   return "notice-tag-service";
 };
 
+const getNoticeById = (noticeId) => noticeData.find((item) => item.id === noticeId);
+
 const createNoticeCard = (notice, compact = false) => `
-  <article class="notice-card ${compact ? "notice-card-compact" : ""}">
+  <article class="notice-card notice-card-clickable ${compact ? "notice-card-compact" : ""}" data-notice-id="${notice.id}" tabindex="0" role="button" aria-label="查看${notice.title}公告详情">
     <div class="notice-card-meta">
       <span class="notice-tag ${getNoticeTagClass(notice.category)}">${notice.categoryLabel}</span>
       <span class="notice-date">${notice.date}</span>
@@ -102,14 +110,49 @@ const createNoticeCard = (notice, compact = false) => `
   </article>
 `;
 
-const renderFocusNotices = () => {
-  if (!noticeFocusGrid) return;
+const createHeroAlertItem = (notice) => `
+  <article class="notice-hero-alert-item" data-notice-id="${notice.id}" tabindex="0" role="button" aria-label="查看${notice.title}公告详情">
+    <div class="notice-hero-alert-meta">
+      <span class="notice-tag ${getNoticeTagClass(notice.category)}">${notice.categoryLabel}</span>
+      <span class="notice-date">${notice.date}</span>
+    </div>
+    <h3>${notice.title}</h3>
+    <p>${notice.summary}</p>
+    <div class="notice-hero-alert-footer">
+      <span>${notice.audience}</span>
+      <span class="notice-status">${notice.status}</span>
+    </div>
+  </article>
+`;
+
+const createNoticeDetail = (notice) => `
+  <article class="notice-detail">
+    <div class="notice-detail-meta">
+      <span class="notice-tag ${getNoticeTagClass(notice.category)}">${notice.categoryLabel}</span>
+      <span class="notice-date">${notice.date}</span>
+      <span class="notice-status">${notice.status}</span>
+    </div>
+    <h3>${notice.title}</h3>
+    <p class="notice-detail-summary">${notice.summary}</p>
+    <div class="notice-detail-section">
+      <h4>适用对象</h4>
+      <p>${notice.audience}</p>
+    </div>
+    <div class="notice-detail-section">
+      <h4>当前状态</h4>
+      <p>${notice.status}</p>
+    </div>
+  </article>
+`;
+
+const renderHeroAlerts = () => {
+  if (!noticeHeroAlertList) return;
 
   const focusItems = focusNoticeIds
     .map((id) => noticeData.find((item) => item.id === id))
     .filter(Boolean);
 
-  noticeFocusGrid.innerHTML = focusItems.map((item) => createNoticeCard(item, true)).join("");
+  noticeHeroAlertList.innerHTML = focusItems.map((item) => createHeroAlertItem(item)).join("");
 };
 
 const renderNoticeColumns = () => {
@@ -137,8 +180,46 @@ const renderNoticeColumns = () => {
     .join("");
 };
 
-renderFocusNotices();
+const openNoticeModal = (noticeId) => {
+  const notice = getNoticeById(noticeId);
+  if (!notice || !noticeModal || !noticeSheetBody || !noticeSheetTitle) return;
+
+  activeNoticeId = noticeId;
+  noticeSheetTitle.textContent = notice.title;
+  noticeSheetBody.innerHTML = createNoticeDetail(notice);
+  noticeModal.classList.add("is-open");
+  noticeModal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("notice-modal-open");
+};
+
+const closeNoticeModal = () => {
+  if (!noticeModal || !noticeSheetBody) return;
+
+  activeNoticeId = null;
+  noticeModal.classList.remove("is-open");
+  noticeModal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("notice-modal-open");
+  noticeSheetBody.innerHTML = "";
+};
+
+const bindNoticeCardInteractions = () => {
+  document.querySelectorAll("[data-notice-id]").forEach((card) => {
+    card.addEventListener("click", () => {
+      openNoticeModal(card.dataset.noticeId || "");
+    });
+
+    card.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openNoticeModal(card.dataset.noticeId || "");
+      }
+    });
+  });
+};
+
+renderHeroAlerts();
 renderNoticeColumns();
+bindNoticeCardInteractions();
 
 if (noticeTotalCount) {
   noticeTotalCount.textContent = String(noticeData.length);
@@ -153,5 +234,15 @@ noticeFilterButtons.forEach((button) => {
     });
 
     renderNoticeColumns();
+    bindNoticeCardInteractions();
   });
+});
+
+noticeModalBackdrop?.addEventListener("click", closeNoticeModal);
+noticeModalClose?.addEventListener("click", closeNoticeModal);
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && noticeModal?.classList.contains("is-open")) {
+    closeNoticeModal();
+  }
 });

@@ -838,7 +838,7 @@ const initInteractiveMap = async () => {
     mapInstance.setZoomAndCenter(Math.max(mapInstance.getZoom(), MAP_ZOOM), MAP_CENTER);
 
     hideMapFallback();
-    setMapStatus("圆形看景点介绍，三角形进入祈福或诗意互动");
+    setMapStatus("圆形看景点介绍，三角形进入游戏交互");
   } catch (error) {
     console.error(error);
     showMapFallback(`真实地图加载失败：${error instanceof Error ? error.message : "请检查 Key、网络或浏览器控制台"}`);
