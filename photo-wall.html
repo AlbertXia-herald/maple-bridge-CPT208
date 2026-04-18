@@ -16,16 +16,16 @@
       <a class="brand" href="index.html" aria-label="返回枫盈苏州首页">
         <span class="brand-mark"><img src="images/log.jpg" alt=""></span>
         <span class="brand-copy">
-          <strong>枫盈苏州</strong>
-          <span>苏州枫桥文化导览</span>
+          <strong data-i18n="common.brand.name">枫盈苏州</strong>
+          <span data-i18n="common.brand.tagline">苏州枫桥文化导览</span>
         </span>
 
         <span class="site-header-tools" aria-label="辅助功能与语言入口">
-          <button class="header-tool header-tool-senior" type="button" data-senior-mode-toggle aria-pressed="false">
+          <button class="header-tool header-tool-senior" type="button" data-senior-mode-toggle aria-pressed="false" data-i18n="common.senior">
             长辈模式
           </button>
-          <button class="header-tool header-tool-language" type="button" data-language-toggle aria-label="中英文切换，暂未启用">
-            中/英
+          <button class="header-tool header-tool-language" type="button" data-language-toggle aria-label="中英文切换，暂未启用" data-i18n="common.language">
+            中/EN
           </button>
         </span>
       </a>
@@ -34,15 +34,15 @@
         <span></span>
         <span></span>
         <span></span>
-        <span class="sr-only">打开导航</span>
+        <span class="sr-only" data-i18n="common.nav.open">打开导航</span>
       </button>
 
       <nav class="site-nav" id="photo-wall-nav" aria-label="全站导航">
-        <a href="index.html#top">首页</a>
-        <a href="interactive-map.html">互动地图</a>
-        <a href="photo-wall.html" aria-current="page">照片墙</a>
-        <a href="notice-board.html">公告栏</a>
-        <a href="smart-agent.html">智能枫桥</a>
+        <a href="index.html#top" data-i18n="common.nav.home">首页</a>
+        <a href="interactive-map.html" data-i18n="common.nav.map">互动地图</a>
+        <a href="photo-wall.html" aria-current="page" data-i18n="common.nav.photo">照片墙</a>
+        <a href="notice-board.html" data-i18n="common.nav.notice">公告栏</a>
+        <a href="smart-agent.html" data-i18n="common.nav.agent">智能枫桥</a>
       </nav>
     </header>
 
@@ -50,11 +50,11 @@
       <section class="photo-wall-hero">
         <div class="photo-wall-hero-copy">
           <p class="eyebrow">Community Photo Wall</p>
-          <h1>把你在枫桥遇见的
+          <h1 data-i18n-html="photo.hero.title">把你在枫桥遇见的
             <span>光影、桥影和人情味，</span>
             轻轻挂上来。
           </h1>
-          <p class="hero-summary">
+          <p class="hero-summary" data-i18n="photo.hero.summary">
             照片墙汇集了游客与居民在枫桥留下的光影瞬间，也欢迎你把自己的所见所感一并挂上来。
           </p>
         </div>
@@ -62,19 +62,19 @@
         <aside class="photo-wall-hero-panel" aria-label="上传入口">
           <article class="photo-wall-upload-card">
             <div class="photo-wall-upload-intro">
-              <p class="eyebrow">上传入口</p>
-              <h2>上传一张照片</h2>
-              <p>选中图片后即可查看效果</p>
+              <p class="eyebrow" data-i18n="photo.upload.eyebrow">上传入口</p>
+              <h2 data-i18n="photo.upload.title">上传一张照片</h2>
+              <p data-i18n="photo.upload.p">选中图片后即可查看效果</p>
             </div>
 
             <label class="upload-dropzone upload-dropzone-hero" for="photo-upload-input">
               <span class="upload-icon" aria-hidden="true">+</span>
-              <strong>把这一刻挂上来</strong>
-              <span>选择图片后会在下方即时预览</span>
+              <strong data-i18n="photo.upload.strong">把这一刻挂上来</strong>
+              <span data-i18n="photo.upload.span">选择图片后会在下方即时预览</span>
               <input id="photo-upload-input" type="file" accept="image/*" multiple>
             </label>
 
-            <p class="photo-wall-hero-meta">当前已展示 <span id="photo-count">0</span> 张照片</p>
+            <p class="photo-wall-hero-meta" data-i18n-html="photo.meta">当前已展示 <span id="photo-count">0</span> 张照片</p>
           </article>
         </aside>
       </section>
@@ -82,8 +82,8 @@
       <section class="photo-wall-gallery section" id="shared-gallery">
         <div class="gallery-topbar">
           <div class="section-heading">
-            <p class="eyebrow">共享照片墙</p>
-            <h2>浏览大家留下的枫桥瞬间</h2>
+            <p class="eyebrow" data-i18n="photo.gallery.eyebrow">共享照片墙</p>
+            <h2 data-i18n="photo.gallery.title">浏览大家留下的枫桥瞬间</h2>
           </div>
         </div>
 
@@ -95,8 +95,8 @@
   <div class="photo-upload-toast" id="photo-upload-toast" aria-live="polite" aria-atomic="true" hidden>
     <div class="photo-upload-toast-inner" role="status">
       <span class="photo-upload-toast-dot" aria-hidden="true"></span>
-      <span class="photo-upload-toast-text">上传成功</span>
-      <button class="photo-upload-toast-close" type="button" data-photo-upload-toast-close aria-label="关闭上传成功提示">关闭</button>
+      <span class="photo-upload-toast-text" data-i18n="photo.toast.success">上传成功</span>
+      <button class="photo-upload-toast-close" type="button" data-photo-upload-toast-close aria-label="关闭上传成功提示" data-i18n="common.close">关闭</button>
     </div>
   </div>
 
@@ -105,11 +105,11 @@
     <section class="photo-lightbox-sheet" role="dialog" aria-modal="true" aria-labelledby="photo-lightbox-title">
       <header class="photo-lightbox-header">
         <div class="photo-lightbox-copy">
-          <p class="photo-lightbox-kicker">照片预览</p>
-          <h2 id="photo-lightbox-title">枫桥瞬间</h2>
+          <p class="photo-lightbox-kicker" data-i18n="photo.lightbox.kicker">照片预览</p>
+          <h2 id="photo-lightbox-title" data-i18n="photo.lightbox.title">枫桥瞬间</h2>
           <p class="photo-lightbox-date" id="photo-lightbox-date"></p>
         </div>
-        <button class="photo-lightbox-close" type="button" data-photo-lightbox-close>关闭</button>
+        <button class="photo-lightbox-close" type="button" data-photo-lightbox-close data-i18n="common.close">关闭</button>
       </header>
       <div class="photo-lightbox-body">
         <figure class="photo-lightbox-media">

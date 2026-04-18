@@ -18,6 +18,8 @@ const MAP_CONFIG = window.MAPLE_BRIDGE_AMAP_CONFIG || {};
 const MAP_CENTER = Array.isArray(MAP_CONFIG.center) ? MAP_CONFIG.center : [120.5662, 31.3161];
 const MAP_ZOOM = typeof MAP_CONFIG.zoom === "number" ? MAP_CONFIG.zoom : 15.9;
 const MAP_VERSION = MAP_CONFIG.version || "2.0";
+const mapLanguage = window.MAPLE_BRIDGE_I18N?.getLanguage?.() || "zh";
+const localize = (value) => window.MAPLE_BRIDGE_I18N?.text?.(value) || (typeof value === "string" ? value : value.zh);
 const SCENIC_BOUNDS = {
   southWest: [120.5651, 31.3071],
   northEast: [120.5702, 31.3112],
@@ -69,6 +71,149 @@ const MAP_SCENE_IMAGE_BY_ID = {
   "puming-pagoda": "images/map_scene/puming-tower.jpg",
 };
 
+const mapUiText = {
+  routeCurrent: { zh: "当前推荐", en: "Current Pick" },
+  routeOrder: { zh: "推荐顺序", en: "Suggested Order" },
+  scenicTitle: { zh: "景点解读", en: "Scenic Reading" },
+  scenicHighlights: { zh: "看点摘要", en: "Key Highlights" },
+  gameTitle: { zh: "玩法说明", en: "How It Works" },
+  gameBody: { zh: "点击下方按钮，系统会随机生成一条今日签语风格的结果，让祈福体验更轻松自然地融入游览过程。", en: "Tap the button below and the system will generate a blessing-style result for today, making the interaction feel light and gentle." },
+  fortuneDraw: { zh: "抽取今日福运", en: "Draw Today's Blessing" },
+  fortuneReset: { zh: "重新来过", en: "Try Again" },
+  fortuneIdleTitle: { zh: "轻触按钮，听一声今日回响。", en: "Tap the button and listen for today's echo." },
+  fortuneIdleText: { zh: "结果会在这里出现。", en: "Your result will appear here." },
+  poemIdleTitle: { zh: "点开一个意象，慢慢读进枫桥夜色。", en: "Tap an image and read your way into Maple Bridge at night." },
+  poemIdleText: { zh: "点击诗中加粗的词语，下方会出现对应的画面和诗文解析。", en: "Click the highlighted imagery in the poem to reveal its visual scene and interpretation below." },
+  poemLead: { zh: "诗句中的五个关键意象已经被标记出来。点开它们，让《枫桥夜泊》的画面、地点与回响在下方慢慢展开。", en: "Five key images in the poem have been marked. Tap them to unfold the scene, setting, and echoes of 'Mooring by Maple Bridge at Night' below." },
+  mapPreparing: { zh: "正在准备真实地图...", en: "Preparing the live map..." },
+  mapFallback: { zh: "地图暂时未能加载", en: "The map could not be loaded right now." }
+};
+
+const routeEn = {
+  "route-60-waterway": {
+    title: "1-Hour Bridges & Canal Route",
+    summary: "Build a first impression of Maple Bridge through its bridges and canal in a short visit.",
+    whyRecommended: "Ideal for visitors with limited time who want to understand the bridge-canal relationship first."
+  },
+  "route-90-waterway": {
+    title: "90-Minute Bridges & Canal Route",
+    summary: "Spend longer among the bridges and canal, and include the old wharf and shoreline.",
+    whyRecommended: "Suitable for visitors who want a slower waterside route with time to pause and take photos."
+  },
+  "route-120-waterway": {
+    title: "2-Hour Deep Canal Route",
+    summary: "Follow the waterside route out toward the old town for a fuller impression of Maple Bridge.",
+    whyRecommended: "Best for visitors with more time who want a complete sense of bridges, water, shoreline, and lanes."
+  },
+  "route-60-history": {
+    title: "1-Hour Historic Passes Route",
+    summary: "Focus on Tieling Pass, temple bells, and tower views for a denser historic thread.",
+    whyRecommended: "Recommended for visitors who care more about historic boundaries and temple culture."
+  },
+  "route-90-history": {
+    title: "90-Minute Historic Passes Route",
+    summary: "Read Maple Bridge through bells, gates, and pagoda views in a steadier historical sequence.",
+    whyRecommended: "Build a fuller historic reading path across defense, memorial landmarks, and bridge-side space."
+  },
+  "route-90-old-town": {
+    title: "90-Minute Old Town Walk",
+    summary: "Move from bridge to lanes, square, and old-town texture at a slower rhythm.",
+    whyRecommended: "Great for visitors who want more local atmosphere rather than moving only between landmarks."
+  }
+};
+
+const hotspotEn = {
+  "fengqiao-bridge": {
+    title: "Maple Bridge",
+    tag: "Scenic Reading",
+    shortDescription: "Standing on the bridge is the easiest way to understand why poetry, the canal, and Suzhou meet here.",
+    detail: "Maple Bridge is one of the core cultural anchors of the scenic area. It links literature, transport history, and local memory in one place: the canal below, Hanshan Temple and Tieling Pass nearby, and the classic poetic viewpoint above.",
+    highlights: ["The most representative landmark in the area", "Connects the canal, temple, and poetic atmosphere", "The best place to ground the imagery of river maples and fishing lights"]
+  },
+  "hanshan-temple": {
+    title: "Hanshan Temple Blessing",
+    tag: "Blessing Play",
+    shortDescription: "What moves people here is not only the blessing itself, but the quiet strength that follows the bell.",
+    intro: "Tap the blessing button and let today's wish unfold slowly in the imagery of temple bells.",
+    fortunes: [
+      { title: "Bell in the Heart", summary: "Today is better for slow decisions. The calmer you are, the clearer the way becomes.", blessing: "May every step you take today be answered by a clear echo." },
+      { title: "Bridge-side Good Fortune", summary: "A good day to meet people, talk, and share your work. Your expression will be warmly received.", blessing: "May you keep your own calm even when surrounded by others." },
+      { title: "Smooth Water Light", summary: "Today is suitable for sorting out plans. Steady progress will work better than last-minute rushing.", blessing: "May what you want to do always find a bridge to cross and a shore to reach." },
+      { title: "Thoughts by Night Mooring", summary: "A good day for solitude and reflection. Inspiration may arrive in stillness.", blessing: "May you hear the bell and answer that belong to you alone." }
+    ]
+  },
+  "water-poem": {
+    title: "Poetic Waters",
+    tag: "Poetic Interaction",
+    shortDescription: "What makes Maple Bridge most moving is not one building, but the way the water gathers all things into one atmosphere. Tap the key imagery in the poem to reveal the scene.",
+    poemTitle: "Mooring by Maple Bridge at Night",
+    poemAuthor: "Zhang Ji",
+    imageryNotes: {
+      "moon-crow": { title: "Moonset and Crow Calls", note: "As the moon sinks and crows cry out, hearing and sky conditions arrive together. This line opens the poem with chill, wakefulness, and drifting solitude." },
+      "river-maple-lights": { title: "River Maples and Fishing Lights", note: "The maple shadows and scattered fishing lights give the wide water a point of focus and bring the traveller's emotion down into something visible." },
+      "gusu-city": { title: "Gusu City", note: "When the poem reaches Gusu, the night on the water gains a real geographic anchor. The mood is no longer abstract; it belongs to Suzhou." },
+      "hanshan-temple": { title: "Hanshan Temple", note: "Hanshan Temple works like a cultural anchor in the poem, connecting the traveller's mind with the temple, its bells, and the wider memory of Maple Bridge." },
+      "midnight-bell": { title: "Midnight Bells", note: "The bells reaching the boat are the most penetrating moment in the poem. They turn a still night scene into a living experience remembered for centuries." }
+    }
+  },
+  "ancient-wharf": {
+    title: "Ancient Wharf",
+    tag: "Scenic Reading",
+    shortDescription: "The old wharf preserves the everyday rhythm of trade, water travel, and stopping by the canal.",
+    detail: "If Maple Bridge defines the spatial frame of the area, the old wharf reveals how people actually moved through it. Boats stopped here, people changed shore, and the poetic idea of night mooring became part of real local life.",
+    highlights: ["Strong everyday and transport memory", "Connects boat travel with mooring imagery", "A realistic entry point for understanding 'night mooring'"]
+  },
+  "bell-corridor": {
+    title: "Bell Corridor",
+    tag: "Scenic Reading",
+    shortDescription: "This is where hearing Hanshan Temple turns into physically entering its cultural atmosphere.",
+    detail: "The bell culture of Hanshan Temple is not just about sound. It also extends through inscriptions, temple memory, and movement through space. This corridor works as a transition from seeing a site to inhabiting its cultural mood.",
+    highlights: ["Extends the temple's bell culture into space", "Links poetry, bells, and walking experience", "A key step from viewing into immersion"]
+  },
+  "jiangcun-bridge": {
+    title: "Jiangcun Bridge",
+    tag: "Scenic Reading",
+    shortDescription: "If Maple Bridge is the main figure, Jiangcun Bridge is the other half that completes the poem's space.",
+    detail: "Jiangcun Bridge stands across the water from Maple Bridge and helps create the layered scene behind the famous poem. Its value lies in this scenic relationship: the bridges, canal, bells, and boats make sense together rather than as isolated landmarks.",
+    highlights: ["Forms the classic poetic space with Maple Bridge", "Useful for reading the canal's layered view", "A quiet but memorable bridge in the scenic area"]
+  },
+  "tieling-pass": {
+    title: "Tieling Pass",
+    tag: "Scenic Reading",
+    shortDescription: "If Maple Bridge is the poetic entrance, Tieling Pass is one of the few places that reveals the area's harder historic edge.",
+    detail: "Tieling Pass reminds visitors that Maple Bridge is not only about bells and river mist. It also carries memories of defense, border control, and resistance. That contrast gives the area both gentleness and strength.",
+    highlights: ["Highly legible Ming-period defense site", "Balances the scenic area's poetic image with history", "Adds depth and tension to the overall reading"]
+  },
+  "grand-canal": {
+    title: "Grand Canal",
+    tag: "Scenic Reading",
+    shortDescription: "To understand Maple Bridge, you must read not only the bridge and temple, but also the canal that keeps everything moving.",
+    detail: "The Grand Canal is the long historical line behind Maple Bridge. It is not just scenery. It shaped Suzhou's urban rhythm, commerce, and cultural memory, turning the scenic area into a living slice of city civilisation.",
+    highlights: ["The main spatial and historical line of the area", "Helps explain Suzhou's old-city structure", "Supports the theme of a flowing cultural heritage"]
+  },
+  "fengqiao-old-town": {
+    title: "Maple Bridge Old Town",
+    tag: "Scenic Reading",
+    shortDescription: "This is where visitors move from looking at landmarks to feeling local life.",
+    detail: "The old town brings bridges, temples, and passes back into the scale of daily living. Waterside homes, narrow lanes, and a slower pace make the area feel inhabited rather than staged, helping the scenic narrative settle into ordinary life.",
+    highlights: ["One of the most life-filled parts of the scenic area", "Best for reading Jiangnan lanes and waterside daily life", "Turns macro heritage into intimate local atmosphere"]
+  },
+  "opera-stage-square": {
+    title: "Opera Stage Square",
+    tag: "Scenic Reading",
+    shortDescription: "This is less a static background and more the public cultural living room of the scenic area.",
+    detail: "Opera Stage Square shows that culture in Maple Bridge is still something people use, gather around, and share. Performances, gatherings, and seasonal events make this a place of living tradition rather than passive display.",
+    highlights: ["Suitable for performances, gatherings, and festivals", "Highlights living culture instead of static exhibition", "Encourages staying, meeting, and participating"]
+  },
+  "puming-pagoda": {
+    title: "Puming Pagoda",
+    tag: "Scenic Reading",
+    shortDescription: "It restores the complete skyline of temple and tower facing each other again.",
+    detail: "Puming Pagoda gives Hanshan Temple a strong vertical symbol. Alongside bells, temple halls, and the canal, it helps visitors understand why Maple Bridge became such a lasting cultural image.",
+    highlights: ["Restores the historic temple-and-pagoda relationship", "A strong visual focus for Hanshan Temple", "Useful for expressing spiritual height and depth"]
+  }
+};
+
 const hotspots = [
   {
     id: "fengqiao-bridge",
@@ -76,9 +221,9 @@ const hotspots = [
     type: "scenic",
     position: { lng: 120.56685, lat: 31.31088 },
     tag: "景点解读",
-    shortDescription: "从桥身向两侧望去，可以同时感受到水巷尺度与游线转折，是枫桥最适合建立空间印象的位置。",
-    detail: "枫桥不仅是一个地理节点，更是诗意意象的聚合点。站在桥面上，能直观理解桥、水、寺、街巷之间的相互关系，也是游客初次到访时最容易形成“我已经到了枫桥”这一感受的地方。",
-    highlights: ["桥上视角适合建立空间认知", "可串联寒山寺、水巷与步行流线", "是讲述《枫桥夜泊》意象的最佳起点"],
+    shortDescription: "站在桥上，最容易理解诗、运河与苏州为什么会在这里重合。",
+    detail: "枫桥是景区最核心的文化坐标之一。它旧名“封桥”，与古代漕运夜间封桥禁行有关，后逐渐写作“枫桥”。现存桥体为清同治六年重建的花岗石单孔石拱桥，后又经过整修。它的价值并不只在“古”，更在于它把文学、交通与地方历史压缩在同一个空间里：桥下是千年运河，桥畔是寒山寺与铁铃关，桥上则是无数游客进入《枫桥夜泊》意境的第一视角。来到这里，看到的不是一座孤立的桥，而是苏州水城文化的一处现实入口。",
+    highlights: ["枫桥景区最具代表性的核心地标", "适合串联运河、古寺与诗意场景理解", "是“江枫渔火”意象落入现实的最佳观察点"],
     image: MAP_SCENE_IMAGE_BY_ID["fengqiao-bridge"] || scenicImage({
       palette: ["#eadbc7", "#b88660", "#f6e5c3"],
       title: "枫桥桥身",
@@ -91,8 +236,8 @@ const hotspots = [
     type: "game",
     position: { lng: 120.56855, lat: 31.3103},
     tag: "祈福互动",
-    shortDescription: "在钟声与香火意象里进行一次轻量祈愿，生成今日签语风格的福运结果。",
-    intro: "寒山寺是这页中最适合做祈愿互动的地点。点一下祈福按钮，让今天的祝福回应在钟声意象里慢慢展开。",
+    shortDescription: "这里最动人的，不只是“灵”，而是钟声之后那种安静下来的力量。",
+    intro: "点一下祈福按钮，让今天的祝福回应在钟声意象里慢慢展开。",
     fortunes: [
       {
         title: "钟声入怀",
@@ -122,7 +267,7 @@ const hotspots = [
     type: "poem",
     position: { lng: 120.56655, lat: 31.30948 },
     tag: "诗意互动",
-    shortDescription: "围绕水域展开《枫桥夜泊》互动，点击诗中的关键意象，可以看到对应解析与画面回应。",
+    shortDescription: "枫桥最迷人的，不是某一处建筑，而是水面把所有景物连成了一种气氛。S点击诗中的关键意象，水中诗景将会浮现。",
     poemTitle: "枫桥夜泊",
     poemAuthor: "张继",
     poemLines: [
@@ -200,9 +345,9 @@ const hotspots = [
     type: "scenic",
     position: { lng: 120.56667, lat: 31.31198 },
     tag: "景点解读",
-    shortDescription: "古渡口更接近日常流动的生活感，适合讲述商旅、水路与停泊记忆。",
+    shortDescription: "古渡口镌刻了古老岁月里日常流动的生活感，将商旅、水路与停泊的记忆刻在石砖片瓦之中。",
     detail: "如果说桥身强调的是空间骨架，那么古渡口强调的就是人与水路的关系。这里承接停舟、换岸、短暂停留等动作，也让枫桥不只是诗里的意象，而是曾经真实运转的地方。",
-    highlights: ["更偏生活性与交通性记忆", "适合串联船行与停泊意象", "可作为游客理解“夜泊”的现实场景入口"],
+    highlights: ["生活性与交通性记忆", "适合串联船行与停泊意象", "是游客理解“夜泊”的现实场景入口"],
     image: MAP_SCENE_IMAGE_BY_ID["ancient-wharf"] || scenicImage({
       palette: ["#dfe7e2", "#769183", "#efe2cb"],
       title: "古渡口",
@@ -215,9 +360,9 @@ const hotspots = [
     type: "scenic",
     position: { lng: 120.56965, lat: 31.30972 },
     tag: "景点解读",
-    shortDescription: "这里适合承接“钟声到客船”的文化联想，把声音经验转化成叙事体验。",
-    detail: "钟声长廊并不需要复杂的机制，就能成为文化理解的锚点。它适合放置关于寒山寺钟声、夜半回响和游客记忆的解释，让用户从“听到”的意象进入更完整的文化背景。",
-    highlights: ["连接钟声、寺院与诗歌", "适合作为文化解读节点", "可扩展为声音播放或时间轴内容"],
+    shortDescription: "这是最适合把“听见寒山”变成“走进寒山”的一段空间。",
+    detail: "寒山寺最著名的文化符号当然是钟声，但钟声真正动人的地方，不只在“响”，而在它周围形成的完整文化系统。官方资料中，寒山寺既有“千年钟声”的传统，也有“古碑长廊”等碑刻空间，诗、钟、碑、塔共同构成了寒山文化的体验脉络。因此，“钟声长廊”这个热点很适合写成一段过渡性的文化廊道：游客在行走中不是只看建筑，而是在阅读碑刻、联想诗句、感受钟韵之间，慢慢把文学中的《枫桥夜泊》转化为身体可以亲历的场景。这里强调的不是热闹，而是沉浸。",
+    highlights: ["适合表现寒山寺“钟声文化”的延展性", "可连接诗碑、钟韵与步行体验", "是从“看景点”过渡到“入情境”的关键节点"],
     image: MAP_SCENE_IMAGE_BY_ID["bell-corridor"] || scenicImage({
       palette: ["#ead7bd", "#8f6545", "#f6e7c2"],
       title: "钟声长廊",
@@ -230,9 +375,9 @@ const hotspots = [
     type: "scenic",
     position: { lng: 120.56768, lat: 31.30974 },
     tag: "景点解读",
-    shortDescription: "江村桥与枫桥共同构成这片景区最重要的桥梁意象，是理解水路与步行游线关系的关键点位。",
-    detail: "江村桥更偏向空间秩序与交通组织的理解入口。站在这里，可以看清桥、水、岸线与寺院之间的层次关系，也能把“桥畔夜泊”的诗意感受落回到真实的地理场景中。",
-    highlights: ["适合观察桥梁与古运河的相对关系", "可与枫桥桥身形成对照观看", "是游客建立景区空间感的重要节点"],
+    shortDescription: "若说枫桥是主角，那么江村桥就是让整首诗真正成立的另一半空间。",
+    detail: "枫桥景区最有层次的地方，在于并不是只有一座桥。官方资料显示，江村桥为单孔石拱桥，原建于唐代，清康熙四十五年由地方募资重建，1984年又经整修。它与枫桥隔水相望，共同构成《枫桥夜泊》的空间想象：桥影、船行、钟声、夜色，并不是从单一点位生成的，而是在两桥与运河之间慢慢展开。相比名气更大的枫桥，江村桥的价值在于它的“配景性”——正因为有它，游客看到的才不是单一地标，而是一幅具有前后景、远近景的完整江南夜泊图景。",
+    highlights: ["与枫桥共同构成经典诗意空间", "适合从对景关系理解运河两岸层次", "是景区中很有“回味感”的古桥节点"],
     image: MAP_SCENE_IMAGE_BY_ID["jiangcun-bridge"] || scenicImage({
       palette: ["#e6dccd", "#9a7050", "#f2dfba"],
       title: "江村桥",
@@ -245,9 +390,9 @@ const hotspots = [
     type: "scenic",
     position: { lng: 120.56752, lat: 31.31082 },
     tag: "景点解读",
-    shortDescription: "铁岭关强调的是枫桥一带更厚重的历史边界感，让游览从桥与水延伸到关隘与防守记忆。",
-    detail: "相比桥梁与水巷的柔和感受，铁岭关更适合讲述枫桥一带在历史上的出入节点与关防意味。它让这片景区不只是诗意夜泊的地方，也保留了古代交通与边界管理的层次。",
-    highlights: ["适合承接历史边界与关防叙事", "为空间体验补充更厚重的历史语境", "能与桥、水、寺形成更完整的文化层次"],
+    shortDescription: "如果说枫桥是诗意入口，那么铁铃关就是这片水乡少有的历史棱角。",
+    detail: "铁铃关建于明嘉靖三十六年，又称枫桥敌楼，是苏州“三关”之一，也是当地保存较完整的抗倭历史遗存。很多游客初到这里，会先被城楼、关台和厚重的墙体吸引，但它真正重要的地方，在于补足了枫桥“柔美之外”的另一面。运河带来商旅往来，也带来防御需求；江南水乡不只有烟雨和钟声，也有城防、警戒与战事记忆。铁铃关让人意识到，枫桥并不只是文人笔下的愁眠之地，它同样经历过守卫城市、抵御外侮的历史时刻，因此这里的气质既温润，也坚硬。",
+    highlights: ["明代城防遗存，历史辨识度很高", "能补充游客对枫桥“诗意之外”的理解", "适合表现景区的历史纵深与空间张力"],
     image: MAP_SCENE_IMAGE_BY_ID["tieling-pass"] || scenicImage({
       palette: ["#ddd2c4", "#8d6649", "#e9d6b3"],
       title: "铁岭关",
@@ -260,9 +405,9 @@ const hotspots = [
     type: "scenic",
     position: { lng: 120.5661, lat: 31.31051 },
     tag: "景点解读",
-    shortDescription: "古运河是这片景区真正的流动背景，桥、渡口、钟声和夜泊意象都要回到这条水路上理解。",
-    detail: "古运河并不是地图上的陪衬，而是枫桥景区叙事真正流动起来的主线。顺着河道看过去，桥梁、寺院、停泊与商旅往来会被串成一个整体，也让《枫桥夜泊》的情绪有了现实依托。",
-    highlights: ["连接桥梁、渡口与船行意象", "是理解夜泊与钟声传播的真实媒介", "适合做整条游线的背景认知节点"],
+    shortDescription: "想读懂枫桥，不能只看桥与寺，更要看一直流动的古运河。",
+    detail: "枫桥景区依托古运河展开，而大运河苏州段作为世界文化遗产的重要组成部分，使这里不仅是观光景点，更是一处持续运转的历史现场。苏州也是运河沿线唯一以“古城概念”参与申遗的城市，这意味着运河并不是城市外的一条水道，而是与古城街巷、水网格局和生活方式紧密连在一起的文化骨架。站在古运河边看枫桥，看到的不只是水面风景，而是一条塑造苏州城市节奏、商业往来和文化记忆的时间长线。它让整个景区从“诗歌场景”上升为“城市文明的切片”。",
+    highlights: ["枫桥景区的空间主线与历史背景", "可从运河角度理解苏州古城格局", "适合强调“流动的文化遗产”这一主题"],
     image: MAP_SCENE_IMAGE_BY_ID["grand-canal"] || scenicImage({
       palette: ["#d8e2e1", "#6c8790", "#efe1c9"],
       title: "古运河",
@@ -275,9 +420,9 @@ const hotspots = [
     type: "scenic",
     position: { lng: 120.56722, lat: 31.31014 },
     tag: "景点解读",
-    shortDescription: "古镇部分承接更接近日常的街巷体验，让游客从“看景点”过渡到“感受地方生活肌理”。",
-    detail: "枫桥古镇的意义在于补足生活性的感受。相比桥与寺的高辨识度地标，这里更适合讲述街巷、商铺、停留节奏和地方气质，让整段游览不止停留在几个打卡点之间。",
-    highlights: ["适合理解枫桥的街巷与生活感", "能承接更缓慢的步行浏览体验", "帮助景区从地标观看延伸到地方氛围"],
+    shortDescription: "这里让游客从“看景”走向“感受地方生活”。",
+    detail: "枫桥景区的魅力，并不只来自寒山寺、古桥和城关，也来自古镇肌理本身。官方资料将枫桥古镇列入景区“五古”之一，正说明它并非配角。沿河街巷、临水民居、商铺尺度与慢节奏步行体验，共同构成了江南水乡最日常也最耐看的部分。桥、寺、关更多承载的是地标和历史，古镇则负责把这些宏观文化重新落回生活：人在这里如何居住、交易、往来，运河如何进入日常，地方气质又如何在细碎的空间中沉淀下来。它让整个游览不止停留在“打卡古迹”，而更像一次进入苏州地方生活纹理的阅读。",
+    highlights: ["景区“五古”之一，生活气息最强", "适合表现江南街巷与水乡日常", "能把宏观景点叙事转成细腻的人间感受"],
     image: MAP_SCENE_IMAGE_BY_ID["fengqiao-old-town"] || scenicImage({
       palette: ["#e8ddcf", "#b37f58", "#f4e7cf"],
       title: "枫桥古镇",
@@ -290,9 +435,9 @@ const hotspots = [
     type: "scenic",
     position: { lng: 120.56722, lat: 31.30964 },
     tag: "景点解读",
-    shortDescription: "古戏台广场更适合承接公共活动与文化展示的想象，是景区里更具聚集感与演出感的位置。",
-    detail: "古戏台广场让枫桥的文化体验从静态观看延伸到公共活动场景。它适合讲述节庆、表演、临时展演与游客停留，帮助用户理解景区也可以是被共同使用、共同观看的文化空间。",
-    highlights: ["强化景区的公共活动感", "适合扩展节庆或演出内容", "是从静态风景进入公共文化空间的重要节点"],
+    shortDescription: "这里不是静止的背景板，而是景区最像“文化客厅”的公共空间。",
+    detail: "枫桥景区今天的吸引力，不只在历史遗存，也在文化如何继续发生。官方资料中，吴门戏台已是景区的重要节点，而寒山雅集等活动也曾在古戏台广场举行。对游客来说，这里最值得强调的不是“古”，而是“活”——它让评弹、雅集、节庆、市民驻足和游客停留，都有了一个可以承载的场所。与桥、寺、关不同，古戏台广场更偏向公共文化体验：人在这里不只是观看历史，而是通过表演、集市和节庆氛围，感受到传统文化在当代城市中仍然可以被使用、被分享、被重新理解。",
+    highlights: ["适合承载演艺、雅集与节庆活动", "突出景区“活态文化”而非单纯静态展示", "能增强游客停留、交流与参与感"],
     image: MAP_SCENE_IMAGE_BY_ID["opera-stage-square"] || scenicImage({
       palette: ["#ead8ca", "#9c6544", "#f1ddbb"],
       title: "古戏台广场",
@@ -305,9 +450,9 @@ const hotspots = [
     type: "scenic",
     position: { lng: 120.56955, lat: 31.31035 },
     tag: "景点解读",
-    shortDescription: "普明宝塔为景区补充了更鲜明的垂直地标感，也让寺院文化的层次更加完整。",
-    detail: "普明宝塔适合被理解为视线中的垂直锚点。相比桥和运河的水平展开，宝塔让这片区域拥有了更明显的上升感与纪念感，也为景区的宗教与历史氛围增加了另一层识别度。",
-    highlights: ["提供明显的垂直地标识别", "补足寺院文化与历史层次", "适合作为景区轮廓中的视觉锚点"],
+    shortDescription: "它让寒山寺重新拥有了“寺与塔相互映照”的完整天际线。",
+    detail: "寒山寺开山原有“妙利普明塔”，但元代以后长期有寺无塔。今天游客看到的普明宝塔为1996年重建，采用仿唐木结构楼阁式样，既回应了寒山寺最初的历史名称，也恢复了古刹应有的塔影景观。对于网页叙事来说，这里不只是一个“高处看景”的点位，更是理解寺院空间秩序的重要线索：塔的垂直感让寒山寺从平面的游览路线中拔起，形成更鲜明的精神性象征。塔、钟、寺、河相互映照之后，游客会更容易理解为什么“枫桥夜泊”能成为跨越千年的文化意象。",
+    highlights: ["重现寒山寺“有寺有塔”的历史格局", "是寒山寺视觉识别度极高的空间焦点", "适合表现古刹的纵深感与精神象征"],
     image: MAP_SCENE_IMAGE_BY_ID["puming-pagoda"] || scenicImage({
       palette: ["#e4d5c2", "#916447", "#eedab7"],
       title: "普明宝塔",
@@ -418,6 +563,55 @@ const resolveRecommendedRoute = (time, preference) => {
   );
 };
 
+const getLocalizedHotspot = (hotspot) => {
+  if (mapLanguage !== "en") {
+    return hotspot;
+  }
+
+  const en = hotspotEn[hotspot.id] || {};
+  return {
+    ...hotspot,
+    title: en.title || hotspot.title,
+    tag: en.tag || hotspot.tag,
+    shortDescription: en.shortDescription || hotspot.shortDescription,
+    detail: en.detail || hotspot.detail,
+    intro: en.intro || hotspot.intro,
+    poemTitle: en.poemTitle || hotspot.poemTitle,
+    poemAuthor: en.poemAuthor || hotspot.poemAuthor,
+    highlights: en.highlights || hotspot.highlights,
+    fortunes: en.fortunes || hotspot.fortunes,
+    imageryNotes: hotspot.imageryNotes?.map((item) => ({
+      ...item,
+      title: en.imageryNotes?.[item.id]?.title || item.title,
+      note: en.imageryNotes?.[item.id]?.note || item.note
+    })) || hotspot.imageryNotes
+  };
+};
+
+const getLocalizedRoute = (route) => {
+  if (mapLanguage !== "en") {
+    return route;
+  }
+
+  const en = routeEn[route.id] || {};
+  return {
+    ...route,
+    title: en.title || route.title,
+    summary: en.summary || route.summary,
+    whyRecommended: en.whyRecommended || route.whyRecommended,
+    durationLabel: route.durationLabel.replace("约 ", "About ").replace(" 分钟", " min"),
+    preference: routePreferenceLabel(route.preference)
+  };
+};
+
+const routeTimeLabel = (time) => (mapLanguage === "en" ? time.replace("分钟", " min") : time);
+const routePreferenceLabel = (preference) => {
+  if (mapLanguage !== "en") return preference;
+  if (preference === "桥与运河") return "Bridges & Canal";
+  if (preference === "历史关隘") return "Historic Passes";
+  return "Old Town Walk";
+};
+
 const renderRouteFilters = () => {
   if (routeTimeOptions) {
     routeTimeOptions.innerHTML = routeTimeOptionsData
@@ -428,7 +622,7 @@ const renderRouteFilters = () => {
             type="button"
             data-route-time="${time}"
           >
-            ${time}
+            ${routeTimeLabel(time)}
           </button>
         `
       )
@@ -444,7 +638,7 @@ const renderRouteFilters = () => {
             type="button"
             data-route-preference="${preference}"
           >
-            ${preference}
+            ${routePreferenceLabel(preference)}
           </button>
         `
       )
@@ -487,8 +681,8 @@ const buildRouteStopsMarkup = (route) =>
         <li>
           <span class="route-stop-index">${index + 1}</span>
           <div>
-            <strong>${stop.title}</strong>
-            <p>${stop.shortDescription}</p>
+            <strong>${getLocalizedHotspot(stop).title}</strong>
+            <p>${getLocalizedHotspot(stop).shortDescription}</p>
           </div>
         </li>
       `
@@ -500,8 +694,12 @@ const renderRouteInlineResult = (route) => {
     return;
   }
 
+  const localizedRoute = getLocalizedRoute(route);
+
   const stopSummary = route.stops
-    .map((stopId) => scenicHotspots.get(stopId)?.title)
+    .map((stopId) => scenicHotspots.get(stopId))
+    .filter(Boolean)
+    .map((stop) => getLocalizedHotspot(stop).title)
     .filter(Boolean)
     .join(" -> ");
 
@@ -509,14 +707,14 @@ const renderRouteInlineResult = (route) => {
   routeResultInline.classList.remove("is-hidden");
   routeResultInline.innerHTML = `
     <div class="route-result-inline-head">
-      <span class="kicker">当前推荐</span>
-      <span class="route-time">${route.durationLabel}</span>
+      <span class="kicker">${localize(mapUiText.routeCurrent)}</span>
+      <span class="route-time">${localizedRoute.durationLabel}</span>
     </div>
-    <h3>${route.title}</h3>
+    <h3>${localizedRoute.title}</h3>
     <p class="route-result-inline-seq">${stopSummary}</p>
     <div class="route-result-inline-actions">
       <button class="button button-secondary route-detail-button" type="button" data-route-detail="${route.id}">
-        查看详细路线
+        ${mapLanguage === "en" ? "View Full Route" : "查看详细路线"}
       </button>
     </div>
   `;
@@ -527,26 +725,27 @@ const openRouteModal = (route) => {
     return;
   }
 
-  activeRouteRecommendation = route;
+  const localizedRoute = getLocalizedRoute(route);
+  activeRouteRecommendation = localizedRoute;
   routeModalBody.innerHTML = `
     <article class="route-route-summary">
       <div class="route-result-head">
-        <span class="kicker">${route.preference}</span>
-        <span class="route-time">${route.durationLabel}</span>
+        <span class="kicker">${localizedRoute.preference}</span>
+        <span class="route-time">${localizedRoute.durationLabel}</span>
       </div>
-      <h3>${route.title}</h3>
-      <p class="route-result-summary">${route.summary}</p>
-      <p class="route-result-reason">${route.whyRecommended}</p>
+      <h3>${localizedRoute.title}</h3>
+      <p class="route-result-summary">${localizedRoute.summary}</p>
+      <p class="route-result-reason">${localizedRoute.whyRecommended}</p>
     </article>
     <section class="route-sheet-section">
-      <h3>推荐顺序</h3>
+      <h3>${localize(mapUiText.routeOrder)}</h3>
       <ol class="route-stop-list">
         ${buildRouteStopsMarkup(route)}
       </ol>
     </section>
     <div class="route-sheet-actions">
       <button class="button button-secondary route-map-button" type="button" data-route-scroll="map">
-        按这条路线看地图
+        ${mapLanguage === "en" ? "View This Route on Map" : "按这条路线看地图"}
       </button>
     </div>
   `;
@@ -631,7 +830,7 @@ const closeModal = () => {
 const scenicTemplate = (hotspot) => `
   <article class="sheet-hero">
     <figure class="sheet-image-frame">
-      <img src="${hotspot.image}" alt="${hotspot.title}景观示意图">
+      <img src="${hotspot.image}" alt="${hotspot.title}${mapLanguage === "en" ? " scene image" : "景观示意图"}">
     </figure>
     <div class="sheet-copy">
       <p class="sheet-tag">${hotspot.tag}</p>
@@ -640,11 +839,11 @@ const scenicTemplate = (hotspot) => `
     </div>
   </article>
   <section class="sheet-section">
-    <h3>景点解读</h3>
+    <h3>${localize(mapUiText.scenicTitle)}</h3>
     <p>${hotspot.detail}</p>
   </section>
   <section class="sheet-section">
-    <h3>看点摘要</h3>
+    <h3>${localize(mapUiText.scenicHighlights)}</h3>
     <ul class="sheet-list">
       ${hotspot.highlights.map((item) => `<li>${item}</li>`).join("")}
     </ul>
@@ -663,15 +862,15 @@ const gameTemplate = (hotspot) => `
     </figure>
   </article>
   <section class="sheet-section">
-    <h3>玩法说明</h3>
-    <p>点击下方按钮，系统会随机生成一条今日签语风格的结果，让祈福体验更轻松自然地融入游览过程。</p>
+    <h3>${localize(mapUiText.gameTitle)}</h3>
+    <p>${localize(mapUiText.gameBody)}</p>
     <div class="fortune-actions">
-      <button class="button button-primary" type="button" data-fortune-action="draw">抽取今日福运</button>
-      <button class="button button-secondary" type="button" data-fortune-action="reset">重新来过</button>
+      <button class="button button-primary" type="button" data-fortune-action="draw">${localize(mapUiText.fortuneDraw)}</button>
+      <button class="button button-secondary" type="button" data-fortune-action="reset">${localize(mapUiText.fortuneReset)}</button>
     </div>
     <div class="fortune-result" id="fortune-result">
-      <strong>轻触按钮，听一声今日回响。</strong>
-      <p>结果会在这里出现。</p>
+      <strong>${localize(mapUiText.fortuneIdleTitle)}</strong>
+      <p>${localize(mapUiText.fortuneIdleText)}</p>
     </div>
   </section>
 `;
@@ -701,15 +900,15 @@ const createPoemNoteMarkup = (imagery) => {
   if (!imagery) {
     return `
       <div class="poem-note-empty">
-        <strong>点开一个意象，慢慢读进枫桥夜色。</strong>
-        <p>点击诗中加粗的词语，下方会出现对应的画面和诗文解析。</p>
+        <strong>${localize(mapUiText.poemIdleTitle)}</strong>
+        <p>${localize(mapUiText.poemIdleText)}</p>
       </div>
     `;
   }
 
   return `
     <figure class="poem-note-media">
-      <img src="${imagery.image}" alt="${imagery.title}意象示意图" loading="lazy" decoding="async">
+      <img src="${imagery.image}" alt="${imagery.title}${mapLanguage === "en" ? " imagery image" : "意象示意图"}" loading="lazy" decoding="async">
     </figure>
     <div class="poem-note-copy">
       <strong>${imagery.title}</strong>
@@ -723,7 +922,7 @@ const poemTemplate = (hotspot) => `
     <div class="sheet-copy">
       <p class="sheet-tag">${hotspot.tag}</p>
       <h2 id="map-modal-title">${hotspot.poemTitle}</h2>
-      <p class="sheet-lead">诗句中的五个关键意象已经被标记出来。点开它们，让《枫桥夜泊》的画面、地点与回响在下方慢慢展开。</p>
+      <p class="sheet-lead">${localize(mapUiText.poemLead)}</p>
       <p class="poem-author">${hotspot.poemAuthor}</p>
     </div>
   </article>
@@ -750,20 +949,21 @@ const renderModal = (hotspot) => {
     return;
   }
 
-  activeHotspot = hotspot;
-  mapModalKicker.textContent = hotspot.tag;
+  const localizedHotspot = getLocalizedHotspot(hotspot);
+  activeHotspot = localizedHotspot;
+  mapModalKicker.textContent = localizedHotspot.tag;
 
-  if (hotspot.type === "scenic") {
-    mapModalBody.innerHTML = scenicTemplate(hotspot);
+  if (localizedHotspot.type === "scenic") {
+    mapModalBody.innerHTML = scenicTemplate(localizedHotspot);
   }
 
-  if (hotspot.type === "game") {
-    mapModalBody.innerHTML = gameTemplate(hotspot);
+  if (localizedHotspot.type === "game") {
+    mapModalBody.innerHTML = gameTemplate(localizedHotspot);
   }
 
-  if (hotspot.type === "poem") {
+  if (localizedHotspot.type === "poem") {
     activePoemImageryId = "";
-    mapModalBody.innerHTML = poemTemplate(hotspot);
+    mapModalBody.innerHTML = poemTemplate(localizedHotspot);
   }
 
   openModal();
@@ -827,12 +1027,13 @@ const hideMapFallback = () => {
 const createMarkerContent = (hotspot) => {
   const button = document.createElement("button");
   const hotspotMode = getHotspotMode(hotspot);
+  const localizedHotspot = getLocalizedHotspot(hotspot);
   button.type = "button";
   button.className = `map-hotspot-chip map-hotspot-${hotspot.type} is-${hotspotMode}`;
-  button.setAttribute("aria-label", `打开${hotspot.title}${hotspot.tag}`);
+  button.setAttribute("aria-label", mapLanguage === "en" ? `Open ${localizedHotspot.title} (${localizedHotspot.tag})` : `打开${localizedHotspot.title}${localizedHotspot.tag}`);
   button.innerHTML = `
     <span class="map-hotspot-dot" aria-hidden="true"></span>
-    <span class="map-hotspot-label">${hotspot.title}</span>
+    <span class="map-hotspot-label">${localizedHotspot.title}</span>
   `;
 
   return button;
@@ -1017,8 +1218,8 @@ document.addEventListener("click", (event) => {
 
     if (fortuneResult) {
       fortuneResult.innerHTML = `
-        <strong>轻触按钮，听一声今日回响。</strong>
-        <p>结果会在这里出现。</p>
+        <strong>${localize(mapUiText.fortuneIdleTitle)}</strong>
+        <p>${localize(mapUiText.fortuneIdleText)}</p>
       `;
     }
   }

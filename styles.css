@@ -510,6 +510,27 @@ body.is-senior-mode .smart-agent-direction-item h3 {
   font-size: 1.2rem;
 }
 
+body.is-lang-en .site-nav a,
+body.is-lang-en .header-tool,
+body.is-lang-en .route-filter-chip,
+body.is-lang-en .notice-filter-chip,
+body.is-lang-en .assistant-quick-action {
+  letter-spacing: 0;
+}
+
+body.is-lang-en .site-nav a {
+  padding-inline: 10px;
+}
+
+body.is-lang-en .header-tool {
+  min-width: 74px;
+}
+
+body.is-lang-en .route-filter-chip,
+body.is-lang-en .notice-filter-chip {
+  min-height: 42px;
+}
+
 .site-nav a {
   display: block;
   padding: 12px 14px;

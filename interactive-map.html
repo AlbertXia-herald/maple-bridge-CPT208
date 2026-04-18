@@ -27,16 +27,16 @@
       <a class="brand" href="index.html" aria-label="返回枫盈苏州首页">
         <span class="brand-mark"><img src="images/log.jpg" alt=""></span>
         <span class="brand-copy">
-          <strong>枫盈苏州</strong>
-          <span>苏州枫桥文化导览</span>
+          <strong data-i18n="common.brand.name">枫盈苏州</strong>
+          <span data-i18n="common.brand.tagline">苏州枫桥文化导览</span>
         </span>
 
         <span class="site-header-tools" aria-label="辅助功能与语言入口">
-          <button class="header-tool header-tool-senior" type="button" data-senior-mode-toggle aria-pressed="false">
+          <button class="header-tool header-tool-senior" type="button" data-senior-mode-toggle aria-pressed="false" data-i18n="common.senior">
             长辈模式
           </button>
-          <button class="header-tool header-tool-language" type="button" data-language-toggle aria-label="中英文切换，暂未启用">
-            中/英
+          <button class="header-tool header-tool-language" type="button" data-language-toggle aria-label="中英文切换，暂未启用" data-i18n="common.language">
+            中/EN
           </button>
         </span>
       </a>
@@ -45,15 +45,15 @@
         <span></span>
         <span></span>
         <span></span>
-        <span class="sr-only">打开导航</span>
+        <span class="sr-only" data-i18n="common.nav.open">打开导航</span>
       </button>
 
       <nav class="site-nav" id="interactive-map-nav" aria-label="全站导航">
-        <a href="index.html#top">首页</a>
-        <a href="interactive-map.html" aria-current="page">互动地图</a>
-        <a href="photo-wall.html">照片墙</a>
-        <a href="notice-board.html">公告栏</a>
-        <a href="smart-agent.html">智能枫桥</a>
+        <a href="index.html#top" data-i18n="common.nav.home">首页</a>
+        <a href="interactive-map.html" aria-current="page" data-i18n="common.nav.map">互动地图</a>
+        <a href="photo-wall.html" data-i18n="common.nav.photo">照片墙</a>
+        <a href="notice-board.html" data-i18n="common.nav.notice">公告栏</a>
+        <a href="smart-agent.html" data-i18n="common.nav.agent">智能枫桥</a>
       </nav>
     </header>
 
@@ -61,34 +61,34 @@
       <section class="interactive-map-hero">
         <div class="interactive-map-copy">
           <p class="eyebrow">Playful Heritage Exploration</p>
-          <h1>点开一张枫桥地图，
+          <h1 data-i18n-html="interactive.hero.title">点开一张枫桥地图，
             <span>从景点、诗意与祈愿里</span>
             慢慢走进去。
           </h1>
-            <p class="hero-summary">
-              你可以点击不同热点，查看景点解读，或进入围绕寒山寺与水面意象展开的游戏交互。
+            <p class="hero-summary" data-i18n="interactive.hero.summary">
+              你可以点击不同地点，查看景点解读，或进入围绕寒山寺与水面意象展开的趣味小游戏。
             </p>
         </div>
 
         <aside class="interactive-map-panel" aria-label="路线推荐">
           <section class="route-recommend-panel" id="route-recommend-panel">
             <div class="route-panel-head">
-              <p class="eyebrow">路线推荐</p>
-              <h2>按停留时间与兴趣方向，挑一条更适合当下节奏的走法。</h2>
-              <p class="route-panel-note">先选时间，再定偏好。完成后会先在这里给出一条轻量摘要，想看完整建议时再打开详细路线弹窗。</p>
+              <p class="eyebrow" data-i18n="interactive.route.eyebrow">路线推荐</p>
+              <h2 data-i18n="interactive.route.title">按停留时间与兴趣方向，挑一条更适合当下节奏的走法。</h2>
+              <p class="route-panel-note" data-i18n="interactive.route.note">先选时间，再定偏好。完成后会先在这里给出一条轻量摘要，想看完整建议时可以打开详细页查看。</p>
             </div>
 
             <div class="route-picker">
               <section class="route-picker-section" aria-label="按时间选择路线">
                 <div class="route-filter-head">
-                  <span class="kicker">时间</span>
+                  <span class="kicker" data-i18n="interactive.route.time">时间</span>
                 </div>
                 <div class="route-filter-chips" id="route-time-options"></div>
               </section>
 
               <section class="route-picker-section" aria-label="按偏好选择路线">
                 <div class="route-filter-head">
-                  <span class="kicker">偏好</span>
+                  <span class="kicker" data-i18n="interactive.route.preference">偏好</span>
                 </div>
                 <div class="route-filter-chips" id="route-preference-options"></div>
               </section>
@@ -102,27 +102,27 @@
       <section class="map-stage section" id="map-explorer">
         <div class="map-stage-header">
           <div class="section-heading">
-            <p class="eyebrow">地图探索</p>
-            <h2>点击热点，沿着枫桥一带慢慢发现内容</h2>
-            <p>地图升级为真实底图承载交互。圆形按钮用于景点介绍，三角形按钮用于玩法互动，帮助你在进入页面后立刻分清“看介绍”和“进体验”的不同入口。</p>
+            <p class="eyebrow" data-i18n="interactive.map.eyebrow">地图探索</p>
+            <h2 data-i18n="interactive.map.title">点击地点入口，沿着枫桥一带慢慢发现内容</h2>
+            <p data-i18n="interactive.map.summary">圆形入口：景点介绍，三角形入口：玩法互动</p>
           </div>
 
           <div class="map-tips">
             <article class="map-tip-card">
-              <h3>景点热点</h3>
-              <p>圆形按钮会打开大尺寸底部信息面板，阅读景点介绍、历史片段与看点摘要。</p>
+              <h3 data-i18n="interactive.map.scenic.title">景点入口</h3>
+              <p data-i18n="interactive.map.scenic.p">圆形按钮会打开景点信息面板，阅读景点介绍、历史片段与看点摘要。</p>
             </article>
             <article class="map-tip-card">
-              <h3>玩法热点</h3>
-              <p>三角形按钮代表玩法入口。寒山寺可进行祈福小游戏，水域区域可进入《枫桥夜泊》互动。</p>
+              <h3 data-i18n="interactive.map.play.title">玩法入口</h3>
+              <p data-i18n="interactive.map.play.p">三角形按钮代表小游戏入口。寒山寺可进行祈福小游戏，水域区域可进入《枫桥夜泊》互动。</p>
             </article>
           </div>
         </div>
 
         <div class="map-surface-wrap">
           <div class="map-legend" id="map-legend" aria-label="热点图例">
-            <span class="legend-pill legend-scenic legend-intro">景点解读</span>
-            <span class="legend-pill legend-game legend-play">游戏交互</span>
+            <span class="legend-pill legend-scenic legend-intro" data-i18n="interactive.legend.scenic">景点解读</span>
+            <span class="legend-pill legend-game legend-play" data-i18n="interactive.legend.play">游戏交互</span>
           </div>
 
           <section class="map-surface" aria-label="枫桥互动地图">
@@ -132,9 +132,9 @@
             <div class="amap-container" id="amap-container" role="application" aria-label="枫桥真实互动地图"></div>
             <div class="map-surface-fallback" data-map-fallback hidden>
               <div class="map-fallback-card">
-                <p class="eyebrow">真实地图未就绪</p>
-                <h3>地图暂时未能加载</h3>
-                <p>请稍后刷新页面，或检查当前网络环境后再次进入互动地图。</p>
+                <p class="eyebrow" data-i18n="interactive.fallback.eyebrow">真实地图未就绪</p>
+                <h3 data-i18n="interactive.fallback.title">地图暂时未能加载</h3>
+                <p data-i18n="interactive.fallback.p">请稍后刷新页面，或检查当前网络环境后再次进入互动地图。</p>
               </div>
             </div>
           </section>
@@ -147,8 +147,8 @@
     <div class="map-modal-backdrop" data-close-modal="true"></div>
     <section class="map-sheet" role="dialog" aria-modal="true" aria-labelledby="map-modal-title">
       <header class="map-sheet-header">
-        <div class="map-sheet-kicker" id="map-modal-kicker">探索中</div>
-        <button class="map-sheet-close" type="button" id="map-modal-close" aria-label="关闭弹窗">关闭</button>
+        <div class="map-sheet-kicker" id="map-modal-kicker" data-i18n="interactive.modal.exploring">探索中</div>
+        <button class="map-sheet-close" type="button" id="map-modal-close" aria-label="关闭弹窗" data-i18n="common.close">关闭</button>
       </header>
       <div class="map-sheet-body" id="map-modal-body"></div>
     </section>
@@ -159,10 +159,10 @@
     <section class="route-sheet" role="dialog" aria-modal="true" aria-labelledby="route-modal-title">
       <header class="route-sheet-header">
         <div>
-          <div class="route-sheet-kicker">路线推荐</div>
-          <h2 id="route-modal-title">导览建议</h2>
+          <div class="route-sheet-kicker" data-i18n="interactive.modal.route">路线推荐</div>
+          <h2 id="route-modal-title" data-i18n="interactive.modal.routeTitle">导览建议</h2>
         </div>
-        <button class="route-sheet-close" type="button" id="route-modal-close" aria-label="关闭路线推荐弹窗">关闭</button>
+        <button class="route-sheet-close" type="button" id="route-modal-close" aria-label="关闭路线推荐弹窗" data-i18n="common.close">关闭</button>
       </header>
       <div class="route-sheet-body" id="route-modal-body"></div>
     </section>
@@ -197,4 +197,3 @@
   </script>
 </body>
 </html>
-

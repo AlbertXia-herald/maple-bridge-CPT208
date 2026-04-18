@@ -10,6 +10,19 @@ const photoUploadToast = document.querySelector("#photo-upload-toast");
 const photoUploadToastClose = document.querySelector("[data-photo-upload-toast-close]");
 let photoUploadToastTimer = null;
 let uploadedPhotos = [];
+const photoWallLanguage = window.MAPLE_BRIDGE_I18N?.getLanguage?.() || "zh";
+const photoWallIsEnglish = photoWallLanguage === "en";
+const photoWallUi = {
+  lightboxTitle: { zh: "枫桥瞬间", en: "Maple Bridge Moment" },
+  uploadSuccess: { zh: "上传成功", en: "Upload complete" },
+  close: { zh: "关闭", en: "Close" },
+  zoomView: { zh: "放大查看", en: "Open preview" },
+  uploadedTitle: { zh: "新上传照片", en: "New Upload" },
+  uploadedUser: { zh: "枫盈枫桥用户", en: "Maple Bridge User" },
+  uploadedTag: { zh: "新上传", en: "New Upload" },
+};
+
+const text = (value) => window.MAPLE_BRIDGE_I18N?.text?.(value) || (typeof value === "string" ? value : value.zh);
 
 const mockPhotos = [
   {
@@ -91,7 +104,7 @@ const closePhotoLightbox = () => {
   photoLightbox.setAttribute("aria-hidden", "true");
   photoLightboxImage.src = "";
   photoLightboxImage.alt = "";
-  photoLightboxTitle.textContent = "枫桥瞬间";
+  photoLightboxTitle.textContent = text(photoWallUi.lightboxTitle);
   photoLightboxDate.textContent = "";
   document.body.classList.remove("photo-lightbox-open");
 };
@@ -114,6 +127,11 @@ const showUploadToast = () => {
     clearTimeout(photoUploadToastTimer);
   }
 
+  const toastText = photoUploadToast?.querySelector(".photo-upload-toast-text");
+  if (toastText) {
+    toastText.textContent = text(photoWallUi.uploadSuccess);
+  }
+
   photoUploadToast.hidden = false;
   photoUploadToast.classList.add("is-visible");
   photoUploadToastTimer = window.setTimeout(() => {
@@ -127,7 +145,7 @@ const createPhotoCard = (photo) => {
   card.dataset.tag = photo.tag || "";
 
   card.innerHTML = `
-    <button class="photo-frame ${photo.isUploaded ? "photo-frame-uploaded" : ""}" type="button" aria-label="放大查看 ${photo.title}">
+    <button class="photo-frame ${photo.isUploaded ? "photo-frame-uploaded" : ""}" type="button" aria-label="${text(photoWallUi.zoomView)} ${photo.title}">
       <img src="${photo.image}" alt="${photo.alt}" loading="lazy">
     </button>
     <div class="photo-card-copy">
@@ -173,11 +191,11 @@ if (uploadInput) {
 
     const newUploadedPhotos = files.map((file, index) => ({
       id: `upload-${Date.now()}-${index}`,
-      title: file.name.replace(/\.[^.]+$/, "") || "新上传照片",
-      uploader: "枫盈枫桥用户",
+      title: file.name.replace(/\.[^.]+$/, "") || text(photoWallUi.uploadedTitle),
+      uploader: text(photoWallUi.uploadedUser),
       date: new Date().toISOString().slice(0, 10).replace(/-/g, "."),
-      tag: "新上传",
-      alt: `用户上传的枫桥照片预览：${file.name}`,
+      tag: text(photoWallUi.uploadedTag),
+      alt: photoWallIsEnglish ? `Uploaded Maple Bridge photo preview: ${file.name}` : `用户上传的枫桥照片预览：${file.name}`,
       image: URL.createObjectURL(file),
       isUploaded: true
     }));
