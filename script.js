@@ -1,16 +1,30 @@
 const menuToggle = document.querySelector(".menu-toggle");
 const siteNav = document.querySelector(".site-nav");
 const navLinks = document.querySelectorAll(".site-nav a");
+const audioToggle = document.querySelector("[data-audio-toggle]");
 const seniorModeToggle = document.querySelector("[data-senior-mode-toggle]");
 const languageToggle = document.querySelector("[data-language-toggle]");
+const settingsToggle = document.querySelector("[data-settings-toggle]");
+const settingsPanel = document.querySelector("[data-settings-panel]");
+const settingsAudioAction = document.querySelector("[data-settings-audio]");
+const settingsSeniorAction = document.querySelector("[data-settings-senior]");
+const settingsLanguageAction = document.querySelector("[data-settings-language]");
+const settingsAudioStatus = document.querySelector("[data-settings-audio-status]");
+const settingsSeniorStatus = document.querySelector("[data-settings-senior-status]");
+const settingsLanguageStatus = document.querySelector("[data-settings-language-status]");
+const AUDIO_MUTED_STORAGE_KEY = "mapleBridgeAudioMuted";
 const SENIOR_MODE_STORAGE_KEY = "mapleBridgeSeniorMode";
 const LANGUAGE_STORAGE_KEY = "mapleBridgeLanguage";
+// Replace this path to choose a different background music file for the site.
+const BACKGROUND_AUDIO_SRC = "audio/塞壬唱片-MSR,HeartStrings - 辞岁行.mp3";
 
 const I18N_TEXT = {
   "common.brand.name": { zh: "枫盈苏州", en: "Maple Bridge Suzhou" },
   "common.brand.tagline": { zh: "苏州枫桥文化导览", en: "Maple Bridge Cultural Guide" },
+  "common.audio": { zh: "音乐", en: "Music" },
   "common.senior": { zh: "长辈模式", en: "Senior Mode" },
   "common.language": { zh: "中/EN", en: "ZH/英" },
+  "common.settings": { zh: "设置", en: "Settings" },
   "common.nav.open": { zh: "打开导航", en: "Open navigation" },
   "common.nav.home": { zh: "首页", en: "Home" },
   "common.nav.map": { zh: "互动地图", en: "Interactive Map" },
@@ -27,7 +41,7 @@ const I18N_TEXT = {
   "index.forecast.high": { zh: "最高温", en: "High" },
   "index.forecast.low": { zh: "最低温", en: "Low" },
   "index.guide.eyebrow": { zh: "导览", en: "Guide" },
-  "index.guide.title": { zh: "先用一段清楚介绍，建立对枫桥景区的整体印象", en: "Start with a clear overview to build a complete first impression of Maple Bridge Scenic Area." },
+  "index.guide.title": { zh: "用一段文字，走入属于它的历史", en: "Enter its history through a few words." },
   "index.guide.summary": { zh: "枫桥景区适合作为初次到访苏州时的文化起点。它的吸引力不只在某一处景点，而在古桥、运河、寺院、水巷与诗意记忆共同形成的整体气质。", en: "Maple Bridge Scenic Area works well as a cultural starting point for a first visit to Suzhou. Its appeal lies not in a single landmark, but in the combined atmosphere created by old bridges, canals, temples, waterside lanes, and poetic memory." },
   "index.guide.card1.title": { zh: "枫桥景区是什么样的地方", en: "What Kind of Place Is Maple Bridge?" },
   "index.guide.card1.p1": { zh: "枫桥景区位于苏州古运河一带，以枫桥、寒山寺、江村桥和沿岸水巷共同构成核心游览体验。它不是依赖大型娱乐设施的景区，而是一处更强调空间氛围、文化线索与慢节奏感受的江南人文场所。", en: "Located along Suzhou's Grand Canal, Maple Bridge Scenic Area is shaped by Maple Bridge, Hanshan Temple, Jiangcun Bridge, and the waterside lanes nearby. It is not a theme-park-style destination, but a Jiangnan cultural place centered on atmosphere, heritage, and slow exploration." },
@@ -53,7 +67,7 @@ const I18N_TEXT = {
   "index.services.hotline.time": { zh: "服务时间：08:00-20:00", en: "Service Hours: 08:00-20:00" },
   "index.services.hotline.note": { zh: "可用于咨询出行、票务或现场参观相关问题。", en: "Available for travel, ticketing, and on-site visit enquiries." },
   "index.entries.agent.eyebrow": { zh: "智能枫桥", en: "Smart Maple Bridge" },
-  "index.entries.agent.title": { zh: "把问路、找内容、推荐顺序交给一个更直接的入口", en: "Let one direct entry help with directions, content, and what to view first." },
+  "index.entries.agent.title": { zh: "从此处走入枫桥的智慧世界", en: "From here scor into the world of Maple Bridge." },
   "index.entries.agent.p": { zh: "智能枫桥承担首页之外的即时帮助，让“想知道下一步看什么”的用户不需要自己摸索。它既适合游客快速找入口，也适合居民直接跳到公告信息。", en: "Smart Maple Bridge offers instant help beyond the homepage, so users do not need to guess what to do next. It works both for visitors seeking quick guidance and for residents who want to jump straight to notices." },
   "index.entries.agent.open": { zh: "打开智能枫桥", en: "Open Smart Guide" },
   "index.entries.agent.full": { zh: "查看完整助手页", en: "Open Full Assistant Page" },
@@ -161,6 +175,12 @@ const getStoredLanguage = () => {
 };
 
 let currentLanguage = getStoredLanguage();
+const backgroundAudio = BACKGROUND_AUDIO_SRC ? new Audio(BACKGROUND_AUDIO_SRC) : null;
+
+if (backgroundAudio) {
+  backgroundAudio.loop = true;
+  backgroundAudio.preload = "auto";
+}
 
 const getLocalizedText = (value, fallback = "") => {
   if (!value) {
@@ -177,6 +197,22 @@ const setStoredLanguage = (language) => {
     window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
   } catch (error) {
     // Ignore storage failures and keep the current page usable.
+  }
+};
+
+const readAudioMutedPreference = () => {
+  try {
+    return window.localStorage.getItem(AUDIO_MUTED_STORAGE_KEY) !== "false";
+  } catch (error) {
+    return true;
+  }
+};
+
+const writeAudioMutedPreference = (muted) => {
+  try {
+    window.localStorage.setItem(AUDIO_MUTED_STORAGE_KEY, String(muted));
+  } catch (error) {
+    // Ignore storage failures and keep the current page state usable.
   }
 };
 
@@ -202,6 +238,121 @@ const writeSeniorModePreference = (enabled) => {
   }
 };
 
+const closeSettingsPanel = () => {
+  document.body.classList.remove("is-settings-open");
+
+  if (!settingsToggle || !settingsPanel) {
+    return;
+  }
+
+  settingsToggle.setAttribute("aria-expanded", "false");
+  settingsPanel.setAttribute("aria-hidden", "true");
+};
+
+const getAudioStatusText = () => {
+  if (!backgroundAudio || !BACKGROUND_AUDIO_SRC) {
+    return currentLanguage === "en" ? "No music source" : "未设置音乐";
+  }
+
+  if (!backgroundAudio.paused && !backgroundAudio.muted) {
+    return currentLanguage === "en" ? "Currently playing" : "当前播放";
+  }
+
+  if (!backgroundAudio.paused && backgroundAudio.muted) {
+    return currentLanguage === "en" ? "Currently muted" : "当前静音";
+  }
+
+  return currentLanguage === "en" ? "Tap to play" : "点击播放";
+};
+
+const syncAudioUi = () => {
+  if (!audioToggle) {
+    return;
+  }
+
+  const isAudible = Boolean(backgroundAudio && !backgroundAudio.paused && !backgroundAudio.muted);
+  const audioLabel = getLocalizedText(I18N_TEXT["common.audio"]);
+
+  audioToggle.textContent = audioLabel;
+  audioToggle.setAttribute("aria-pressed", String(isAudible));
+  audioToggle.setAttribute("aria-label", `${audioLabel}：${getAudioStatusText()}`);
+  audioToggle.title = getAudioStatusText();
+
+  if (settingsAudioStatus) {
+    settingsAudioStatus.textContent = getAudioStatusText();
+  }
+};
+
+const toggleBackgroundAudio = async () => {
+  if (!backgroundAudio || !BACKGROUND_AUDIO_SRC) {
+    syncAudioUi();
+    return;
+  }
+
+  if (!backgroundAudio.paused && !backgroundAudio.muted) {
+    backgroundAudio.muted = true;
+    writeAudioMutedPreference(true);
+    syncAudioUi();
+    return;
+  }
+
+  backgroundAudio.muted = false;
+
+  try {
+    await backgroundAudio.play();
+    writeAudioMutedPreference(false);
+  } catch (error) {
+    backgroundAudio.muted = true;
+    writeAudioMutedPreference(true);
+  }
+
+  syncAudioUi();
+};
+
+const initBackgroundAudio = async () => {
+  if (!backgroundAudio || !BACKGROUND_AUDIO_SRC) {
+    syncAudioUi();
+    return;
+  }
+
+  backgroundAudio.muted = readAudioMutedPreference();
+
+  try {
+    await backgroundAudio.play();
+  } catch (error) {
+    // Browsers may block autoplay before a user gesture.
+  }
+
+  syncAudioUi();
+};
+
+const syncSettingsSummary = () => {
+  const seniorEnabled = document.body.classList.contains("is-senior-mode");
+
+  if (settingsAudioStatus) {
+    settingsAudioStatus.textContent = getAudioStatusText();
+  }
+
+  if (settingsSeniorStatus) {
+    settingsSeniorStatus.textContent = seniorEnabled
+      ? (currentLanguage === "en" ? "Currently on" : "当前开启")
+      : (currentLanguage === "en" ? "Currently off" : "当前关闭");
+  }
+
+  if (settingsLanguageStatus) {
+    settingsLanguageStatus.textContent = currentLanguage === "en"
+      ? "Current language: English"
+      : "当前语言：中文";
+  }
+
+  if (settingsToggle) {
+    settingsToggle.setAttribute("aria-label", currentLanguage === "en" ? "Open settings" : "打开设置");
+    settingsToggle.title = currentLanguage === "en" ? "Open settings" : "打开设置";
+  }
+
+  syncAudioUi();
+};
+
 const syncSeniorModeUi = (enabled) => {
   document.documentElement.classList.toggle("is-senior-mode", enabled);
   document.body.classList.toggle("is-senior-mode", enabled);
@@ -213,6 +364,7 @@ const syncSeniorModeUi = (enabled) => {
   seniorModeToggle.setAttribute("aria-pressed", String(enabled));
   seniorModeToggle.setAttribute("aria-label", enabled ? "退出长辈模式" : "开启长辈模式");
   seniorModeToggle.title = enabled ? "点击退出长辈模式" : "点击开启长辈模式";
+  syncSettingsSummary();
 };
 
 const applyPageMeta = () => {
@@ -261,9 +413,15 @@ const applyStaticTranslations = () => {
     languageToggle.title = currentLanguage === "en" ? "Switch to Chinese" : "Switch to English";
   }
 
+  if (audioToggle) {
+    audioToggle.textContent = getLocalizedText(I18N_TEXT["common.audio"]);
+  }
+
   if (seniorModeToggle) {
     seniorModeToggle.textContent = getLocalizedText(I18N_TEXT["common.senior"]);
   }
+
+  syncSettingsSummary();
 };
 
 const setLanguage = (language, shouldReload = false) => {
@@ -278,17 +436,49 @@ const setLanguage = (language, shouldReload = false) => {
 
 syncSeniorModeUi(readSeniorModePreference());
 applyStaticTranslations();
+initBackgroundAudio();
+
+if (audioToggle) {
+  audioToggle.addEventListener("click", async () => {
+    await toggleBackgroundAudio();
+    closeSettingsPanel();
+  });
+}
 
 if (seniorModeToggle) {
   seniorModeToggle.addEventListener("click", () => {
     const nextEnabled = !document.body.classList.contains("is-senior-mode");
     syncSeniorModeUi(nextEnabled);
     writeSeniorModePreference(nextEnabled);
+    closeSettingsPanel();
   });
 }
 
 if (languageToggle) {
   languageToggle.addEventListener("click", () => {
+    setLanguage(currentLanguage === "zh" ? "en" : "zh", true);
+  });
+}
+
+if (settingsAudioAction) {
+  settingsAudioAction.addEventListener("click", async () => {
+    await toggleBackgroundAudio();
+    closeSettingsPanel();
+  });
+}
+
+if (settingsSeniorAction) {
+  settingsSeniorAction.addEventListener("click", () => {
+    const nextEnabled = !document.body.classList.contains("is-senior-mode");
+    syncSeniorModeUi(nextEnabled);
+    writeSeniorModePreference(nextEnabled);
+    closeSettingsPanel();
+  });
+}
+
+if (settingsLanguageAction) {
+  settingsLanguageAction.addEventListener("click", () => {
+    closeSettingsPanel();
     setLanguage(currentLanguage === "zh" ? "en" : "zh", true);
   });
 }
@@ -300,6 +490,7 @@ if (menuToggle && siteNav) {
   };
 
   menuToggle.addEventListener("click", () => {
+    closeSettingsPanel();
     const isOpen = document.body.classList.toggle("nav-open");
     menuToggle.setAttribute("aria-expanded", String(isOpen));
   });
@@ -311,6 +502,50 @@ if (menuToggle && siteNav) {
   window.addEventListener("resize", () => {
     if (window.innerWidth >= 760) {
       closeMenu();
+    }
+
+    if (window.innerWidth > 375) {
+      closeSettingsPanel();
+    }
+  });
+}
+
+if (settingsToggle && settingsPanel) {
+  settingsToggle.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const nextOpen = !document.body.classList.contains("is-settings-open");
+
+    document.body.classList.toggle("is-settings-open", nextOpen);
+    settingsToggle.setAttribute("aria-expanded", String(nextOpen));
+    settingsPanel.setAttribute("aria-hidden", String(!nextOpen));
+
+    if (nextOpen) {
+      document.body.classList.remove("nav-open");
+      if (menuToggle) {
+        menuToggle.setAttribute("aria-expanded", "false");
+      }
+    }
+  });
+
+  settingsPanel.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!document.body.classList.contains("is-settings-open")) {
+      return;
+    }
+
+    if (settingsToggle.contains(event.target) || settingsPanel.contains(event.target)) {
+      return;
+    }
+
+    closeSettingsPanel();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeSettingsPanel();
     }
   });
 }

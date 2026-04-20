@@ -13,22 +13,50 @@
 <body class="smart-agent-page">
   <div class="page-shell">
     <header class="site-header">
-      <a class="brand" href="index.html" aria-label="返回枫盈苏州首页">
-        <span class="brand-mark"><img src="images/log.jpg" alt=""></span>
-        <span class="brand-copy">
-          <strong data-i18n="common.brand.name">枫盈苏州</strong>
-          <span data-i18n="common.brand.tagline">苏州枫桥文化导览</span>
-        </span>
+      <div class="site-header-main">
+        <a class="brand" href="index.html" aria-label="返回枫盈苏州首页">
+          <span class="brand-mark"><img src="images/log.jpg" alt=""></span>
+          <span class="brand-copy">
+            <strong data-i18n="common.brand.name">枫盈苏州</strong>
+            <span data-i18n="common.brand.tagline">苏州枫桥文化导览</span>
+          </span>
+        </a>
 
         <span class="site-header-tools" aria-label="辅助功能与语言入口">
+          <button class="header-tool header-tool-audio" type="button" data-audio-toggle aria-pressed="false" data-i18n="common.audio">
+            音乐
+          </button>
           <button class="header-tool header-tool-senior" type="button" data-senior-mode-toggle aria-pressed="false" data-i18n="common.senior">
             长辈模式
           </button>
           <button class="header-tool header-tool-language" type="button" data-language-toggle aria-label="中英文切换，暂未启用" data-i18n="common.language">
             中/EN
           </button>
+          <button class="header-tool header-tool-settings" type="button" data-settings-toggle aria-expanded="false" aria-controls="header-settings-panel" data-i18n="common.settings">
+            设置
+          </button>
+          <div class="header-settings-panel" id="header-settings-panel" data-settings-panel aria-hidden="true">
+            <button class="header-settings-action" type="button" data-settings-audio>
+              <span class="header-settings-copy">
+                <strong data-i18n="common.audio">音乐</strong>
+                <span data-settings-audio-status>点击播放</span>
+              </span>
+            </button>
+            <button class="header-settings-action" type="button" data-settings-senior>
+              <span class="header-settings-copy">
+                <strong data-i18n="common.senior">长辈模式</strong>
+                <span data-settings-senior-status>当前关闭</span>
+              </span>
+            </button>
+            <button class="header-settings-action" type="button" data-settings-language>
+              <span class="header-settings-copy">
+                <strong data-i18n="common.language">中/EN</strong>
+                <span data-settings-language-status>当前中文</span>
+              </span>
+            </button>
+          </div>
         </span>
-      </a>
+      </div>
 
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="smart-agent-nav">
         <span></span>

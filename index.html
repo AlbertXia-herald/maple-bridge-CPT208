@@ -13,22 +13,50 @@
 <body>
   <div class="page-shell">
     <header class="site-header">
-      <a class="brand" href="#top" aria-label="返回首页">
-        <span class="brand-mark"><img src="images/log.jpg" alt=""></span>
-        <span class="brand-copy">
-          <strong data-i18n="common.brand.name">枫盈苏州</strong>
-          <span data-i18n="common.brand.tagline">苏州枫桥文化导览</span>
-        </span>
+      <div class="site-header-main">
+        <a class="brand" href="#top" aria-label="返回首页">
+          <span class="brand-mark"><img src="images/log.jpg" alt=""></span>
+          <span class="brand-copy">
+            <strong data-i18n="common.brand.name">枫盈苏州</strong>
+            <span data-i18n="common.brand.tagline">苏州枫桥文化导览</span>
+          </span>
+        </a>
 
         <span class="site-header-tools" aria-label="辅助功能与语言入口">
+          <button class="header-tool header-tool-audio" type="button" data-audio-toggle aria-pressed="false" data-i18n="common.audio">
+            音乐
+          </button>
           <button class="header-tool header-tool-senior" type="button" data-senior-mode-toggle aria-pressed="false" data-i18n="common.senior">
             长辈模式
           </button>
           <button class="header-tool header-tool-language" type="button" data-language-toggle aria-label="中英文切换，暂未启用" data-i18n="common.language">
             中/EN
           </button>
+          <button class="header-tool header-tool-settings" type="button" data-settings-toggle aria-expanded="false" aria-controls="header-settings-panel" data-i18n="common.settings">
+            设置
+          </button>
+          <div class="header-settings-panel" id="header-settings-panel" data-settings-panel aria-hidden="true">
+            <button class="header-settings-action" type="button" data-settings-audio>
+              <span class="header-settings-copy">
+                <strong data-i18n="common.audio">音乐</strong>
+                <span data-settings-audio-status>点击播放</span>
+              </span>
+            </button>
+            <button class="header-settings-action" type="button" data-settings-senior>
+              <span class="header-settings-copy">
+                <strong data-i18n="common.senior">长辈模式</strong>
+                <span data-settings-senior-status>当前关闭</span>
+              </span>
+            </button>
+            <button class="header-settings-action" type="button" data-settings-language>
+              <span class="header-settings-copy">
+                <strong data-i18n="common.language">中/EN</strong>
+                <span data-settings-language-status>当前中文</span>
+              </span>
+            </button>
+          </div>
         </span>
-      </a>
+      </div>
 
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
         <span></span>
@@ -139,7 +167,7 @@
       <section class="section section-guide" id="guide">
         <div class="section-heading">
           <p class="eyebrow" data-i18n="index.guide.eyebrow">导览</p>
-          <h2 data-i18n="index.guide.title">先用一段清楚介绍，建立对枫桥景区的整体印象</h2>
+          <h2 data-i18n="index.guide.title">先用一段文字，走进枫桥景区的历史印象</h2>
           <p data-i18n="index.guide.summary">枫桥景区适合作为初次到访苏州时的文化起点。它的吸引力不只在某一处景点，而在古桥、运河、寺院、水巷与诗意记忆共同形成的整体气质。</p>
         </div>
 
@@ -163,8 +191,6 @@
       <section class="section section-services" id="services">
         <div class="section-heading">
           <p class="eyebrow" data-i18n="index.services.eyebrow">攻略秘籍</p>
-          <h2 data-i18n="index.services.title">把到访前最常用的支持信息集中在这里</h2>
-          <p data-i18n="index.services.summary">保留一组简洁、可靠的服务信息，帮助首次浏览首页的用户快速处理出行、票务和现场咨询这三类常见问题。</p>
         </div>
 
         <div class="services-grid">
@@ -198,7 +224,7 @@
           <div class="agent-banner">
             <div>
               <p class="eyebrow" data-i18n="index.entries.agent.eyebrow">智能枫桥</p>
-              <h2 data-i18n="index.entries.agent.title">把问路、找内容、推荐顺序交给一个更直接的入口</h2>
+              <h2 data-i18n="index.entries.agent.title">在这里，让我们走得更深入些</h2>
               <p data-i18n="index.entries.agent.p">智能枫桥承担首页之外的即时帮助，让“想知道下一步看什么”的用户不需要自己摸索。它既适合游客快速找入口，也适合居民直接跳到公告信息。</p>
             </div>
             <div class="agent-entry-actions">
