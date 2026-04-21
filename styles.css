@@ -631,6 +631,24 @@ body.is-lang-en .header-tool {
 }
 
 @media (max-width: 759px) {
+  .site-header-tools {
+    gap: 0;
+    margin-left: 6px;
+    padding-left: 6px;
+  }
+
+  .site-header-tools > .header-tool-senior,
+  .site-header-tools > .header-tool-audio,
+  .site-header-tools > .header-tool-language {
+    display: none;
+  }
+
+  .header-tool-settings {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   body.is-senior-mode .header-tool {
     min-height: 40px;
     padding: 0 10px;
@@ -649,6 +667,10 @@ body.is-lang-en .header-tool {
     min-width: 0;
     padding-inline: 9px;
     font-size: 0.72rem;
+  }
+
+  .header-settings-panel {
+    width: min(210px, calc(100vw - 28px));
   }
 }
 
@@ -675,12 +697,6 @@ body.is-lang-en .header-tool {
     display: none;
   }
 
-  .site-header-tools {
-    gap: 0;
-    margin-left: 6px;
-    padding-left: 6px;
-  }
-
   .header-tool {
     min-height: 36px;
     padding: 0 9px;
@@ -692,22 +708,6 @@ body.is-lang-en .header-tool {
     width: 40px;
     height: 40px;
     padding: 0 9px;
-  }
-
-  .site-header-tools > .header-tool-senior,
-  .site-header-tools > .header-tool-audio,
-  .site-header-tools > .header-tool-language {
-    display: none;
-  }
-
-  .header-tool-settings {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .header-settings-panel {
-    width: min(210px, calc(100vw - 28px));
   }
 }
 

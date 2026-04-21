@@ -504,7 +504,7 @@ if (menuToggle && siteNav) {
       closeMenu();
     }
 
-    if (window.innerWidth > 375) {
+    if (window.innerWidth >= 760) {
       closeSettingsPanel();
     }
   });
