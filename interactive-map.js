@@ -13,6 +13,11 @@ const routeModal = document.querySelector("#route-modal");
 const routeModalBody = document.querySelector("#route-modal-body");
 const routeModalClose = document.querySelector("#route-modal-close");
 const mapExplorerSection = document.querySelector("#map-explorer");
+const routeActiveBanner = document.querySelector("[data-route-active]");
+const routeActiveKicker = document.querySelector("[data-route-active-kicker]");
+const routeActiveTitle = document.querySelector("[data-route-active-title]");
+const routeActiveMeta = document.querySelector("[data-route-active-meta]");
+const routeActiveClear = document.querySelector("[data-route-active-clear]");
 
 const MAP_CONFIG = window.MAPLE_BRIDGE_AMAP_CONFIG || {};
 const MAP_CENTER = Array.isArray(MAP_CONFIG.center) ? MAP_CONFIG.center : [120.5662, 31.3161];
@@ -35,6 +40,9 @@ let activeRouteFilters = {
 };
 let activeRouteRecommendation = null;
 let isRouteModalOpen = false;
+let activeViewedRouteId = "";
+let pendingRouteFocusId = "";
+const scenicMarkerLookup = new Map();
 
 const scenicImage = ({ palette, title, subtitle }) => {
   const [first, second, third] = palette;
@@ -86,7 +94,10 @@ const mapUiText = {
   poemIdleText: { zh: "点击诗中加粗的词语，下方会出现对应的画面和诗文解析。", en: "Click the highlighted imagery in the poem to reveal its visual scene and interpretation below." },
   poemLead: { zh: "诗句中的五个关键意象已经被标记出来。点开它们，让《枫桥夜泊》的画面、地点与回响在下方慢慢展开。", en: "Five key images in the poem have been marked. Tap them to unfold the scene, setting, and echoes of 'Mooring by Maple Bridge at Night' below." },
   mapPreparing: { zh: "正在准备真实地图...", en: "Preparing the live map..." },
-  mapFallback: { zh: "地图暂时未能加载", en: "The map could not be loaded right now." }
+  mapFallback: { zh: "地图暂时未能加载", en: "The map could not be loaded right now." },
+  routeViewing: { zh: "当前查看路线", en: "Viewing Route" },
+  routeHighlighted: { zh: "地图中已高亮路线节点", en: "Route stops highlighted on the map" },
+  routeClear: { zh: "清除高亮", en: "Clear" }
 };
 
 const routeEn = {
@@ -744,7 +755,7 @@ const openRouteModal = (route) => {
       </ol>
     </section>
     <div class="route-sheet-actions">
-      <button class="button button-secondary route-map-button" type="button" data-route-scroll="map">
+      <button class="button button-secondary route-map-button" type="button" data-route-scroll="${route.id}">
         ${mapLanguage === "en" ? "View This Route on Map" : "按这条路线看地图"}
       </button>
     </div>
@@ -765,6 +776,135 @@ const updateRouteRecommendation = () => {
   const route = resolveRecommendedRoute(activeRouteFilters.time, activeRouteFilters.preference);
   activeRouteRecommendation = route;
   renderRouteInlineResult(route);
+};
+
+const getRouteById = (routeId) => routeRecommendations.find((route) => route.id === routeId) || null;
+
+const updateRouteActiveBanner = (route) => {
+  if (!routeActiveBanner || !routeActiveKicker || !routeActiveTitle || !routeActiveMeta || !routeActiveClear) {
+    return;
+  }
+
+  if (!route) {
+    routeActiveBanner.hidden = true;
+    routeActiveBanner.classList.remove("is-visible");
+    routeActiveTitle.textContent = "";
+    routeActiveMeta.textContent = "";
+    return;
+  }
+
+  const localizedRoute = getLocalizedRoute(route);
+  routeActiveKicker.textContent = localize(mapUiText.routeViewing);
+  routeActiveTitle.textContent = localizedRoute.title;
+  routeActiveMeta.textContent = `${localizedRoute.durationLabel} · ${localizedRoute.preference} · ${localize(mapUiText.routeHighlighted)}`;
+  routeActiveClear.textContent = localize(mapUiText.routeClear);
+  routeActiveBanner.hidden = false;
+  routeActiveBanner.classList.add("is-visible");
+};
+
+const clearRouteHighlight = ({ resetActiveRoute = false } = {}) => {
+  scenicMarkerLookup.forEach(({ content }) => {
+    content.classList.remove("is-route-active");
+    content.removeAttribute("data-route-order");
+
+    const orderBadge = content.querySelector(".map-route-order");
+    if (orderBadge) {
+      orderBadge.textContent = "";
+    }
+  });
+
+  if (resetActiveRoute) {
+    activeViewedRouteId = "";
+    pendingRouteFocusId = "";
+    updateRouteActiveBanner(null);
+  }
+};
+
+const applyRouteHighlight = (route) => {
+  clearRouteHighlight();
+
+  if (!route) {
+    return [];
+  }
+
+  let visibleOrder = 1;
+  const routeEntries = [];
+
+  route.stops.forEach((stopId) => {
+    const entry = scenicMarkerLookup.get(stopId);
+
+    if (!entry) {
+      return;
+    }
+
+    entry.content.classList.add("is-route-active");
+    entry.content.setAttribute("data-route-order", String(visibleOrder));
+
+    const orderBadge = entry.content.querySelector(".map-route-order");
+    if (orderBadge) {
+      orderBadge.textContent = String(visibleOrder);
+    }
+
+    routeEntries.push(entry);
+    visibleOrder += 1;
+  });
+
+  return routeEntries;
+};
+
+const focusRouteOnMap = (route) => {
+  if (!route) {
+    return;
+  }
+
+  if (!mapInstance || !window.AMap) {
+    pendingRouteFocusId = route.id;
+    return;
+  }
+
+  const routeEntries = applyRouteHighlight(route);
+
+  if (!routeEntries.length) {
+    updateRouteActiveBanner(route);
+    return;
+  }
+
+  const markers = routeEntries.map((entry) => entry.marker);
+  const positions = routeEntries.map((entry) => [entry.hotspot.position.lng, entry.hotspot.position.lat]);
+
+  if (markers.length === 1) {
+    const [lng, lat] = positions[0];
+    mapInstance.setZoomAndCenter(Math.max(MAP_ZOOM, 18.2), [lng, lat]);
+  } else {
+    mapInstance.setFitView(markers, false, [112, 184, 108, 156], MAP_ZOOM);
+  }
+
+  updateRouteActiveBanner(route);
+  pendingRouteFocusId = "";
+};
+
+const viewRouteOnMap = (route) => {
+  if (!route) {
+    return;
+  }
+
+  activeViewedRouteId = route.id;
+  pendingRouteFocusId = route.id;
+  closeRouteModal();
+  updateRouteActiveBanner(route);
+  mapExplorerSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+  focusRouteOnMap(route);
+};
+
+const syncViewedRouteOnMapReady = () => {
+  const routeId = pendingRouteFocusId || activeViewedRouteId;
+  const route = getRouteById(routeId);
+
+  if (!route) {
+    return;
+  }
+
+  focusRouteOnMap(route);
 };
 
 const initRouteRecommendation = () => {
@@ -828,21 +968,21 @@ const closeModal = () => {
 };
 
 const scenicTemplate = (hotspot) => `
-  <article class="sheet-hero">
+  <article class="sheet-hero sheet-hero-scenic">
     <figure class="sheet-image-frame">
       <img src="${hotspot.image}" alt="${hotspot.title}${mapLanguage === "en" ? " scene image" : "景观示意图"}">
     </figure>
-    <div class="sheet-copy">
+    <div class="sheet-copy sheet-copy-scenic">
       <p class="sheet-tag">${hotspot.tag}</p>
       <h2 id="map-modal-title">${hotspot.title}</h2>
       <p class="sheet-lead">${hotspot.shortDescription}</p>
+      <div class="sheet-detail-inline">
+        <h3>${localize(mapUiText.scenicTitle)}</h3>
+        <p>${hotspot.detail}</p>
+      </div>
     </div>
   </article>
-  <section class="sheet-section">
-    <h3>${localize(mapUiText.scenicTitle)}</h3>
-    <p>${hotspot.detail}</p>
-  </section>
-  <section class="sheet-section">
+  <section class="sheet-section sheet-section-scenic-highlights">
     <h3>${localize(mapUiText.scenicHighlights)}</h3>
     <ul class="sheet-list">
       ${hotspot.highlights.map((item) => `<li>${item}</li>`).join("")}
@@ -856,6 +996,10 @@ const gameTemplate = (hotspot) => `
       <p class="sheet-tag">${hotspot.tag}</p>
       <h2 id="map-modal-title">${hotspot.title}</h2>
       <p class="sheet-lead">${hotspot.intro}</p>
+      <div class="fortune-result fortune-result-inline" id="fortune-result">
+        <strong>${localize(mapUiText.fortuneIdleTitle)}</strong>
+        <p>${localize(mapUiText.fortuneIdleText)}</p>
+      </div>
     </div>
     <figure class="fortune-vessel" id="fortune-vessel" aria-hidden="true">
       <img src="images/qiangtong.png" alt="" loading="lazy" decoding="async">
@@ -867,10 +1011,6 @@ const gameTemplate = (hotspot) => `
     <div class="fortune-actions">
       <button class="button button-primary" type="button" data-fortune-action="draw">${localize(mapUiText.fortuneDraw)}</button>
       <button class="button button-secondary" type="button" data-fortune-action="reset">${localize(mapUiText.fortuneReset)}</button>
-    </div>
-    <div class="fortune-result" id="fortune-result">
-      <strong>${localize(mapUiText.fortuneIdleTitle)}</strong>
-      <p>${localize(mapUiText.fortuneIdleText)}</p>
     </div>
   </section>
 `;
@@ -944,6 +1084,14 @@ const poemTemplate = (hotspot) => `
   </section>
 `;
 
+const enhanceMapImageViewers = (scope = mapModalBody) => {
+  if (!scope) {
+    return;
+  }
+
+  window.MAPLE_BRIDGE_IMAGE_ZOOM?.mountAll?.(scope);
+};
+
 const renderModal = (hotspot) => {
   if (!mapModalBody || !mapModalKicker) {
     return;
@@ -966,6 +1114,7 @@ const renderModal = (hotspot) => {
     mapModalBody.innerHTML = poemTemplate(localizedHotspot);
   }
 
+  enhanceMapImageViewers(mapModalBody);
   openModal();
 };
 
@@ -1032,6 +1181,7 @@ const createMarkerContent = (hotspot) => {
   button.className = `map-hotspot-chip map-hotspot-${hotspot.type} is-${hotspotMode}`;
   button.setAttribute("aria-label", mapLanguage === "en" ? `Open ${localizedHotspot.title} (${localizedHotspot.tag})` : `打开${localizedHotspot.title}${localizedHotspot.tag}`);
   button.innerHTML = `
+    <span class="map-route-order" aria-hidden="true"></span>
     <span class="map-hotspot-dot" aria-hidden="true"></span>
     <span class="map-hotspot-label">${localizedHotspot.title}</span>
   `;
@@ -1052,9 +1202,10 @@ const createMapMarker = (hotspot) => {
     throw new Error("AMap marker cannot be created before map initialization.");
   }
 
+  const content = createMarkerContent(hotspot);
   const marker = new AMap.Marker({
     position: [hotspot.position.lng, hotspot.position.lat],
-    content: createMarkerContent(hotspot),
+    content,
     anchor: "bottom-center",
     offset: new AMap.Pixel(0, -4),
     title: hotspot.title,
@@ -1062,6 +1213,10 @@ const createMapMarker = (hotspot) => {
 
   bindMarkerEvents(marker, hotspot);
   marker.setMap(mapInstance);
+
+  if (hotspot.type === "scenic") {
+    scenicMarkerLookup.set(hotspot.id, { marker, hotspot, content });
+  }
 
   return marker;
 };
@@ -1169,6 +1324,7 @@ const initInteractiveMap = async () => {
 
     hideMapFallback();
     setMapStatus("圆形看景点介绍，三角形进入游戏交互");
+    syncViewedRouteOnMapReady();
   } catch (error) {
     console.error(error);
     showMapFallback(`真实地图加载失败：${error instanceof Error ? error.message : "请检查 Key、网络或浏览器控制台"}`);
@@ -1193,9 +1349,15 @@ document.addEventListener("click", (event) => {
     closeRouteModal();
   }
 
-  if (target.dataset.routeScroll === "map") {
-    closeRouteModal();
-    mapExplorerSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const routeViewButton = target.closest("[data-route-scroll]");
+  if (routeViewButton instanceof HTMLElement && routeViewButton.dataset.routeScroll) {
+    const route = getRouteById(routeViewButton.dataset.routeScroll);
+    viewRouteOnMap(route);
+  }
+
+  const routeClearButton = target.closest("[data-route-active-clear]");
+  if (routeClearButton instanceof HTMLElement) {
+    clearRouteHighlight({ resetActiveRoute: true });
   }
 
   if (target.dataset.fortuneAction === "draw" && activeHotspot?.type === "game") {
@@ -1239,6 +1401,7 @@ document.addEventListener("click", (event) => {
 
     if (poemNote && imagery) {
       poemNote.innerHTML = createPoemNoteMarkup(imagery);
+      enhanceMapImageViewers(poemNote);
     }
   }
 });

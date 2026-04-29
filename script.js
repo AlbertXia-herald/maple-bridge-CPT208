@@ -50,6 +50,11 @@ const I18N_TEXT = {
   "index.guide.card2.p": { zh: "景区最吸引人的地方，在于诗歌、历史与现实空间之间的呼应。寒山寺钟声、桥边水路和江南夜色，使这里不仅适合参观，也适合被缓慢理解和回味。", en: "What makes the area especially compelling is the resonance between poetry, history, and real space. The bells of Hanshan Temple, the waterways by the bridge, and the Jiangnan nightscape make it a place not only to visit, but also to read slowly and remember." },
   "index.guide.card3.title": { zh: "到访语境", en: "How to Approach a Visit" },
   "index.guide.card3.p": { zh: "如果你是第一次来，可以先把它理解为一处“适合边走边看、边听边想”的文化景区。首页先负责建立整体印象，更多空间关系和图像氛围可以在后面的入口中继续展开。", en: "If it is your first time here, think of Maple Bridge as a cultural site best experienced by walking, watching, listening, and reflecting. The homepage builds the overall impression first, while the next pages unfold its spatial relationships and visual atmosphere in more depth." },
+  "index.guide.notice.title": { zh: "参观须知", en: "Visitor Notes" },
+  "index.guide.notice.intro": { zh: "先记住几条稳定的园区提醒，会让当天的参观更从容，也更适合与周围环境相处。", en: "A few steady on-site reminders can make the visit smoother and more considerate of the space around you." },
+  "index.guide.notice.item1": { zh: "文明游园，爱护景观设施，保持环境整洁。", en: "Visit respectfully, take care of the landscape facilities, and help keep the area clean." },
+  "index.guide.notice.item2": { zh: "宠物、危险品及机动车、非机动车一般不得进入游览区域。", en: "Pets, dangerous items, and motor or non-motor vehicles are generally not allowed in the visiting areas." },
+  "index.guide.notice.item3": { zh: "注意水域安全，不攀爬翻越；放飞无人机等活动需事先获得许可。", en: "Stay safe near the water, avoid climbing or crossing barriers, and obtain permission before activities such as drone flying." },
   "index.services.eyebrow": { zh: "攻略秘籍", en: "Essentials" },
   "index.services.title": { zh: "把到访前最常用的支持信息集中在这里", en: "Keep the most useful pre-visit information in one clear place." },
   "index.services.summary": { zh: "保留一组简洁、可靠的服务信息，帮助首次浏览首页的用户快速处理出行、票务和现场咨询这三类常见问题。", en: "This section keeps travel, ticketing, and on-site enquiry information concise and reliable for users who want practical support at a glance." },
@@ -59,9 +64,11 @@ const I18N_TEXT = {
   "index.services.travel.bus": { zh: "<strong>公交：</strong>可乘坐301路、303路、313路、406路、415路、442路至「枫桥景区站」下车。", en: "<strong>Bus:</strong> Routes 301, 303, 313, 406, 415, and 442 stop at Maple Bridge Scenic Area Station." },
   "index.services.travel.drive": { zh: "<strong>自驾：</strong>景区内设有停车场，位于枫桥路与寒山寺路交叉口，收费标准为10元/次。", en: "<strong>Driving:</strong> Parking is available inside the scenic area near the Fengqiao Road and Hanshan Temple Road junction. Fee: RMB 10 per entry." },
   "index.services.ticket.tag": { zh: "票务", en: "Tickets" },
-  "index.services.ticket.title": { zh: "先看票务提示", en: "Check Ticket Notes First" },
-  "index.services.ticket.p1": { zh: "建议提前在线了解开放安排与购票说明，出发前确认参观时段、预约要求与现场入园规则，减少临时等待。", en: "Check opening arrangements and ticketing notes online in advance. Confirm visit hours, reservation requirements, and admission rules before departure to avoid unnecessary waiting." },
-  "index.services.ticket.p2": { zh: "出发前可先确认开放安排、预约要求与现场参观须知。", en: "Before leaving, confirm opening hours, reservation rules, and on-site visit guidance." },
+  "index.services.ticket.title": { zh: "在线订票", en: "Book Tickets Online" },
+  "index.services.ticket.p1": { zh: "点击进入官方票务入口，提前查看开放安排、购票要求与入园说明。", en: "Open the official ticketing page to review opening arrangements, booking requirements, and admission guidance in advance." },
+  "index.services.ticket.p2": { zh: "新标签页打开，便于随时返回首页继续浏览。", en: "Opens in a new tab so you can return to the homepage at any time." },
+  "index.services.ticket.time": { zh: "服务时间：07:30-17:00", en: "Service Hours: 07:30-17:00" },
+  "index.services.ticket.note": { zh: "点击图标即可跳转至购票页面", en: "Tap the icon to open the ticket booking page." },
   "index.services.hotline.tag": { zh: "热线电话", en: "Hotline" },
   "index.services.hotline.title": { zh: "咨询电话", en: "Enquiry Number" },
   "index.services.hotline.time": { zh: "服务时间：08:00-20:00", en: "Service Hours: 08:00-20:00" },
@@ -555,7 +562,9 @@ const weatherTicker = document.querySelector("[data-weather-ticker]");
 if (weatherTicker) {
   const slides = Array.from(weatherTicker.querySelectorAll(".weather-slide"));
   let activeIndex = 0;
+  const WEATHER_ROTATE_INTERVAL = 4000;
   const weatherDate = document.querySelector("[data-weather-date]");
+  const templeDate = document.querySelector("[data-temple-date]");
   const weatherIcon = document.querySelector("[data-weather-icon]");
   const weatherTemp = document.querySelector("[data-weather-temp]");
   const weatherSummary = document.querySelector("[data-weather-summary]");
@@ -605,6 +614,7 @@ if (weatherTicker) {
   const showSlide = (index) => {
     slides.forEach((slide, slideIndex) => {
       slide.classList.toggle("is-active", slideIndex === index);
+      slide.setAttribute("aria-hidden", slideIndex === index ? "false" : "true");
     });
   };
 
@@ -635,11 +645,11 @@ if (weatherTicker) {
     }));
 
   const createForecastSvg = (series) => {
-      const width = 640;
-      const height = 198;
-      const padding = { top: 38, right: 22, bottom: 30, left: 22 };
-      const chartWidth = width - padding.left - padding.right;
-      const chartHeight = height - padding.top - padding.bottom;
+    const width = 640;
+    const height = 132;
+    const padding = { top: 24, right: 18, bottom: 24, left: 18 };
+    const chartWidth = width - padding.left - padding.right;
+    const chartHeight = height - padding.top - padding.bottom;
     const allTemps = series.flatMap((item) => [item.max, item.min]);
     const minTemp = Math.min(...allTemps) - 2;
     const maxTemp = Math.max(...allTemps) + 2;
@@ -661,12 +671,12 @@ if (weatherTicker) {
         const yLow = getY(item.min);
 
         return `
-          <text x="${x}" y="${padding.top - 18}" text-anchor="middle" font-size="18">${item.icon}</text>
-          <text x="${x}" y="${yHigh - 10}" text-anchor="middle" font-size="11" fill="#8c4a37" font-weight="700">${item.max}°</text>
-          <circle cx="${x}" cy="${yHigh}" r="4" fill="#9a4f3c" />
-          <text x="${x}" y="${yLow + 18}" text-anchor="middle" font-size="11" fill="#5e7b87" font-weight="700">${item.min}°</text>
-          <circle cx="${x}" cy="${yLow}" r="4" fill="#6f92a0" />
-          <text x="${x}" y="${height - 16}" text-anchor="middle" font-size="11" fill="#6f6358">${item.label}</text>
+          <text x="${x}" y="${padding.top - 10}" text-anchor="middle" font-size="13">${item.icon}</text>
+          <text x="${x}" y="${yHigh - 8}" text-anchor="middle" font-size="9.5" fill="#8c4a37" font-weight="700">${item.max}°</text>
+          <circle cx="${x}" cy="${yHigh}" r="3.2" fill="#9a4f3c" />
+          <text x="${x}" y="${yLow + 14}" text-anchor="middle" font-size="9.5" fill="#5e7b87" font-weight="700">${item.min}°</text>
+          <circle cx="${x}" cy="${yLow}" r="3.2" fill="#6f92a0" />
+          <text x="${x}" y="${height - 10}" text-anchor="middle" font-size="9.5" fill="#6f6358">${item.label}</text>
         `;
       })
       .join("");
@@ -674,8 +684,8 @@ if (weatherTicker) {
     return `
       <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${currentLanguage === "en" ? "Temperature trend for the next seven days" : "未来七天最高温和最低温趋势图"}" preserveAspectRatio="none">
         ${gridLines}
-        <polyline points="${highPoints}" fill="none" stroke="#9a4f3c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-        <polyline points="${lowPoints}" fill="none" stroke="#6f92a0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+        <polyline points="${highPoints}" fill="none" stroke="#9a4f3c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+        <polyline points="${lowPoints}" fill="none" stroke="#6f92a0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
         ${labels}
       </svg>
     `;
@@ -778,6 +788,10 @@ if (weatherTicker) {
   const setWeatherErrorState = () => {
     if (weatherDate) {
       weatherDate.textContent = formatDate();
+    }
+
+    if (templeDate) {
+      templeDate.textContent = formatDate();
     }
 
     if (weatherIcon) {
@@ -905,6 +919,10 @@ if (weatherTicker) {
         weatherDate.textContent = formatDate(currentWeather.time);
       }
 
+      if (templeDate) {
+        templeDate.textContent = formatDate(currentWeather.time);
+      }
+
       if (weatherIcon) {
         weatherIcon.textContent = weatherInfo.icon;
       }
@@ -978,6 +996,7 @@ if (weatherTicker) {
   };
 
   weatherTicker.setAttribute("aria-busy", "true");
+  showSlide(activeIndex);
   loadRealtimeWeather().finally(() => {
     weatherTicker.setAttribute("aria-busy", "false");
   });
@@ -987,6 +1006,6 @@ if (weatherTicker) {
     window.setInterval(() => {
       activeIndex = (activeIndex + 1) % slides.length;
       showSlide(activeIndex);
-    }, 2600);
+    }, WEATHER_ROTATE_INTERVAL);
   }
 }

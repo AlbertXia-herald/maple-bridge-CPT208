@@ -6,10 +6,12 @@ const photoLightboxImage = document.querySelector("#photo-lightbox-image");
 const photoLightboxTitle = document.querySelector("#photo-lightbox-title");
 const photoLightboxDate = document.querySelector("#photo-lightbox-date");
 const photoLightboxCloseButtons = document.querySelectorAll("[data-photo-lightbox-close]");
+const photoLightboxMedia = document.querySelector(".photo-lightbox-media");
 const photoUploadToast = document.querySelector("#photo-upload-toast");
 const photoUploadToastClose = document.querySelector("[data-photo-upload-toast-close]");
 let photoUploadToastTimer = null;
 let uploadedPhotos = [];
+const photoLightboxViewer = photoLightboxMedia ? window.MAPLE_BRIDGE_IMAGE_ZOOM?.mount(photoLightboxMedia) : null;
 const photoWallLanguage = window.MAPLE_BRIDGE_I18N?.getLanguage?.() || "zh";
 const photoWallIsEnglish = photoWallLanguage === "en";
 const photoWallUi = {
@@ -93,6 +95,7 @@ const openPhotoLightbox = (photo) => {
   photoLightbox.classList.add("is-open");
   photoLightbox.setAttribute("aria-hidden", "false");
   document.body.classList.add("photo-lightbox-open");
+  photoLightboxViewer?.refresh?.();
 };
 
 const closePhotoLightbox = () => {
@@ -107,6 +110,7 @@ const closePhotoLightbox = () => {
   photoLightboxTitle.textContent = text(photoWallUi.lightboxTitle);
   photoLightboxDate.textContent = "";
   document.body.classList.remove("photo-lightbox-open");
+  photoLightboxViewer?.reset?.();
 };
 
 const hideUploadToast = () => {
