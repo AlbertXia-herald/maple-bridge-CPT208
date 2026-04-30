@@ -76,11 +76,18 @@
 
     <main id="top">
       <section class="hero">
+        <div class="hero-background-soften" aria-hidden="true"></div>
         <div class="hero-background-marquee" aria-hidden="true">
           <figure class="hero-background-frame hero-background-frame-1"></figure>
           <figure class="hero-background-frame hero-background-frame-2"></figure>
           <figure class="hero-background-frame hero-background-frame-3"></figure>
           <figure class="hero-background-frame hero-background-frame-4"></figure>
+        </div>
+        <div class="hero-indicators" aria-hidden="true">
+          <span class="hero-indicator-dot is-active"></span>
+          <span class="hero-indicator-dot"></span>
+          <span class="hero-indicator-dot"></span>
+          <span class="hero-indicator-dot"></span>
         </div>
       </section>
 
@@ -107,9 +114,10 @@
           </article>
           <article class="overview-card overview-card-notice">
             <h3 data-i18n="index.guide.notice.title">参观须知</h3>
+            <ul class="overview-note-list">
               <li data-i18n="index.guide.notice.item1">文明游园，爱护景观设施，保持环境整洁。</li>
-              <li data-i18n="index.guide.notice.item2">宠物、危险品及机动车、非机动车一般不得进入游览区域。</li>
-              <li data-i18n="index.guide.notice.item3">注意水域安全，不攀爬翻越；放飞无人机等活动需事先获得许可。</li>
+              <li data-i18n="index.guide.notice.item2">宠物、危险品及机动车、非机动车不得进入游览区域。</li>
+              <li data-i18n="index.guide.notice.item3">注意水域安全，请勿攀爬翻越；放飞无人机等活动需事先许可。</li>
             </ul>
           </article>
         </div>
@@ -222,9 +230,18 @@
             <span class="entry-tag" data-i18n="index.services.travel.tag">出行</span>
             <h3 data-i18n="index.services.travel.title">景区怎么到</h3>
             <div class="travel-list">
-              <p data-i18n-html="index.services.travel.metro"><strong>地铁：</strong>乘坐地铁1号线至「西环路站」下车，步行约15分钟可达。</p>
-              <p data-i18n-html="index.services.travel.bus"><strong>公交：</strong>可乘坐301路、303路、313路、406路、415路、442路至「枫桥景区站」下车。</p>
-              <p data-i18n-html="index.services.travel.drive"><strong>自驾：</strong>景区内设有停车场，位于枫桥路与寒山寺路交叉口，收费标准为10元/次。</p>
+              <div class="travel-item">
+                <p data-i18n-html="index.services.travel.metro"><strong>地铁：</strong>乘坐地铁1号线至「西环路站」下车，步行约15分钟可达。</p>
+                <button class="travel-detail-button" type="button" data-travel-detail-trigger="metro" data-i18n="index.services.travel.detail">详情</button>
+              </div>
+              <div class="travel-item">
+                <p data-i18n-html="index.services.travel.bus"><strong>公交：</strong>可乘坐301路、303路、313路、406路、415路、442路至「枫桥景区站」下车。</p>
+                <button class="travel-detail-button" type="button" data-travel-detail-trigger="bus" data-i18n="index.services.travel.detail">详情</button>
+              </div>
+              <div class="travel-item">
+                <p data-i18n-html="index.services.travel.drive"><strong>自驾：</strong>景区内设有停车场，位于枫桥路与寒山寺路交叉口，收费标准为10元/次。</p>
+                <button class="travel-detail-button" type="button" data-travel-detail-trigger="drive" data-i18n="index.services.travel.detail">详情</button>
+              </div>
             </div>
           </article>
         </div>
@@ -277,6 +294,20 @@
         <button class="assistant-close" type="button" data-close-assistant="true" aria-label="关闭智能枫桥" data-i18n="common.close">关闭</button>
       </header>
       <div class="assistant-sheet-body" id="assistant-modal-root"></div>
+    </section>
+  </div>
+
+  <div class="travel-detail-modal" id="travel-detail-modal" aria-hidden="true">
+    <div class="travel-detail-modal-backdrop" data-close-travel-modal="true"></div>
+    <section class="travel-detail-sheet" role="dialog" aria-modal="true" aria-labelledby="travel-detail-title">
+      <header class="travel-detail-sheet-header">
+        <div>
+          <p class="eyebrow" data-i18n="index.services.travel.modal.kicker">出行详情</p>
+          <h2 id="travel-detail-title">地铁路线详情</h2>
+        </div>
+        <button class="travel-detail-close" type="button" data-close-travel-modal="true" data-i18n="common.close" aria-label="关闭">关闭</button>
+      </header>
+      <div class="travel-detail-sheet-body" id="travel-detail-modal-root"></div>
     </section>
   </div>
 

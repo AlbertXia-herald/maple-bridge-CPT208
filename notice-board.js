@@ -1,4 +1,4 @@
-﻿const noticeHeroAlertList = document.querySelector("#notice-hero-alert-list");
+const noticeHeroAlertList = document.querySelector("#notice-hero-alert-list");
 const noticeColumns = document.querySelector("#notice-columns");
 const noticeTotalCount = document.querySelector("#notice-total-count");
 const noticeFilterButtons = document.querySelectorAll("[data-category-filter]");
@@ -10,84 +10,131 @@ const noticeSheetBody = document.querySelector("#notice-sheet-body");
 const noticeLang = window.MAPLE_BRIDGE_I18N?.getLanguage?.() || "zh";
 const t = (value) => window.MAPLE_BRIDGE_I18N?.text?.(value) || (typeof value === "string" ? value : value.zh);
 
-const noticeData = [
-  {
-    id: "nb-01",
-    title: { zh: "四月社区曲艺体验课开放报名", en: "April Community Opera Workshop Now Open for Registration" },
-    category: "community",
-    categoryLabel: { zh: "社区活动", en: "Community Events" },
-    priority: { zh: "重要", en: "Important" },
-    date: "2026.04.12",
-    summary: { zh: "本月社区文化活动将开设两场曲艺体验课，面向周边居民开放预约报名，名额有限。", en: "Two community opera workshops will be held this month. Nearby residents may register in advance. Places are limited." },
-    audience: { zh: "周边居民", en: "Nearby residents" },
-    status: { zh: "报名中", en: "Registration Open" }
-  },
-  {
-    id: "nb-02",
-    title: { zh: "本周末景区主步道夜间照明维护", en: "Night Lighting Maintenance on Main Scenic Walkway This Weekend" },
-    category: "operations",
-    categoryLabel: { zh: "景区运营", en: "Scenic Operations" },
-    priority: { zh: "提醒", en: "Reminder" },
-    date: "2026.04.11",
-    summary: { zh: "周六 19:30 至 21:00 主步道部分照明将进行维护，届时请注意临时绕行提示。", en: "Part of the main walkway lighting will be under maintenance from 19:30 to 21:00 on Saturday. Please follow temporary diversion signs." },
-    audience: { zh: "居民与游客", en: "Residents and visitors" },
-    status: { zh: "本周执行", en: "This Week" }
-  },
-  {
-    id: "nb-03",
-    title: { zh: "居民议事会场地调整至枫桥社区中心二层", en: "Resident Meeting Moved to Level 2 of Maple Bridge Community Center" },
-    category: "service",
-    categoryLabel: { zh: "便民提醒", en: "Service Notices" },
-    priority: { zh: "重要", en: "Important" },
-    date: "2026.04.10",
-    summary: { zh: "原定在游客服务点举行的居民议事会，调整至社区中心二层多功能室，请互相转告。", en: "The resident meeting originally planned at the visitor service point has been moved to the multi-purpose room on Level 2 of the community center." },
-    audience: { zh: "社区居民", en: "Community residents" },
-    status: { zh: "地点已更新", en: "Venue Updated" }
-  },
-  {
-    id: "nb-04",
-    title: { zh: "非遗手作夜市志愿者招募启动", en: "Volunteer Recruitment Opens for Intangible Heritage Night Market" },
-    category: "community",
-    categoryLabel: { zh: "社区活动", en: "Community Events" },
-    priority: { zh: "招募", en: "Recruitment" },
-    date: "2026.04.09",
-    summary: { zh: "面向社区青年与居民开放夜市志愿者报名，主要协助秩序引导、讲解接待与材料分发。", en: "Volunteers are being recruited from local youth and residents to support visitor guidance, reception, and material distribution." },
-    audience: { zh: "青年居民", en: "Young residents" },
-    status: { zh: "招募中", en: "Recruiting" }
-  },
-  {
-    id: "nb-05",
-    title: { zh: "清明后景区开放时间恢复常规安排", en: "Regular Opening Hours Resume After Qingming Holiday" },
-    category: "operations",
-    categoryLabel: { zh: "景区运营", en: "Scenic Operations" },
-    priority: { zh: "通知", en: "Notice" },
-    date: "2026.04.08",
-    summary: { zh: "节后景区开放时间恢复至常规时段，请居民及周边商户按更新后的运营时间安排出行。", en: "The scenic area's opening hours return to the regular schedule after the holiday. Residents and nearby businesses are advised to plan accordingly." },
-    audience: { zh: "居民与商户", en: "Residents and local businesses" },
-    status: { zh: "已生效", en: "In Effect" }
-  },
-  {
-    id: "nb-06",
-    title: { zh: "本月垃圾分类入户提醒时间表发布", en: "This Month's Door-to-Door Waste Sorting Reminder Schedule Released" },
-    category: "service",
-    categoryLabel: { zh: "便民提醒", en: "Service Notices" },
-    priority: { zh: "便民", en: "Service" },
-    date: "2026.04.07",
-    summary: { zh: "社区志愿者将于本月中旬进行垃圾分类入户提醒，请留意各楼栋张贴的具体安排。", en: "Community volunteers will make waste-sorting reminder visits in mid-month. Please check the notices posted in each building." },
-    audience: { zh: "社区居民", en: "Community residents" },
-    status: { zh: "本月安排", en: "Scheduled This Month" }
-  }
-];
-
-const focusNoticeIds = ["nb-02", "nb-03", "nb-01"];
-let activeCategory = "all";
-let activeNoticeId = null;
-
 const categoryConfig = [
   { key: "community", label: { zh: "社区活动", en: "Community Events" } },
   { key: "operations", label: { zh: "景区运营", en: "Scenic Operations" } },
   { key: "service", label: { zh: "便民提醒", en: "Service Notices" } }
 ];
+
+const CATEGORY_LABELS = {
+  community: { zh: "社区活动", en: "Community Events" },
+  operations: { zh: "景区运营", en: "Scenic Operations" },
+  service: { zh: "便民提醒", en: "Service Notices" }
+};
+
+const normalizeDate = (value) => {
+  const [year = "", month = "", day = ""] = String(value).split(".");
+  return `${year}.${month.padStart(2, "0")}.${day.padStart(2, "0")}`;
+};
+
+const toSortValue = (value) => Number(String(value).replaceAll(".", ""));
+
+const createNotice = ({
+  id,
+  category,
+  date,
+  title,
+  detailBody,
+  audience,
+  status,
+  sourceUrl = "",
+  note = "",
+}) => {
+  const normalizedDate = normalizeDate(date);
+  const archived = /已结束|2024年发的|年初已经结束/.test(note);
+
+  return {
+    id,
+    category,
+    categoryLabel: CATEGORY_LABELS[category],
+    date: normalizedDate,
+    sortValue: toSortValue(normalizedDate),
+    title,
+    summary: detailBody,
+    detailBody,
+    audience,
+    status,
+    sourceUrl,
+    note,
+    isArchived: archived,
+  };
+};
+
+const noticeData = [
+  createNotice({
+    id: "nb-01",
+    category: "community",
+    date: "2026.4.15",
+    title: "枫华社区 “阅苏州・绘童心” 亲子公益活动",
+    detailBody: "共读苏州绘本，亲子共绘团扇，展现苏州古今风貌，推动家校社协同育人。",
+    audience: "社区儿童及家长",
+    status: { zh: "已结束", en: "Ended" },
+    sourceUrl: "https://mp.weixin.qq.com/s?__biz=MzI4MzE4NjY2MA==&mid=2247573577&idx=7&sn=44f8f3917b319dfd548cbf28ffd47226&chksm=ea6b7b787f8d298ff7b5b442c82ee857ccfa2dfc9ab7cbba8568578ee467da2b89ca476cedbe&scene=27",
+    note: "四月底已结束",
+  }),
+  createNotice({
+    id: "nb-02",
+    category: "community",
+    date: "2026.4.19",
+    title: "枫津社区痛风与关节炎健康科普义诊活动",
+    detailBody: "邀请苏大附二院专家科普痛风防治知识，讲解饮食用药，提供一对一义诊咨询。",
+    audience: "社区居民（中老年为主）",
+    status: { zh: "已结束", en: "Ended" },
+    sourceUrl: "https://mp.weixin.qq.com/s?__biz=MzI4MzE4NjY2MA==&mid=2247573577&idx=7&sn=44f8f3917b319dfd548cbf28ffd47226&chksm=ea6b7b787f8d298ff7b5b442c82ee857ccfa2dfc9ab7cbba8568578ee467da2b89ca476cedbe&scene=27",
+    note: "四月底已结束",
+  }),
+  createNotice({
+    id: "nb-03",
+    category: "operations",
+    date: "2024.12.2",
+    title: "苏州枫桥景区限流免费开放",
+    detailBody: "寒山寺听钟声跨年活动来啦，自2024年12月31日（星期二）13∶00开始，苏州枫桥景区将实行限流免费开放，瞬时流量控制在3000人以内。",
+    audience: "居民与游客",
+    status: { zh: "历史通知", en: "Archived Notice" },
+    sourceUrl: "https://suzhou.bendibao.com/news/20241230/128011.shtm",
+    note: "这个通知是2024年发的",
+  }),
+  createNotice({
+    id: "nb-04",
+    category: "operations",
+    date: "2025.10.17",
+    title: "关于枫桥景区建筑景观整体提升工程中标公告",
+    detailBody: "枫桥景区建筑景观提升工程已于2025年10月完成招标，中标单位为苏州混凝土水泥制品研究院有限公司联合体，工期100天，若为您出行造成不便，敬请谅解。",
+    audience: "居民与游客",
+    status: { zh: "已归档", en: "Archived" },
+    sourceUrl: "https://xunbiaobao.baidu.com/biddingDetail?id=3b9df65b140849c133a0b49032805695a0b2491e&source=seo",
+    note: "这个年初已经结束了",
+  }),
+  createNotice({
+    id: "nb-05",
+    category: "service",
+    date: "2026.4.27",
+    title: "枫桥街道白马涧社区开展多元化便民服务活动",
+    detailBody: "白马涧社区开展便民服务，提供义诊、义剪、缝补及反诈宣传体验，贴心服务送到家门口，暖民心、聚家园。",
+    audience: "社区全体居民",
+    status: { zh: "已发布", en: "Published" },
+    sourceUrl: "https://js.news.163.com/26/0427/17/KRHOT8PT04249CU3.html",
+  }),
+  createNotice({
+    id: "nb-06",
+    category: "service",
+    date: "2025.5.15",
+    title: "枫桥街道便民服务中心：午间服务“不打烊”， 贴心服务暖民心",
+    detailBody: "2025 年 3 月起推行午间不打烊，工作日全天服务，办理社保、医保、证件等业务，惠及上班族与老人，获居民好评。",
+    audience: "街道全体居民",
+    status: { zh: "已发布", en: "Published" },
+    sourceUrl: "https://js.news.163.com/25/0515/17/JVK94DAA04249CU3.html",
+  }),
+];
+
+let activeCategory = "all";
+let activeNoticeId = null;
+
+const getFocusNotices = () =>
+  noticeData
+    .filter((item) => !item.isArchived)
+    .sort((a, b) => b.sortValue - a.sortValue)
+    .slice(0, 3);
 
 const getNoticeTagClass = (category) => {
   if (category === "community") return "notice-tag-community";
@@ -135,7 +182,7 @@ const createNoticeDetail = (notice) => `
       <span class="notice-status">${t(notice.status)}</span>
     </div>
     <h3>${t(notice.title)}</h3>
-    <p class="notice-detail-summary">${t(notice.summary)}</p>
+    <p class="notice-detail-summary">${t(notice.detailBody)}</p>
     <div class="notice-detail-section">
       <h4>${noticeLang === "en" ? "Audience" : "适用对象"}</h4>
       <p>${t(notice.audience)}</p>
@@ -144,29 +191,37 @@ const createNoticeDetail = (notice) => `
       <h4>${noticeLang === "en" ? "Status" : "当前状态"}</h4>
       <p>${t(notice.status)}</p>
     </div>
+    ${notice.note ? `
+      <div class="notice-detail-section">
+        <h4>${noticeLang === "en" ? "Note" : "说明"}</h4>
+        <p>${notice.note}</p>
+      </div>
+    ` : ""}
+    ${notice.sourceUrl ? `
+      <div class="notice-detail-section">
+        <h4>${noticeLang === "en" ? "Source" : "活动详情"}</h4>
+        <a class="notice-detail-link" href="${notice.sourceUrl}" target="_blank" rel="noopener noreferrer">${noticeLang === "en" ? "View original notice" : "查看原文"}</a>
+      </div>
+    ` : ""}
   </article>
 `;
 
 const renderHeroAlerts = () => {
   if (!noticeHeroAlertList) return;
-
-  const focusItems = focusNoticeIds
-    .map((id) => noticeData.find((item) => item.id === id))
-    .filter(Boolean);
-
-  noticeHeroAlertList.innerHTML = focusItems.map((item) => createHeroAlertItem(item)).join("");
+  noticeHeroAlertList.innerHTML = getFocusNotices().map((item) => createHeroAlertItem(item)).join("");
 };
 
 const renderNoticeColumns = () => {
   if (!noticeColumns) return;
 
-  const scopedCategories = categoryConfig.filter((category) => {
-    return activeCategory === "all" || activeCategory === category.key;
-  });
+  const scopedCategories = categoryConfig.filter((category) => activeCategory === "all" || activeCategory === category.key);
 
   noticeColumns.innerHTML = scopedCategories
     .map((category) => {
-      const items = noticeData.filter((notice) => notice.category === category.key);
+      const items = noticeData
+        .filter((notice) => notice.category === category.key)
+        .sort((a, b) => b.sortValue - a.sortValue);
+
       return `
         <section class="notice-column">
           <header class="notice-column-header">

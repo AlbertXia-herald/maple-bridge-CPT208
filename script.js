@@ -53,8 +53,8 @@ const I18N_TEXT = {
   "index.guide.notice.title": { zh: "参观须知", en: "Visitor Notes" },
   "index.guide.notice.intro": { zh: "先记住几条稳定的园区提醒，会让当天的参观更从容，也更适合与周围环境相处。", en: "A few steady on-site reminders can make the visit smoother and more considerate of the space around you." },
   "index.guide.notice.item1": { zh: "文明游园，爱护景观设施，保持环境整洁。", en: "Visit respectfully, take care of the landscape facilities, and help keep the area clean." },
-  "index.guide.notice.item2": { zh: "宠物、危险品及机动车、非机动车一般不得进入游览区域。", en: "Pets, dangerous items, and motor or non-motor vehicles are generally not allowed in the visiting areas." },
-  "index.guide.notice.item3": { zh: "注意水域安全，不攀爬翻越；放飞无人机等活动需事先获得许可。", en: "Stay safe near the water, avoid climbing or crossing barriers, and obtain permission before activities such as drone flying." },
+  "index.guide.notice.item2": { zh: "宠物、危险品及机动车、非机动车不得进入游览区域。", en: "Pets, dangerous items, and motor or non-motor vehicles are not allowed in the visiting areas." },
+  "index.guide.notice.item3": { zh: "注意水域安全，请勿攀爬翻越；放飞无人机等活动需事先许可。", en: "Stay safe near the water, do not climb or cross barriers, and get permission before activities such as drone flying." },
   "index.services.eyebrow": { zh: "攻略秘籍", en: "Essentials" },
   "index.services.title": { zh: "把到访前最常用的支持信息集中在这里", en: "Keep the most useful pre-visit information in one clear place." },
   "index.services.summary": { zh: "保留一组简洁、可靠的服务信息，帮助首次浏览首页的用户快速处理出行、票务和现场咨询这三类常见问题。", en: "This section keeps travel, ticketing, and on-site enquiry information concise and reliable for users who want practical support at a glance." },
@@ -63,6 +63,8 @@ const I18N_TEXT = {
   "index.services.travel.metro": { zh: "<strong>地铁：</strong>乘坐地铁1号线至「西环路站」下车，步行约15分钟可达。", en: "<strong>Metro:</strong> Take Metro Line 1 to Xihuan Road Station, then walk about 15 minutes." },
   "index.services.travel.bus": { zh: "<strong>公交：</strong>可乘坐301路、303路、313路、406路、415路、442路至「枫桥景区站」下车。", en: "<strong>Bus:</strong> Routes 301, 303, 313, 406, 415, and 442 stop at Maple Bridge Scenic Area Station." },
   "index.services.travel.drive": { zh: "<strong>自驾：</strong>景区内设有停车场，位于枫桥路与寒山寺路交叉口，收费标准为10元/次。", en: "<strong>Driving:</strong> Parking is available inside the scenic area near the Fengqiao Road and Hanshan Temple Road junction. Fee: RMB 10 per entry." },
+  "index.services.travel.detail": { zh: "详情", en: "Details" },
+  "index.services.travel.modal.kicker": { zh: "出行详情", en: "Travel Details" },
   "index.services.ticket.tag": { zh: "票务", en: "Tickets" },
   "index.services.ticket.title": { zh: "在线订票", en: "Book Tickets Online" },
   "index.services.ticket.p1": { zh: "点击进入官方票务入口，提前查看开放安排、购票要求与入园说明。", en: "Open the official ticketing page to review opening arrangements, booking requirements, and admission guidance in advance." },
@@ -137,7 +139,7 @@ const I18N_TEXT = {
   "notice.filter.service": { zh: "便民提醒", en: "Service Notices" },
   "notice.modal.kicker": { zh: "公告详情", en: "Notice Details" },
   "notice.modal.title": { zh: "查看完整内容", en: "View Full Details" },
-  "smart.hero.title": { zh: '让智能枫桥先帮<span>你判断，接下来适合怎么逛。</span>', en: 'Let Smart Maple Bridge help first,<span>so you know how to explore next.</span>' },
+  "smart.hero.title": { zh: '让智能枫桥先帮<span>你判断，接下来</span>适合怎么逛。', en: 'Let Smart Maple Bridge help first,<span>so you can decide what to</span>explore next.' },
   "smart.hero.summary": { zh: "智能枫桥会先根据你的兴趣，帮你判断更适合走哪种方向、先看哪段景区内容，以及从哪里开始更顺手。", en: "Smart Maple Bridge helps you decide which direction suits your interests, what to see first, and where to begin most smoothly." },
   "smart.direction.kicker": { zh: "游玩方向", en: "Visit Styles" },
   "smart.direction.title": { zh: "先按兴趣选一种逛法", en: "Pick a visiting style by interest" },
@@ -170,6 +172,72 @@ const PAGE_META = {
   "smart-agent.html": {
     title: { zh: "智能枫桥 | 枫盈苏州", en: "Smart Maple Bridge | Maple Bridge Suzhou" },
     description: { zh: "枫盈苏州智能问答页，帮助用户快速找到更适合自己的枫桥游玩方向、路线与信息入口。", en: "Smart guide page of Maple Bridge Suzhou, helping users quickly find suitable visit styles, routes, and information entries." }
+  }
+};
+
+const TRAVEL_DETAIL_CONTENT = {
+  metro: {
+    title: { zh: "地铁路线详情", en: "Metro Route Details" },
+    summary: {
+      zh: "适合第一次来访、希望路线稳定清晰的游客。先坐地铁到西环路站，再按步行方向前往枫桥景区入口。",
+      en: "This is the clearest and most stable option for a first visit. Take the metro to Xihuan Road Station, then continue on foot to the Maple Bridge Scenic Area entrance."
+    },
+    steps: {
+      zh: [
+        "乘坐苏州地铁 1 号线，到「西环路站」下车。",
+        "出站后按前往枫桥景区方向的地面指引步行，沿主路继续前进。",
+        "步行途中会经过景区周边道路与沿线店铺，整体路线较直观。",
+        "全程步行约 15 分钟，到达枫桥景区入口后即可开始游览。"
+      ],
+      en: [
+        "Take Suzhou Metro Line 1 and get off at Xihuan Road Station.",
+        "After leaving the station, follow the street-level signs toward Maple Bridge Scenic Area.",
+        "Continue along the main road; the walking route is relatively direct and easy to follow.",
+        "The walk takes about 15 minutes, after which you will reach the scenic area entrance."
+      ]
+    }
+  },
+  bus: {
+    title: { zh: "公交路线详情", en: "Bus Route Details" },
+    summary: {
+      zh: "适合已经在苏州市区活动、希望少换乘的用户。可直接选择经过枫桥景区站的线路，下车后短距离步行即可进入景区。",
+      en: "This option works well if you are already moving around Suzhou and want fewer transfers. Choose a route that stops at Maple Bridge Scenic Area Station, then walk a short distance to the entrance."
+    },
+    steps: {
+      zh: [
+        "可优先选择 301 路、303 路、313 路、406 路、415 路或 442 路前往景区。",
+        "在「枫桥景区站」下车，留意站牌与景区方向提示。",
+        "下车后沿道路步行前往景区入口，通常只需短距离步行即可到达。",
+        "若同行人员较多或携带物品，建议下车后先在站点附近整理，再统一进入景区。"
+      ],
+      en: [
+        "Choose routes such as 301, 303, 313, 406, 415, or 442 to reach the scenic area.",
+        "Get off at Maple Bridge Scenic Area Station and check the stop signage for the scenic direction.",
+        "From the stop, walk a short distance along the road to the scenic area entrance.",
+        "If you are travelling in a group or carrying items, it is easier to regroup near the stop before entering."
+      ]
+    }
+  },
+  drive: {
+    title: { zh: "自驾路线详情", en: "Driving Route Details" },
+    summary: {
+      zh: "适合携带较多物品、同行人员较多，或希望直接把车停在景区周边的用户。建议先导航到停车点，再步行进入景区。",
+      en: "This is suitable if you have more belongings, are travelling with several people, or prefer to park close to the scenic area. Drive to the parking point first, then enter on foot."
+    },
+    steps: {
+      zh: [
+        "导航时可将目的地设置为枫桥路与寒山寺路交叉口附近的景区停车区域。",
+        "到达后按现场停车引导进入停车位，注意节假日高峰时段可能需要排队。",
+        "当前停车参考费用为 10 元 / 次，具体以现场公示信息为准。",
+        "停车后步行前往景区入口，建议确认随身物品后再开始游览。"
+      ],
+      en: [
+        "Set your destination to the scenic parking area near the Fengqiao Road and Hanshan Temple Road junction.",
+        "Follow the on-site parking guidance after arrival; queues may form during weekends or holidays.",
+        "The current reference parking fee is RMB 10 per entry, subject to on-site information.",
+        "After parking, walk to the scenic area entrance and check that you have all essential items before entering."
+      ]
+    }
   }
 };
 
@@ -374,6 +442,45 @@ const syncSeniorModeUi = (enabled) => {
   syncSettingsSummary();
 };
 
+let activeTravelDetailType = null;
+
+function buildTravelDetailMarkup(detail) {
+  const summary = getLocalizedText(detail.summary);
+  const steps = getLocalizedText(detail.steps, []);
+  const stepsMarkup = steps
+    .map((step, index) => `
+      <li>
+        <span class="travel-detail-step-index">${index + 1}</span>
+        <p>${step}</p>
+      </li>
+    `)
+    .join("");
+
+  return `
+    <div class="travel-detail-content">
+      <p class="travel-detail-summary">${summary}</p>
+      <ol class="travel-detail-steps">${stepsMarkup}</ol>
+    </div>
+  `;
+}
+
+function syncTravelDetailModalContent() {
+  if (!activeTravelDetailType) {
+    return;
+  }
+
+  const detail = TRAVEL_DETAIL_CONTENT[activeTravelDetailType];
+  const travelDetailTitle = document.querySelector("#travel-detail-title");
+  const travelDetailRoot = document.querySelector("#travel-detail-modal-root");
+
+  if (!detail || !travelDetailTitle || !travelDetailRoot) {
+    return;
+  }
+
+  travelDetailTitle.textContent = getLocalizedText(detail.title);
+  travelDetailRoot.innerHTML = buildTravelDetailMarkup(detail);
+}
+
 const applyPageMeta = () => {
   const pageName = window.location.pathname.split("/").pop() || "index.html";
   const meta = PAGE_META[pageName] || PAGE_META["index.html"];
@@ -435,6 +542,7 @@ const setLanguage = (language, shouldReload = false) => {
   currentLanguage = language === "en" ? "en" : "zh";
   setStoredLanguage(currentLanguage);
   applyStaticTranslations();
+  syncTravelDetailModalContent();
 
   if (shouldReload) {
     window.location.reload();
@@ -489,6 +597,51 @@ if (settingsLanguageAction) {
     setLanguage(currentLanguage === "zh" ? "en" : "zh", true);
   });
 }
+
+const travelDetailModal = document.querySelector("#travel-detail-modal");
+const travelDetailTriggers = Array.from(document.querySelectorAll("[data-travel-detail-trigger]"));
+const travelDetailCloseButtons = Array.from(document.querySelectorAll("[data-close-travel-modal]"));
+
+const closeTravelDetailModal = () => {
+  if (!travelDetailModal) {
+    return;
+  }
+
+  travelDetailModal.classList.remove("is-open");
+  travelDetailModal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("travel-modal-open");
+};
+
+const openTravelDetailModal = (type) => {
+  if (!travelDetailModal || !TRAVEL_DETAIL_CONTENT[type]) {
+    return;
+  }
+
+  activeTravelDetailType = type;
+  syncTravelDetailModalContent();
+  travelDetailModal.classList.add("is-open");
+  travelDetailModal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("travel-modal-open");
+};
+
+travelDetailTriggers.forEach((trigger) => {
+  trigger.addEventListener("click", () => {
+    const type = trigger.getAttribute("data-travel-detail-trigger");
+    openTravelDetailModal(type);
+  });
+});
+
+travelDetailCloseButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    closeTravelDetailModal();
+  });
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && travelDetailModal?.classList.contains("is-open")) {
+    closeTravelDetailModal();
+  }
+});
 
 if (menuToggle && siteNav) {
   const closeMenu = () => {
@@ -555,6 +708,29 @@ if (settingsToggle && settingsPanel) {
       closeSettingsPanel();
     }
   });
+}
+
+const homepageHero = document.querySelector(".hero");
+
+if (homepageHero) {
+  const heroIndicatorDots = Array.from(homepageHero.querySelectorAll(".hero-indicator-dot"));
+  const HERO_BACKGROUND_COUNT = 4;
+  const HERO_BACKGROUND_ROTATE_INTERVAL = 8000;
+  let activeHeroBackgroundIndex = 0;
+
+  const syncHeroIndicators = (index) => {
+    heroIndicatorDots.forEach((dot, dotIndex) => {
+      dot.classList.toggle("is-active", dotIndex === index);
+    });
+  };
+
+  if (heroIndicatorDots.length === HERO_BACKGROUND_COUNT) {
+    syncHeroIndicators(activeHeroBackgroundIndex);
+    window.setInterval(() => {
+      activeHeroBackgroundIndex = (activeHeroBackgroundIndex + 1) % HERO_BACKGROUND_COUNT;
+      syncHeroIndicators(activeHeroBackgroundIndex);
+    }, HERO_BACKGROUND_ROTATE_INTERVAL);
+  }
 }
 
 const weatherTicker = document.querySelector("[data-weather-ticker]");

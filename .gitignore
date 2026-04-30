@@ -1,0 +1,32 @@
+# Codex / agent tooling
+.codex/
+.agents/
+
+# Editor settings
+.vscode/
+.idea/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs and temp files
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+
+# Node / frontend caches if added later
+node_modules/
+dist/
+build/
+.cache/
+.parcel-cache/
+coverage/
+
+# Environment files
+.env
+.env.*
