@@ -8,17 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260414-maplegend">
+  <link rel="stylesheet" href="styles.css?v=20260430-interactive-map">
   <script>
-    (() => {
-      const buildVersion = `20260414-maplegend-fix-${Date.now()}`;
-      window.MAPLE_BRIDGE_ASSET_VERSION = buildVersion;
-
-      const styleLink = document.querySelector('link[href^="styles.css"]');
-      if (styleLink) {
-        styleLink.href = `styles.css?v=${buildVersion}`;
-      }
-    })();
+    window.MAPLE_BRIDGE_ASSET_VERSION = "20260430-interactive-map";
   </script>
 </head>
 <body class="interactive-map-page">
@@ -161,9 +153,16 @@
             <button class="map-route-active-clear" type="button" data-route-active-clear></button>
           </div>
 
-          <section class="map-surface" aria-label="枫桥互动地图">
+          <section class="map-surface is-loading" aria-label="枫桥互动地图">
             <div class="map-surface-status" data-map-status>
               正在准备真实地图...
+            </div>
+            <div class="map-surface-loading" data-map-loading>
+              <div class="map-loading-card">
+                <p class="eyebrow">Map Loading</p>
+                <h3>正在准备互动地图</h3>
+                <p>地图资源与热点内容正在载入，请稍候片刻。</p>
+              </div>
             </div>
             <div class="amap-container" id="amap-container" role="application" aria-label="枫桥真实互动地图"></div>
             <div class="map-surface-fallback" data-map-fallback hidden>
@@ -215,7 +214,7 @@
   </script>
   <script>
     (() => {
-      const assetVersion = window.MAPLE_BRIDGE_ASSET_VERSION || `20260414-maplegend-fix-${Date.now()}`;
+      const assetVersion = window.MAPLE_BRIDGE_ASSET_VERSION || "20260430-interactive-map";
 
       const loadScript = (src) =>
         new Promise((resolve, reject) => {

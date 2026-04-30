@@ -3,7 +3,9 @@ const mapModalBody = document.querySelector("#map-modal-body");
 const mapModalClose = document.querySelector("#map-modal-close");
 const mapModalKicker = document.querySelector("#map-modal-kicker");
 const mapSurface = document.querySelector("#amap-container");
+const mapSurfaceShell = document.querySelector(".map-surface");
 const mapStatus = document.querySelector("[data-map-status]");
+const mapLoading = document.querySelector("[data-map-loading]");
 const mapFallback = document.querySelector("[data-map-fallback]");
 const routePanel = document.querySelector("#route-recommend-panel");
 const routeTimeOptions = document.querySelector("#route-time-options");
@@ -42,6 +44,8 @@ let activeRouteRecommendation = null;
 let isRouteModalOpen = false;
 let activeViewedRouteId = "";
 let pendingRouteFocusId = "";
+let isTouchGestureMode = false;
+let isTwoFingerGestureActive = false;
 const scenicMarkerLookup = new Map();
 
 const scenicImage = ({ palette, title, subtitle }) => {
@@ -1146,7 +1150,94 @@ const setMapStatus = (message) => {
   }
 };
 
+const setMapSurfaceState = (state) => {
+  if (!mapSurfaceShell) {
+    return;
+  }
+
+  mapSurfaceShell.classList.toggle("is-loading", state === "loading");
+  mapSurfaceShell.classList.toggle("is-map-ready", state === "ready");
+  mapSurfaceShell.classList.toggle("is-map-failed", state === "failed");
+
+  if (mapLoading) {
+    mapLoading.hidden = state !== "loading";
+  }
+};
+
+const shouldUseTwoFingerMapGesture = () =>
+  window.matchMedia?.("(pointer: coarse)")?.matches || ("ontouchstart" in window && window.innerWidth < 1024);
+
+const syncMapGestureClass = () => {
+  if (!mapSurfaceShell) {
+    return;
+  }
+
+  mapSurfaceShell.classList.toggle("is-touch-locked", isTouchGestureMode);
+  mapSurfaceShell.classList.toggle("is-two-finger-active", isTwoFingerGestureActive);
+};
+
+const setMapGestureMode = (mode) => {
+  if (!mapInstance) {
+    return;
+  }
+
+  const allowMapGesture = mode === "two-finger";
+  isTwoFingerGestureActive = allowMapGesture;
+
+  mapInstance.setStatus({
+    dragEnable: !isTouchGestureMode || allowMapGesture,
+    zoomEnable: !isTouchGestureMode || allowMapGesture,
+    doubleClickZoom: true,
+    keyboardEnable: false,
+    jogEnable: false,
+  });
+
+  syncMapGestureClass();
+};
+
+const bindTouchGestureGate = () => {
+  if (!mapSurfaceShell || !mapSurface || !shouldUseTwoFingerMapGesture()) {
+    return;
+  }
+
+  isTouchGestureMode = true;
+  setMapGestureMode("locked");
+
+  const updateGestureFromTouchCount = (touchCount, shouldPreventDefault = false, event = null) => {
+    if (touchCount >= 2) {
+      if (shouldPreventDefault && event?.cancelable) {
+        event.preventDefault();
+      }
+
+      setMapGestureMode("two-finger");
+      return;
+    }
+
+    setMapGestureMode("locked");
+  };
+
+  mapSurfaceShell.addEventListener("touchstart", (event) => {
+    updateGestureFromTouchCount(event.touches.length, event.touches.length >= 2, event);
+  }, { passive: false });
+
+  mapSurfaceShell.addEventListener("touchmove", (event) => {
+    updateGestureFromTouchCount(event.touches.length, event.touches.length >= 2, event);
+  }, { passive: false });
+
+  const resetTouchGesture = () => {
+    updateGestureFromTouchCount(0);
+  };
+
+  mapSurfaceShell.addEventListener("touchend", (event) => {
+    updateGestureFromTouchCount(event.touches.length);
+  }, { passive: true });
+
+  mapSurfaceShell.addEventListener("touchcancel", resetTouchGesture, { passive: true });
+};
+
 const showMapFallback = (message) => {
+  setMapSurfaceState("failed");
+
   if (mapFallback) {
     mapFallback.hidden = false;
 
@@ -1172,6 +1263,27 @@ const hideMapFallback = () => {
     mapSurface.removeAttribute("aria-hidden");
   }
 };
+
+const waitForMapFirstRender = () =>
+  new Promise((resolve) => {
+    if (!mapInstance?.on) {
+      resolve();
+      return;
+    }
+
+    let settled = false;
+    const finish = () => {
+      if (settled) {
+        return;
+      }
+
+      settled = true;
+      resolve();
+    };
+
+    mapInstance.on("complete", finish);
+    window.setTimeout(finish, 1200);
+  });
 
 const createMarkerContent = (hotspot) => {
   const button = document.createElement("button");
@@ -1284,9 +1396,11 @@ const loadAmapSdk = async () => {
 };
 
 const initInteractiveMap = async () => {
-  if (!mapSurface) {
+  if (!mapSurface || !mapSurfaceShell) {
     return;
   }
+
+  setMapSurfaceState("loading");
 
   if (!MAP_CONFIG.key) {
     showMapFallback("尚未配置高德地图 Key");
@@ -1315,6 +1429,8 @@ const initInteractiveMap = async () => {
       features: ["bg", "road", "building", "point"],
     });
 
+    bindTouchGestureGate();
+
     const markers = hotspots.map((hotspot) => createMapMarker(hotspot));
     const scenicBounds = new AMap.Bounds(SCENIC_BOUNDS.southWest, SCENIC_BOUNDS.northEast);
 
@@ -1322,7 +1438,9 @@ const initInteractiveMap = async () => {
     mapInstance.setFitView(markers, false, [116, 176, 96, 146], MAP_ZOOM);
     mapInstance.setZoomAndCenter(Math.max(mapInstance.getZoom(), MAP_ZOOM), MAP_CENTER);
 
+    await waitForMapFirstRender();
     hideMapFallback();
+    setMapSurfaceState("ready");
     setMapStatus("圆形看景点介绍，三角形进入游戏交互");
     syncViewedRouteOnMapReady();
   } catch (error) {

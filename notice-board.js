@@ -130,11 +130,15 @@ const noticeData = [
 let activeCategory = "all";
 let activeNoticeId = null;
 
-const getFocusNotices = () =>
-  noticeData
-    .filter((item) => !item.isArchived)
+const getFocusNotices = () => {
+  const primaryOperationsNotice = noticeData.find((item) => item.category === "operations");
+  const secondaryNotices = noticeData
+    .filter((item) => !item.isArchived && item.id !== primaryOperationsNotice?.id)
     .sort((a, b) => b.sortValue - a.sortValue)
-    .slice(0, 3);
+    .slice(0, 1);
+
+  return [primaryOperationsNotice, ...secondaryNotices].filter(Boolean);
+};
 
 const getNoticeTagClass = (category) => {
   if (category === "community") return "notice-tag-community";

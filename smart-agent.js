@@ -15,8 +15,8 @@
       relatedTitle: "你也可以继续问",
       linksTitle: "相关入口",
       welcomeTitle: "先从常见问题开始",
-      welcomeText: "你可以直接点击问题，也可以自己输入一句。我会优先在本地 FAQ 里匹配最接近的答案。",
-      noKnowledge: "FAQ 数据暂时未加载。",
+      welcomeText: "你可以直接点击问题，也可以自己输入一句。我会优先在本地知识库里匹配最接近的答案。",
+      noKnowledge: "智能枫桥知识库暂时未加载。",
       allCategory: "全部问题"
     },
     en: {
@@ -32,8 +32,8 @@
       relatedTitle: "You can also ask",
       linksTitle: "Helpful links",
       welcomeTitle: "Start with a common question",
-      welcomeText: "You can click a question directly or type your own. I will match it against the local FAQ knowledge base first.",
-      noKnowledge: "The FAQ knowledge base is not available right now.",
+      welcomeText: "You can click a question directly or type your own. I will match it against the local knowledge base first.",
+      noKnowledge: "The Smart Maple Bridge knowledge base is not available right now.",
       allCategory: "All Topics"
     }
   };

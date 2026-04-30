@@ -17,9 +17,9 @@
   window.smartMapleBridgeFaq = {
     zh: {
       intro: {
-        eyebrow: "静态 FAQ Agent",
-        title: "先问一句，再决定下一步怎么逛枫桥。",
-        helper: "这里不会调用外部 AI，也不做实时承诺，而是用一组常见问题，帮你更快找到路线、门票、参观和内容入口。"
+        eyebrow: "智能枫桥 Agent",
+        title: "先问一句，再决定怎么逛。",
+        helper: "智能枫桥会根据常见问题，帮助你更快找到路线、门票、参观须知与内容入口。"
       },
       categories: [
         { key: "all", label: "全部问题" },
@@ -42,7 +42,7 @@
       ],
       fallback: {
         title: "我暂时没有完全匹配的问题",
-        answer: "我还不能像实时客服那样回答所有问题，但你可以先试试下面这些常见问法，我会优先用本地 FAQ 帮你找答案。",
+        answer: "我还不能像实时客服那样回答所有问题，但你可以先试试下面这些常见问法，我会优先用本地知识库帮你找答案。",
         suggestedQuestions: [
           "枫桥在哪里？",
           "怎么去枫桥景区？",
@@ -145,7 +145,7 @@
           category: "route",
           categoryLabel: "路线定制",
           question: "智能枫桥可以帮我做什么？",
-          answer: "它更像一个静态 FAQ 助手，适合帮你快速判断从哪里开始看、该去哪个页面找内容，以及先问哪些常见问题。它不会提供实时票务、天气或在线客服能力，但能把地图、照片墙和公告栏这些入口串起来。",
+          answer: "它更像一个轻量的智能枫桥 Agent，适合帮你快速判断从哪里开始看、该去哪个页面找内容，以及先问哪些常见问题。它不会提供实时票务、天气或在线客服能力，但能把地图、照片墙和公告栏这些入口串起来。",
           keywords: ["智能枫桥", "可以帮我做什么", "有什么用", "assistant", "help", "what can you do"],
           suggestedQuestions: ["公告栏有什么用？", "照片墙在哪里？", "适合第一次来的路线是什么？"],
           links: [sharedLinks.map.zh, sharedLinks.photo.zh, sharedLinks.notice.zh],
@@ -188,9 +188,9 @@
     },
     en: {
       intro: {
-        eyebrow: "Static FAQ Agent",
+        eyebrow: "Smart Maple Bridge Agent",
         title: "Ask one question first, then choose how to explore Maple Bridge.",
-        helper: "This page does not use a live AI service. It uses a local FAQ knowledge base to help you find routes, ticket guidance, visitor notes, and the right page to open next."
+        helper: "This page does not use a live AI service. It uses a local knowledge base to help you find routes, ticket guidance, visitor notes, and the right page to open next."
       },
       categories: [
         { key: "all", label: "All Topics" },
@@ -213,7 +213,7 @@
       ],
       fallback: {
         title: "I could not find a fully matching question yet",
-        answer: "I am a lightweight local FAQ assistant, not a live AI service. You can try one of these common questions first and I will match it against the built-in knowledge base.",
+        answer: "I am a lightweight Smart Maple Bridge agent, not a live AI service. You can try one of these common questions first and I will match it against the built-in knowledge base.",
         suggestedQuestions: [
           "Where is Maple Bridge?",
           "How to get there?",
@@ -316,7 +316,7 @@
           category: "route",
           categoryLabel: "Route planning",
           question: "What can Smart Maple Bridge do?",
-          answer: "It works like a lightweight static FAQ assistant. It can help you decide where to start, which page to open next, and which common questions to ask first. It does not provide live ticketing, weather, or customer service, but it connects the map, photo wall, and notice board clearly.",
+          answer: "It works like a lightweight Smart Maple Bridge agent. It can help you decide where to start, which page to open next, and which common questions to ask first. It does not provide live ticketing, weather, or customer service, but it connects the map, photo wall, and notice board clearly.",
           keywords: ["what can smart maple bridge do", "assistant", "help", "what can you do"],
           suggestedQuestions: ["What is the notice board for?", "Where is the photo wall?", "What route do you recommend?"],
           links: [sharedLinks.map.en, sharedLinks.photo.en, sharedLinks.notice.en],
