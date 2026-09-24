@@ -2,6 +2,8 @@
 
 A mobile-first interactive web experience for exploring the cultural heritage of **Maple Bridge (枫桥), Suzhou**.
 
+**[View Live Demo →](https://albertxia-herald.github.io/maple-bridge-CPT208/)**
+
 The project combines cultural storytelling, map-based exploration, multimedia content, visitor guidance, and lightweight interactive experiences in a fully static front-end application.
 
 Originally developed for **CPT208 Human-Centric Computing**, the project focuses on usability, accessibility, mobile interaction, and coherent information design.
@@ -196,3 +198,75 @@ maple-bridge-CPT208/
 ├── audio/
 ├── assets/
 └── references/
+```
+
+---
+
+## Running Locally
+
+No installation or build step is required.
+
+Clone the repository:
+
+```bash
+git clone https://github.com/AlbertXia-herald/maple-bridge-CPT208.git
+cd maple-bridge-CPT208
+```
+
+Then either:
+
+1. open `index.html` directly in a browser, or
+2. run the project with a lightweight local static server.
+
+A local static server is recommended for the most consistent resource-loading behavior.
+
+---
+
+## Demo Flow
+
+A representative walkthrough is:
+
+1. Start from the homepage and explore the hero and visitor-guidance interactions
+2. Open **Smart Maple Bridge** and test suggested visitor questions
+3. Enter the **Interactive Map** and explore scenic hotspots
+4. Generate a route recommendation and view the highlighted route
+5. Explore the **Photo Wall**
+6. Finish with the **Notice Board**
+
+---
+
+## Project Scope
+
+This repository represents a polished academic prototype rather than a production tourism service.
+
+Current scope limitations include:
+
+- no authentication system
+- no persistent database
+- no production CMS
+- no backend API
+- local FAQ logic rather than a live LLM
+- some content remains prototype-oriented
+
+Visitor information such as opening hours, transport guidance, or ticket details should therefore be treated as demonstration content unless independently verified.
+
+---
+
+## Course Context
+
+This project was developed as part of **CPT208 Human-Centric Computing** at Xi'an Jiaotong-Liverpool University.
+
+The coursework emphasized the design and implementation of a usable, accessible, and human-centered interactive system.
+
+This repository is presented as an engineering and HCI portfolio project.
+
+---
+
+## Author
+
+**Jiahao Qi**
+
+BSc Information and Computing Science  
+Xi'an Jiaotong-Liverpool University
+
+GitHub: [@AlbertXia-herald](https://github.com/AlbertXia-herald)
