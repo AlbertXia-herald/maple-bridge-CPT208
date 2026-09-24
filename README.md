@@ -8,6 +8,28 @@ Originally developed for **CPT208 Human-Centric Computing**, the project focuses
 
 ---
 
+## Preview
+
+### Homepage
+
+A mobile-first landing experience combining cultural identity, visitor guidance, and access to the main interactive modules.
+
+![Maple Bridge homepage](docs/screenshots/homepage-preview.png)
+
+### Interactive Map & Route Recommendation
+
+An AMap-based exploration interface with scenic hotspots, playful interactions, and route recommendations based on visitor preferences.
+
+![Maple Bridge interactive map](docs/screenshots/interactive-map-preview.png)
+
+### Smart Maple Bridge
+
+A lightweight local knowledge assistant supporting visitor questions, category-based browsing, suggested questions, and contextual links to other parts of the experience.
+
+![Smart Maple Bridge](docs/screenshots/smart-agent-preview.png)
+
+---
+
 ## Overview
 
 Maple Bridge is designed around two levels of interaction:
